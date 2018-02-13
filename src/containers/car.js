@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import axios from 'axios';
+//import axios from 'axios';
 import './car.css';
 
 export class Car extends Component {
@@ -8,7 +8,6 @@ export class Car extends Component {
     super(props);
     this.state = { //ToDo: Remove this prefilling towards the end. Currently aids quicker testing.
       carId:"",
-      tripNo:"",
 	  stepSize:"1",
 	  startAtSec:"4434353452300",
 	  poly:[ //ToDo:To be generated from the route once drawn
@@ -43,7 +42,7 @@ export class Car extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    var payload = this.state
+/*    var payload = this.state
     console.log(payload);
     var apiBaseUrl = "http://d71ae62d.ngrok.io/granular/";
      axios.post(apiBaseUrl+'getGranularPoints', payload).then(function (response) {
@@ -56,8 +55,8 @@ export class Car extends Component {
 		 }
 		 }).catch(function (error) {
 		 console.log("The error is------------", error);
-		 });
-    // this.props.onSave(this.state);//ToDo: Propogate car properties to create a new car in main page
+		 });*/
+    this.props.onSave(this.state);//ToDo: Propogate car properties to create a new car in main page
   }
 
 
@@ -72,15 +71,6 @@ export class Car extends Component {
               autoFocus
               type="text"
               value={this.state.carId}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-
-          <FormGroup controlId="tripNo" bsSize="large">
-            <ControlLabel>Trip Number</ControlLabel>
-            <FormControl
-              type="text"
-              value={this.state.tripNo}
               onChange={this.handleChange}
             />
           </FormGroup>
