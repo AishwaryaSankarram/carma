@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 import {Car} from './containers/car';
+import {MapContainer} from './containers/map';
 import './App.css';
 
 class App extends Component {
@@ -11,7 +12,8 @@ class App extends Component {
       this.state = {
       modalIsOpen: false,
       cars: [], //For drawing car icons based on no.of cars set
-      count: 0
+      count: 0,
+      mapOpen: false
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -41,6 +43,7 @@ class App extends Component {
 
   showMap() {
     console.log("Display map for the selected car---------");
+    this.setState({mapOpen: true})
   }
 
   componentWillMount() {
@@ -57,6 +60,10 @@ class App extends Component {
     return <div id="test">{buttons}</div> || null;
   }
 
+  drawMap(){
+    return <MapContainer/>;
+  }
+
  render() {
     return (
       <div className="App">
@@ -69,7 +76,9 @@ class App extends Component {
           <button className="btn btn-xs pull-right remove icon-close" onClick={this.closeModal}>Close</button>
           </h2>
             <Car onSave={this.createCar}/>
+
         </Modal>
+        {this.state.mapOpen ?  this.drawMap() :  null}
       </div>
     );
   }
