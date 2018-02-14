@@ -13,6 +13,7 @@ class App extends Component {
       modalIsOpen: false,
       cars: [], //For drawing car icons based on no.of cars set
       count: 0,
+      selectedCar: {},
       mapOpen: false
     };
     this.openModal = this.openModal.bind(this);
@@ -35,15 +36,21 @@ class App extends Component {
     console.log("Creating a car");
     this.closeModal();
     let oldCars = this.state.cars;
-    oldCars.push(carData.carId);
+    oldCars.push(carData);
     let oldCount = this.state.count;
     let newCount = oldCount + 1;
     this.setState({cars: oldCars, count: newCount});
   }
 
-  showMap() {
-    console.log("Display map for the selected car---------");
-    this.setState({mapOpen: true})
+  showMap(e) {
+    console.log("Display map for the selected car---------",  e.target.dataset.carid);
+    let carId = e.target.dataset.carid;
+    let cars = this.state.cars;
+    let selectedCar = cars.filter(function(car) {
+       return car.carId  == carId;
+     })[0];
+    console.log(selectedCar);
+    this.setState({mapOpen: true, selectedCar: selectedCar});
   }
 
   componentWillMount() {
@@ -54,14 +61,14 @@ class App extends Component {
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
                buttons.push(
-               <button key={i} className="pull-left" onClick={this.showMap}>Car - {this.state.cars[i]} </button>
+               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId}  className="pull-left" onClick={this.showMap}>Car - {this.state.cars[i].carId} </button>
             );
      }
     return <div id="test">{buttons}</div> || null;
   }
 
   drawMap(){
-    return <MapContainer/>;
+    return <MapContainer car={this.state.selectedCar}/>;
   }
 
  render() {

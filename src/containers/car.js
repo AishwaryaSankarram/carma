@@ -15,17 +15,13 @@ export class Car extends Component {
      	"lng":80.230191    
     },    {"lat":13.037518,
      "lng":80.230921    
-    },    {"lat":13.040528,
-     "lng":80.231908    
-    },    {"lat":13.045086,
-     "lng":80.232595    
     }],
     v2xServer:"192.168.1.17",
     gpsCanServer:"192.168.1.17",
-    remoteIp: "192.168.1.17",
+    remoteIp: "192.168.1.9",
     remotePath:"/tmp/",
-    remotePass:"Cis_123@co",
-    remoteUser:"mouli"
+    remotePass:"carma123",
+    remoteUser:"mohamed"
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
