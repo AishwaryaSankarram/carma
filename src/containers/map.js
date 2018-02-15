@@ -48,9 +48,10 @@ export class MapContainer extends React.Component {
     	if(selCar != null){
     		selCar.poly =  this.createPoly(h);
     	}
+    	selCar.poly[0].speed = selCar.speed;
 	    var payload = selCar;
 	    console.log(payload);
-	    var apiBaseUrl = "http://192.168.1.18:8080/granular/";
+	    var apiBaseUrl = "http://192.168.1.17:8080/granular/";
 	     axios.post(apiBaseUrl+'getGranularPoints', payload).then(function (response) {
 			 console.log(response);
 			 if(response.status === 200){
@@ -101,7 +102,10 @@ export class MapContainer extends React.Component {
 		let p = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? this.props.car.poly : this.state.markers;
 	 	return (
 			<div className="gMap">
-			<button onClick={this.handleSubmit}> Submit </button>
+			<span>Routes for car {this.props.car.carId} </span>
+			<div id="btn-submit-container">
+				<button onClick={this.handleSubmit}> Submit </button>
+			</div>
 			<MyMapComponent onClick={this.handleClick} 
 		showMarker={this.state.showMarker} 
 		markerCount={this.state.markerCount} 

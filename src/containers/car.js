@@ -8,20 +8,7 @@ export class Car extends Component {
     super(props);
     this.state = { //ToDo: Remove this prefilling towards the end. Currently aids quicker testing.
       carId:"",
-	  stepSize:"1",
-	  startAtSec:"4434353452300",
-	  /*poly:[ 
-	  {"lat":13.035177,
-     	"lng":80.230191    
-    },    {"lat":13.037518,
-     "lng":80.230921    
-    }],*/
-    v2xServer:"192.168.1.17",
-    gpsCanServer:"192.168.1.17",
-    remoteIp: "192.168.1.9",
-    remotePath:"/tmp/",
-    remotePass:"carma123",
-    remoteUser:"mohamed"
+	    speed: ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -38,10 +25,19 @@ export class Car extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.props.onSave(this.state);
+    var defaultParams = {
+      stepSize:"1",
+      startAtSec:"4434353452300",
+      v2xServer:"192.168.1.17",
+      gpsCanServer:"192.168.1.17",
+      remoteIp: "192.168.1.9",
+      remotePath:"/tmp/",
+      remotePass:"carma123",
+      remoteUser:"mohamed"
+    };  
+    let carData = Object.assign(defaultParams, this.state);
+    this.props.onSave(carData);
   }
-
-
 
   render() {
     return (
@@ -56,83 +52,21 @@ export class Car extends Component {
               onChange={this.handleChange}
             />
           </FormGroup>
-          <FormGroup controlId="stepSize" bsSize="large">
-            <ControlLabel>Step Size</ControlLabel>
+          <FormGroup controlId="speed" bsSize="large">
+            <ControlLabel>Speed</ControlLabel>
             <FormControl
               type="text"
-              value={this.state.stepSize}
+              value={this.state.speed}
               onChange={this.handleChange}
             />
-          </FormGroup>
-          <FormGroup controlId="startAtSec" bsSize="large">
-            <ControlLabel>Start At Seconds</ControlLabel>
-            <FormControl
-              type="text"
-              value={this.state.startAtSec}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-		      <FormGroup controlId="v2xServer" bsSize="large">
-            <ControlLabel>IP of the V2X Server</ControlLabel>
-            <FormControl
-              type="text"
-              value={this.state.v2xServer}
-              onChange={this.handleChange}
-            />
-          </FormGroup>          
-
-          <FormGroup controlId="gpsCanServer" bsSize="large">
-            <ControlLabel>GPS Server</ControlLabel>
-            <FormControl
-              type="text"
-              value={this.state.gpsCanServer}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-
-          <FormGroup controlId="remoteIp" bsSize="large">
-            <ControlLabel>Repository IP</ControlLabel>
-            <FormControl
-              type="text"
-              value={this.state.remoteIp}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-
-          <FormGroup controlId="remotePath" bsSize="large">
-            <ControlLabel>Remote Path</ControlLabel>
-            <FormControl
-              type="text"
-              value={this.state.remotePath}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-
-          <FormGroup controlId="remoteUser" bsSize="large">
-            <ControlLabel>Remote User</ControlLabel>
-            <FormControl
-              type="text"
-              value={this.state.remoteUser}
-              onChange={this.handleChange}
-            />
-          </FormGroup>
-
-          <FormGroup controlId="remotePass" bsSize="large">
-            <ControlLabel>Remote User Password</ControlLabel>
-            <FormControl
-              value={this.state.remotePass}
-              onChange={this.handleChange}
-              type="password"
-            />
-          </FormGroup>
-
+            </FormGroup>
           <Button
             block
             bsSize="sm"
             bsStyle="primary"
             disabled={!this.validateForm()}
             type="submit">
-            Submit
+            Save
           </Button>
         </form>
       </div>

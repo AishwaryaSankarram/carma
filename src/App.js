@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Modal from 'react-modal';
 import {Car} from './containers/car';
 import {MapContainer} from './containers/map';
+import {Header} from './layouts/header';
+import {Footer} from './layouts/footer';
 import './App.css';
 
 class App extends Component {
@@ -62,10 +64,10 @@ class App extends Component {
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
                buttons.push(
-               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId}  className="pull-left fa fa-car" onClick={this.showMap}>Car - {this.state.cars[i].carId} </button>
+               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId}  className="pull-left fa fa-car" onClick={this.showMap}> Car - {this.state.cars[i].carId} </button>
             );
      }
-    return <div id="test">{buttons}</div> || null;
+    return <div id="car-panel">{buttons}</div> || null;
   }
 
   updateCar(car) {
@@ -88,6 +90,7 @@ class App extends Component {
  render() {
     return (
       <div className="App">
+        {<Header />}
         <button onClick={this.openModal} className="new_car"><i className="fa fa-plus">Add Car</i></button>
         {this.displayCars()}
         <Modal isOpen={this.state.modalIsOpen}
@@ -100,6 +103,7 @@ class App extends Component {
 
         </Modal>
         {this.state.mapOpen ?  this.drawMap() :  null}
+        {<Footer />}
       </div>
     );
   }
