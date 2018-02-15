@@ -32,7 +32,7 @@ class App extends Component {
     this.setState({modalIsOpen: false});
   }
 
-  createCar(carData){ //Causes a state change on form submit of a car ---> ToDo: Doesn't re-rerender the page
+  createCar(carData){ 
     console.log("Creating a car");
     this.closeModal();
     let oldCars = this.state.cars;
@@ -47,7 +47,7 @@ class App extends Component {
     let carId = e.target.dataset.carid;
     let cars = this.state.cars;
     let selectedCar = cars.filter(function(car) {
-       return car.carId  == carId;
+       return car.carId  === carId;
      })[0];
     console.log(selectedCar);
     this.setState({mapOpen: true, selectedCar: selectedCar});
@@ -57,11 +57,11 @@ class App extends Component {
     Modal.setAppElement('div');
   }
 
-  displayCars(){  //---> ToDo: Doesn't re-rerender the page --Check
+  displayCars(){ 
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
                buttons.push(
-               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId}  className="pull-left" onClick={this.showMap}>Car - {this.state.cars[i].carId} </button>
+               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId}  className="pull-left fa fa-car" onClick={this.showMap}>Car - {this.state.cars[i].carId} </button>
             );
      }
     return <div id="test">{buttons}</div> || null;
@@ -74,7 +74,7 @@ class App extends Component {
  render() {
     return (
       <div className="App">
-        <button onClick={this.openModal} className="new_car glyphicon glyphicon-asterisk"></button>
+        <button onClick={this.openModal} className="new_car"><i className="fa fa-plus">Add Car</i></button>
         {this.displayCars()}
         <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
