@@ -21,6 +21,7 @@ class App extends Component {
     this.createCar = this.createCar.bind(this);
     this.displayCars = this.displayCars.bind(this);
     this.showMap = this.showMap.bind(this);
+    this.updateCar = this.updateCar.bind(this);
 
   }
 
@@ -67,8 +68,21 @@ class App extends Component {
     return <div id="test">{buttons}</div> || null;
   }
 
+  updateCar(car) {
+      const cars = this.state.cars;
+      cars.map((obj) => {
+      if(obj.carId === car.carId){
+          obj = car;
+          return obj;
+        }
+      });
+      this.setState({
+        cars: cars
+      });
+  }
+
   drawMap(){
-    return <MapContainer car={this.state.selectedCar}/>;
+    return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar}/>;
   }
 
  render() {

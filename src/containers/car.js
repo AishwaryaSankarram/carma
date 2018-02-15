@@ -10,12 +10,12 @@ export class Car extends Component {
       carId:"",
 	  stepSize:"1",
 	  startAtSec:"4434353452300",
-	  poly:[ //ToDo:To be generated from the route once drawn
+	  /*poly:[ 
 	  {"lat":13.035177,
      	"lng":80.230191    
     },    {"lat":13.037518,
      "lng":80.230921    
-    }],
+    }],*/
     v2xServer:"192.168.1.17",
     gpsCanServer:"192.168.1.17",
     remoteIp: "192.168.1.9",
@@ -38,21 +38,7 @@ export class Car extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-/*    var payload = this.state
-    console.log(payload);
-    var apiBaseUrl = "http://d71ae62d.ngrok.io/granular/";
-     axios.post(apiBaseUrl+'getGranularPoints', payload).then(function (response) {
-		 console.log(response);
-		 if(response.status === 200){
-		 	console.log("Rest Hit successful");
-		 }
-		 else{
-		 	console.log("Oops...! Rest HIT failed with--------" + response.status);
-		 }
-		 }).catch(function (error) {
-		 console.log("The error is------------", error);
-		 });*/
-    this.props.onSave(this.state);//ToDo: Propogate car properties to create a new car in main page
+    this.props.onSave(this.state);
   }
 
 
