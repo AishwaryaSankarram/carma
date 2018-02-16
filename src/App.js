@@ -64,7 +64,7 @@ class App extends Component {
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
                buttons.push(
-               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId}  className="pull-left fa fa-car" onClick={this.showMap}> Car - {this.state.cars[i].carId} </button>
+               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId}  className="pull-left load_car" onClick={this.showMap}><div className="fa fa-car"></div> <div className="car_name_no">Car - {this.state.cars[i].carId} </div></button>
             );
      }
     return <div id="car-panel">{buttons}</div> || null;
@@ -91,14 +91,14 @@ class App extends Component {
     return (
       <div className="App">
         {<Header />}
-        <button onClick={this.openModal} className="new_car"><i className="fa fa-plus">Add Car</i></button>
+        <button onClick={this.openModal} className="new_car"><i className="fa fa-plus">  ADD CAR</i></button>
         {this.displayCars()}
         <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
           contentLabel="Car Details">
-          <h2 ref={subtitle => this.subtitle = subtitle}>Car Details
-          <button className="btn btn-xs pull-right remove icon-close" onClick={this.closeModal}>Close</button>
-          </h2>
+          <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details
+          <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" onClick={this.closeModal}><div></div></button></div>
+          </div>
             <Car onSave={this.createCar}/>
 
         </Modal>

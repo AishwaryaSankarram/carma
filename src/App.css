@@ -22,13 +22,97 @@
     border: none;
 }
 .ReactModal__Content{
-  width: 500px !important;
-  left: 25% !important;
+    width: 500px !important;
+    max-height: 380px;
+    left: 50% !important;
+    margin-left: -250px;
 }
+.modal-title{
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 20px;
+
+}
+.modal-title .icon-close{
+   background: transparent;
+   outline: none;
+    border: none;
+    margin: -46px -16px 10px 0px;
+    font-size: 16px
+}
+.footer{
+      position: fixed;
+    width: 100%;
+    bottom: 0;
+    background: #333;
+    color: #fff;
+    padding: 7px;
+    margin-top: 20px;
+}
+.gMap{
+  height: 100px;
+  clear: both;
+}
+.route_label{
+  font-size: 16px;
+      margin: 20px 20px 0px 10px;
+}
+.header_part {
+     -moz-transition: 0.4s ease-in-out all;
+     -webkit-transition: 0.4s ease-in-out all;
+     transition: 0.4s ease-in-out all;
+     -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+     -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+     background-color: #fff;
+     display: table;
+     width: 100%;
+     height: 60px;
+     -webkit-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
+     -moz-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
+     box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
+
+ }
+
+    .page_logo .logo{
+            width: 200px;
+            margin: 13px 25px;
+     }
+         .page_logo .logo img{
+          width: 100%;
+         }
+         .new_car{
+                 background: #4dadf7;
+  outline: none;
+  border:1px solid #fff;
+  padding: 6px;
+  color: #fff;
+         }
+         .new_car .fa{margin: 0 5px;}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-#btn-submit-container{
-  text-align: right;
+.load_car{
+      background: transparent;
+  outline: none;
+  border:1px solid #93c84a;
+  margin: 10px;
+  padding: 0;
+}
+.load_car .car_name_no{
+    border-top: 1px solid #93c84a;
+    padding: 5px 10px;
+}
+.load_car .fa{
+font-size: 22px;
+margin: 5px;
+}
+#btn-submit-container button{
+      background: #4dadf7;
+  outline: none;
+  border:1px solid #fff;
+  padding: 6px;
+  color: #fff;
+  margin: 10px;
 }

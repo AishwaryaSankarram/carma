@@ -102,9 +102,11 @@ export class MapContainer extends React.Component {
 		let p = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? this.props.car.poly : this.state.markers;
 	 	return (
 			<div className="gMap">
-			<span>Routes for car {this.props.car.carId} </span>
-			<div id="btn-submit-container">
+			<div className="clearfix">
+			<div className="pull-left route_label">Routes for car {this.props.car.carId} </div>
+			<div id="btn-submit-container"  className="pull-right ">
 				<button onClick={this.handleSubmit}> Submit </button>
+			</div>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 
 		showMarker={this.state.showMarker} 
