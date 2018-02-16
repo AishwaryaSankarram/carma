@@ -94,6 +94,7 @@ class App extends Component {
         {this.displayCars()}
         <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
+          shouldCloseOnOverlayClick={false} 
           contentLabel="Car Details">
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details
           <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" onClick={this.closeModal}><div></div></button></div>
