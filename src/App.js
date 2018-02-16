@@ -90,8 +90,7 @@ class App extends Component {
  render() {
     return (
       <div className="App">
-        {<Header />}
-        <button onClick={this.openModal} className="new_car"><i className="fa fa-plus">  ADD CAR</i></button>
+        {<Header onBtnClick={this.openModal}/>}
         {this.displayCars()}
         <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
@@ -100,7 +99,6 @@ class App extends Component {
           <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" onClick={this.closeModal}><div></div></button></div>
           </div>
             <Car onSave={this.createCar}/>
-
         </Modal>
         {this.state.mapOpen ?  this.drawMap() :  null}
         {<Footer />}
