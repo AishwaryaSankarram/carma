@@ -26,6 +26,7 @@
     max-height: 380px;
     left: 50% !important;
     margin-left: -250px;
+    margin-top:50px; 
 }
 .modal-title{
     font-size: 22px;
@@ -73,22 +74,25 @@
      box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
 
  }
-
-    .page_logo .logo{
+.page_logo{
+  width: 200px;
+  float: left;
+}
+.page_logo .logo{
             width: 200px;
             margin: 13px 25px;
      }
-         .page_logo .logo img{
+.page_logo .logo img{
           width: 100%;
          }
-         .new_car{
+.new_car{
                  background: #4dadf7;
   outline: none;
   border:1px solid #fff;
   padding: 6px;
   color: #fff;
          }
-         .new_car .fa{margin: 0 5px;}
+.new_car .fa{margin: 0 5px;}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -115,4 +119,11 @@ margin: 5px;
   padding: 6px;
   color: #fff;
   margin: 10px;
+}
+.add_car{
+  float: right;
+  margin: 10px;
+}
+.map-container{
+  height: calc(100% -200px);
 }
