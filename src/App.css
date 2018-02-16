@@ -42,7 +42,7 @@
     font-size: 16px
 }
 .footer{
-      position: fixed;
+    position: fixed;
     width: 100%;
     bottom: 0;
     background: #333;
@@ -56,7 +56,8 @@
 }
 .route_label{
   font-size: 16px;
-      margin: 20px 20px 0px 10px;
+  font-weight: bold;
+  margin: 20px 20px 0px 10px;
 }
 .header_part {
      -moz-transition: 0.4s ease-in-out all;
@@ -79,26 +80,26 @@
   float: left;
 }
 .page_logo .logo{
-            width: 200px;
-            margin: 13px 25px;
-     }
+   width: 200px;
+   margin: 13px 25px;
+ }
 .page_logo .logo img{
           width: 100%;
-         }
+ }
 .new_car{
-                 background: #4dadf7;
+  background: #4dadf7;
   outline: none;
   border:1px solid #fff;
   padding: 6px;
   color: #fff;
-         }
+}
 .new_car .fa{margin: 0 5px;}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 .load_car{
-      background: transparent;
+  background: transparent;
   outline: none;
   border:1px solid #93c84a;
   margin: 10px;

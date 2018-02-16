@@ -6,7 +6,7 @@ import './car.css';
 export class Car extends Component {
 	constructor(props) {
     super(props);
-    this.state = { //ToDo: Remove this prefilling towards the end. Currently aids quicker testing.
+    this.state = { 
       carId:"",
 	    speed: ""
     };
@@ -29,7 +29,7 @@ export class Car extends Component {
     const v2xServers = ["192.168.1.64","192.168.1.65","192.168.1.66","192.168.1.67","192.168.1.68"];
     var defaultParams = {
       stepSize:"1",
-      startAtSec:"4434353452300", 
+      startAtSec: new Date().getTime(), 
       v2xServer: v2xServers[this.props.carIndex % 5],
       gpsCanServer: gpsCanServers[this.props.carIndex % 5],
       remoteIp: "192.168.1.17",
@@ -37,7 +37,16 @@ export class Car extends Component {
       remotePass:"Cis_123@co",
       remoteUser:"mouli"
     };  
-    let carData = Object.assign(defaultParams, this.state);
+    let sourceCar = this.props.sourceCar;
+    if(Object.keys(sourceCar).length > 0){
+      defaultParams = Object.assign(defaultParams, sourceCar); //Adding old car params
+      //Following params will have to be updated for new car
+      defaultParams.startAtSec =  new Date().getTime();
+      defaultParams.v2xServer = v2xServers[this.props.carIndex % 5];
+      defaultParams.gpsCanServer = gpsCanServers[this.props.carIndex % 5];
+    }
+    let carData = Object.assign(defaultParams, this.state); //Adding current params
+    console.log("saving carData------" , carData);
     this.props.onSave(carData);
   }
 

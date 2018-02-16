@@ -17,6 +17,7 @@ class App extends Component {
       cars: [], //For drawing car icons based on no.of cars set
       count: 0,
       selectedCar: {},
+      sourceCar: {},
       mapOpen: false
     };
     this.openModal = this.openModal.bind(this);
@@ -25,11 +26,12 @@ class App extends Component {
     this.displayCars = this.displayCars.bind(this);
     this.showMap = this.showMap.bind(this);
     this.updateCar = this.updateCar.bind(this);
+    this.cloneCar = this.cloneCar.bind(this);
 
   }
 
   openModal() {
-     this.setState({modalIsOpen: true})
+     this.setState({modalIsOpen: true, sourceCar: {}})
   }
 
   closeModal() {
@@ -63,17 +65,25 @@ class App extends Component {
     Modal.setAppElement('div');
   }
 
+  cloneCar(car) {
+    this.setState({sourceCar: car, modalIsOpen: true});
+  }
+
   displayCars(){ 
-    console.log("displaying cars---------");
+     console.log("displaying cars---------");
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
-            let t = (this.state.cars[i] === this.state.selectedCar) ? 'green' : '' ;
-            buttons.push(
-               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId} 
+            let car = this.state.cars[i];
+            let t = (car === this.state.selectedCar) ? 'green' : '' ;
+            let button = <button key={car.carId} data-carid={car.carId} 
                        className={"pull-left load_car " + t} onClick={this.showMap}>
                    <div className="fa fa-car"></div>
                    <div className="car_name_no">Car {this.state.cars[i].carId} </div>
-              </button>
+              </button>;
+            let cloneIcon = <i key={'icon_' + car.carId} className="fa fa-plus pull-left" onClick={() => this.cloneCar(car)}></i>;
+            let btnHtml = car.isSaved ? ([button , cloneIcon]) : button ;
+            buttons.push(
+               btnHtml
             );
      }
     return <div id="car-panel">{buttons}</div> || null;
@@ -108,7 +118,7 @@ class App extends Component {
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details
           <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" onClick={this.closeModal}><div></div></button></div>
           </div>
-            <Car onSave={this.createCar} carIndex={this.state.count}/>
+            <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar}/>
         </Modal>
         {this.state.mapOpen ?  this.drawMap() :  <MyMapComponent disabled="true" />}
         {<Footer />}
