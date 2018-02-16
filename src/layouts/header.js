@@ -15,8 +15,9 @@ export class Header extends Component {
                 <img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks"/>
               </figure>
           </div>
+          <div className="header_title">Route Planner</div>
           <div className="add_car">
-              <button onClick={this.handleBtnClick} className="new_car"><i className="fa fa-plus">Add Car</i></button>
+              <button onClick={this.handleBtnClick} className="new_car" title="Add Car"><i className="fa fa-plus">Add Car</i></button>
           </div>
         </div>
     );

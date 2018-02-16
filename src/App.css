@@ -51,7 +51,7 @@
     margin-top: 20px;
 }
 .gMap{
-  height: 100px;
+  height: 100%;
   clear: both;
 }
 .route_label{
@@ -125,5 +125,19 @@ margin: 5px;
   margin: 10px;
 }
 .map-container{
-  height: calc(100% -200px);
+  height: 100%;
 }
+.clearfix::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+  .header_title{
+    width: calc(100% - 400px);
+    font-size: 25px;
+    color: #93c84a;
+    text-transform: uppercase;
+    font-weight: bold;
+    float: left;
+    margin: 13px 0px;
+  }
