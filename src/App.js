@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Modal from 'react-modal';
 import {Car} from './containers/car';
 import {MapContainer} from './containers/map';
+import {MyMapComponent} from './components/map';
 import {Header} from './layouts/header';
 import {Footer} from './layouts/footer';
 import './App.css';
@@ -63,10 +64,16 @@ class App extends Component {
   }
 
   displayCars(){ 
+    console.log("displaying cars---------");
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
-               buttons.push(
-               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId}  className="pull-left load_car" onClick={this.showMap}><div className="fa fa-car"></div> <div className="car_name_no">Car - {this.state.cars[i].carId} </div></button>
+            let t = (this.state.cars[i] === this.state.selectedCar) ? 'green' : '' ;
+            buttons.push(
+               <button key={this.state.cars[i].carId} data-carid={this.state.cars[i].carId} 
+                       className={"pull-left load_car " + t} onClick={this.showMap}>
+                   <div className="fa fa-car"></div>
+                   <div className="car_name_no">Car {this.state.cars[i].carId} </div>
+              </button>
             );
      }
     return <div id="car-panel">{buttons}</div> || null;
@@ -101,9 +108,9 @@ class App extends Component {
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details
           <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" onClick={this.closeModal}><div></div></button></div>
           </div>
-            <Car onSave={this.createCar}/>
+            <Car onSave={this.createCar} carIndex={this.state.count}/>
         </Modal>
-        {this.state.mapOpen ?  this.drawMap() :  null}
+        {this.state.mapOpen ?  this.drawMap() :  <MyMapComponent disabled="true" />}
         {<Footer />}
       </div>
     );

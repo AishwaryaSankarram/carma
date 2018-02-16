@@ -15,9 +15,21 @@ export const MyMapComponent = compose(
   withScriptjs,
   withGoogleMap
 )((props) => (
-  <GoogleMap defaultZoom={16} defaultCenter={props.markerCount > 0 ? props.markerPos[props.markerCount] : {lat: 37.35209000546612, lng: -121.95941368730672}} mapTypeId="roadmap" onClick={props.onClick}>
-    {props.showMarker && <MyMarker markerPos={props.markerPos} /> }
-    {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} /> }
-  </GoogleMap>
+     props.disabled ?  <GoogleMap
+        defaultZoom={16}
+        defaultCenter={{lat: 37.35209000546612, lng: -121.95941368730672}}
+        defaultOptions={{
+          streetViewControl: false,
+          scaleControl: false,
+          mapTypeControl: false,
+          panControl: false,
+          zoomControl: false,
+          rotateControl: false,
+          fullscreenControl: false
+      }} disableDefaultUI /> : 
+      <GoogleMap defaultZoom={16} defaultCenter={props.markerCount > 0 ? props.markerPos[props.markerCount] : {lat: 37.35209000546612, lng: -121.95941368730672}} mapTypeId="roadmap" onClick={props.onClick}>
+       {props.showMarker && <MyMarker markerPos={props.markerPos} /> }
+        {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} /> }
+     </GoogleMap>
 ));
 

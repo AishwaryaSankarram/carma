@@ -105,7 +105,7 @@ export class MapContainer extends React.Component {
 	 	return (
 			<div className="gMap">
 			<div className="clearfix">
-			<div className="pull-left route_label">Routes for car {this.props.car.carId} </div>
+			<div className="pull-left route_label">Route for Car {this.props.car.carId} </div>
 			<div id="btn-submit-container"  className="pull-right ">
 				<button onClick={this.handleSubmit}> Submit </button>
 			</div>

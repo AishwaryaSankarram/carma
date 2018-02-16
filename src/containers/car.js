@@ -25,15 +25,17 @@ export class Car extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    const gpsCanServers = ["192.168.1.74","192.168.1.75","192.168.1.76","192.168.1.77","192.168.1.78"];
+    const v2xServers = ["192.168.1.64","192.168.1.65","192.168.1.66","192.168.1.67","192.168.1.68"];
     var defaultParams = {
       stepSize:"1",
-      startAtSec:"4434353452300",
-      v2xServer:"192.168.1.17",
-      gpsCanServer:"192.168.1.17",
-      remoteIp: "192.168.1.9",
+      startAtSec:"4434353452300", 
+      v2xServer: v2xServers[this.props.carIndex % 5],
+      gpsCanServer: gpsCanServers[this.props.carIndex % 5],
+      remoteIp: "192.168.1.17",
       remotePath:"/tmp/",
-      remotePass:"carma123",
-      remoteUser:"mohamed"
+      remotePass:"Cis_123@co",
+      remoteUser:"mouli"
     };  
     let carData = Object.assign(defaultParams, this.state);
     this.props.onSave(carData);

@@ -131,8 +131,8 @@ margin: 5px;
     display: block;
     content: "";
     clear: both;
-  }
-  .header_title{
+}
+.header_title{
     width: calc(100% - 400px);
     font-size: 25px;
     color: #93c84a;
@@ -140,4 +140,10 @@ margin: 5px;
     font-weight: bold;
     float: left;
     margin: 13px 0px;
-  }
+}
+.green {
+  color: #93c84a;
+}
+#car-panel {
+  height: 85px;
+}
