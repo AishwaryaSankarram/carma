@@ -43,32 +43,34 @@ export class MapContainer extends React.Component {
 
 	handleSubmit(){
 		console.log("Submit Clicked");
-    	let h = this.child.method(); // do stuff
-    	let selCar = this.props.car;
-    	if(selCar != null){
-    		selCar.poly =  this.createPoly(h);
-    	}
-    	selCar.poly[0].speed = selCar.speed;
-	    var payload = selCar;
-	    console.log(payload);
-	    var apiBaseUrl = "http://192.168.1.17:8080/granular/";
-	     axios.post(apiBaseUrl+'getGranularPoints', payload).then(function (response) {
-			 console.log(response);
-			 if(response.status === 200){
-			 	console.log("Rest Hit successful");
-			 }
-			 else{
-			 	console.log("Oops...! Rest HIT failed with--------" + response.status);
-			 }
-			 }).catch(function (error) {
-			 console.log("The error is------------", error);
-	 	});
-	 	selCar['isSaved'] = true;
-	 	selCar['drawPolyline']=this.state.drawPolyline;
-	 	selCar['markerCount'] = this.state.markerCount;
-		selCar['markers'] = this.state.markers;
-	 	selCar['showMarker'] = this.state.showMarker;
-	 	this.props.updateCar(selCar);
+		if(this.state.drawPolyline) {
+	    	let h = this.child.method(); // do stuff
+	    	let selCar = this.props.car;
+	    	if(selCar != null){
+	    		selCar.poly =  this.createPoly(h);
+	    	}
+	    	selCar.poly[0].speed = selCar.speed;
+		    var payload = selCar;
+		    console.log(payload);
+		    var apiBaseUrl = "http://192.168.1.17:8080/granular/";
+		     axios.post(apiBaseUrl+'getGranularPoints', payload).then(function (response) {
+				 console.log(response);
+				 if(response.status === 200){
+				 	console.log("Rest Hit successful");
+				 }
+				 else{
+				 	console.log("Oops...! Rest HIT failed with--------" + response.status);
+				 }
+				 }).catch(function (error) {
+				 console.log("The error is------------", error);
+		 	});
+		 	selCar['isSaved'] = true;
+		 	selCar['drawPolyline']=this.state.drawPolyline;
+		 	selCar['markerCount'] = this.state.markerCount;
+			selCar['markers'] = this.state.markers;
+		 	selCar['showMarker'] = this.state.showMarker;
+		 	this.props.updateCar(selCar);
+		 }
 	}
 
 	createPoly(poly){

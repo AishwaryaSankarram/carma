@@ -47,13 +47,15 @@ class App extends Component {
 
   showMap(e) {
     console.log("Display map for the selected car---------",  e.target.dataset.carid);
-    let carId = e.target.dataset.carid;
-    let cars = this.state.cars;
-    let selectedCar = cars.filter(function(car) {
-       return car.carId  === carId;
-     })[0];
-    console.log(selectedCar);
-    this.setState({mapOpen: true, selectedCar: selectedCar});
+    let carId = typeof e.target.dataset.carid === 'undefined' ? e.target.parentElement.dataset.carid : e.target.dataset.carid;
+    if(typeof carId !== 'undefined' && carId != null){
+      let cars = this.state.cars;
+      let selectedCar = cars.filter(function(car) {
+         return car.carId  === carId;
+       })[0];
+      console.log(selectedCar);
+      this.setState({mapOpen: true, selectedCar: selectedCar});
+    }
   }
 
   componentWillMount() {
