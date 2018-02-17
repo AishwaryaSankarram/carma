@@ -107,7 +107,7 @@ export class MapContainer extends React.Component {
 			<div className="clearfix">
 			<div className="pull-left route_label">Route for Car {this.props.car.carId} </div>
 			<div id="btn-submit-container"  className="pull-right ">
-				<button onClick={this.handleSubmit}> Submit </button>
+				<button onClick={this.handleSubmit} className="car_submit_disable"> Submit </button>
 			</div>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 

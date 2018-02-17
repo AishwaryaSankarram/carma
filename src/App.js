@@ -75,12 +75,12 @@ class App extends Component {
      for(let i = 0; i < this.state.count ; i++) {
             let car = this.state.cars[i];
             let t = (car === this.state.selectedCar) ? 'green' : '' ;
-            let button = <button key={car.carId} data-carid={car.carId} 
+            let button =<button key={car.carId} data-carid={car.carId} 
                        className={"pull-left load_car " + t} onClick={this.showMap}>
-                   <div className="fa fa-car"></div>
+                   <div className="fa fa-car "></div>
                    <div className="car_name_no">Car {this.state.cars[i].carId} </div>
               </button>;
-            let cloneIcon = <i key={'icon_' + car.carId} className="fa fa-plus pull-left" onClick={() => this.cloneCar(car)}></i>;
+            let cloneIcon = <i key={'icon_' + car.carId} className="fa fa-copy new_car_copy pull-left" onClick={() => this.cloneCar(car)}></i>;
             let btnHtml = car.isSaved ? ([button , cloneIcon]) : button ;
             buttons.push(
                btnHtml

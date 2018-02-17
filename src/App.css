@@ -147,4 +147,29 @@ margin: 5px;
 }
 #car-panel {
   height: 85px;
+  margin-top: 15px;
+  position: relative;
+}
+.no_car_lis{
+  position: relative;
+}
+.new_car_copy{
+    position: absolute;
+    top: 0px;
+    left: 65px;
+    background: #fff;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #4dadf7;
+    font-size: 16px !important;
+    padding: 4px;
+    border-radius: 15px;
+    display: none;
+}
+.green .new_car_copy{
+  display: block;
+}
+.car_submit_disable{
+    background: #afd8f7 !important;
+    cursor: no-drop;
 }
