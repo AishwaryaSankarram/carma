@@ -20,7 +20,7 @@ export class MapContainer extends React.Component {
 
 	componentWillReceiveProps(nextProps) { 
 		if(nextProps.car.carId !== this.state.car.carId){ //Reload the map on a different car
-			if(typeof nextProps.car.isSaved !== 'undefined' && nextProps.car.isSaved){ //Old map props retrieved for saved cars
+			if(typeof nextProps.car.poly !== 'undefined' && nextProps.car.poly && nextProps.car.poly.length > 0){ //Old map props retrieved for saved cars
 				let car = nextProps.car;
 				this.setState({
 					markers: car.markers,
@@ -107,7 +107,7 @@ export class MapContainer extends React.Component {
 			<div className="clearfix">
 			<div className="pull-left route_label">Route for Car {this.props.car.carId} </div>
 			<div id="btn-submit-container"  className="pull-right ">
-				<button onClick={this.handleSubmit} className="car_submit_disable"> Submit </button>
+				<button onClick={this.handleSubmit} className={this.props.car.isSaved ? "car_submit_disable" : ""}> Submit </button>
 			</div>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 
@@ -120,9 +120,6 @@ export class MapContainer extends React.Component {
 		</div>
 		);
 	}
-
-	
-
 
 	render() {
 		return this.displayMaps();

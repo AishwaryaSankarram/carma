@@ -44,6 +44,7 @@ export class Car extends Component {
       defaultParams.startAtSec =  new Date().getTime();
       defaultParams.v2xServer = v2xServers[this.props.carIndex % 5];
       defaultParams.gpsCanServer = gpsCanServers[this.props.carIndex % 5];
+      defaultParams.isSaved = false;
     }
     let carData = Object.assign(defaultParams, this.state); //Adding current params
     console.log("saving carData------" , carData);

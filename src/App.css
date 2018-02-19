@@ -150,9 +150,7 @@ margin: 5px;
   margin-top: 15px;
   position: relative;
 }
-.no_car_lis{
-  position: relative;
-}
+
 .new_car_copy{
     position: absolute;
     top: 0px;
@@ -172,4 +170,10 @@ margin: 5px;
 .car_submit_disable{
     background: #afd8f7 !important;
     cursor: no-drop;
+}
+
+.car-btn{
+  position: relative;
+  float: left;
+  display: inline;
 }
