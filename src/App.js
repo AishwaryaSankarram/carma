@@ -75,7 +75,7 @@ class App extends Component {
      for(let i = 0; i < this.state.count ; i++) {
             let car = this.state.cars[i];
             let t = (car === this.state.selectedCar) ? 'green' : '' ;
-            let hideClass = car.isSaved ? '' : 'hide';
+            let hideClass = (car.isSaved && car === this.state.selectedCar)? '' : 'hide';
            
             let btnHtml = <div key={car.carId} className="car-btn"><button key={car.carId} data-carid={car.carId} 
                        className={"pull-left load_car " + t} onClick={this.showMap}><div className="fa fa-car "></div> 
