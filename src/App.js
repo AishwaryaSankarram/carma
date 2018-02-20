@@ -103,7 +103,20 @@ class App extends Component {
   }
 
   drawMap(){
-    return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar}/>;
+  	let isSaved = this.state.selectedCar.isSaved ;
+  	let routes = [];
+  	if(isSaved){
+  		routes = [];
+  	}else{
+  		let cars = this.state.cars;
+  		let savedCars = cars.filter(function(car) {
+         	return car.isSaved;
+       });
+  		savedCars.map((car) => {
+  			routes.push(car.poly);
+  		});
+  	}
+    return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar} routes={routes} />;
   }
 
  render() {

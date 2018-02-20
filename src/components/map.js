@@ -3,6 +3,7 @@ import { compose, withProps } from "recompose";
 import {withScriptjs, withGoogleMap, GoogleMap} from "react-google-maps";
 import {MyMarker} from './marker';
 import {PolyLine} from './polyline';
+import {MultiPolyLine} from './multiPolyLine';
 
 export const MyMapComponent = compose(
   withProps({
@@ -29,7 +30,9 @@ export const MyMapComponent = compose(
       }} disableDefaultUI /> : 
       <GoogleMap defaultZoom={16} defaultCenter={props.markerCount > 0 ? props.markerPos[props.markerCount] : {lat: 37.35209000546612, lng: -121.95941368730672}} mapTypeId="roadmap" onClick={props.onClick}>
        {props.showMarker && <MyMarker markerPos={props.markerPos} /> }
-        {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} /> }
+       {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} /> }
+       {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} /> }
+
      </GoogleMap>
 ));
 

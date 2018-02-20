@@ -11,7 +11,8 @@ export class MapContainer extends React.Component {
 			markerCount: 0,
 			drawPolyline: false,
 			car: this.props.car, 
-			poly: []
+			poly: [], 
+			routes: this.props.routes 
 		} ;
 		this.handleClick = this.handleClick.bind(this);
 		this.displayMaps = this.displayMaps.bind(this);
@@ -32,7 +33,8 @@ export class MapContainer extends React.Component {
 					markerCount: car.markerCount,
 					drawPolyline: car.drawPolyline,
 					car: nextProps.car, 
-					poly: nextProps.car.poly
+					poly: nextProps.car.poly,
+					routes: nextProps.routes
 				});
 			}else{			//Rendering new map for unsaved car
 				this.setState({
@@ -40,7 +42,9 @@ export class MapContainer extends React.Component {
 					showMarker: false,
 					markerCount: 0,
 					drawPolyline: false,
-					car: nextProps.car
+					car: nextProps.car,
+					poly: [],
+					routes: nextProps.routes
 				});
 			}
 		}
@@ -186,6 +190,7 @@ export class MapContainer extends React.Component {
 							markerPos={this.state.markers}
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)} 
+							routes={this.state.routes} 
 			/>
 		</div>
 		);
