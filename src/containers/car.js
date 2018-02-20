@@ -61,6 +61,7 @@ export class Car extends Component {
               autoFocus
               type="text"
               value={this.state.carId}
+              placeholder="Number"
               onChange={this.handleChange}
             />
           </FormGroup>
@@ -69,6 +70,7 @@ export class Car extends Component {
             <FormControl
               type="text"
               value={this.state.speed}
+              placeholder="Meters per second"
               onChange={this.handleChange}
             />
             </FormGroup>

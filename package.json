@@ -9,6 +9,7 @@
     "axios": "^0.17.1",
     "font-awesome": "^4.7.0",
     "material-ui": "^0.20.0",
+    "polyline": "^0.2.0",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.1",
     "react-bootstrap-form": "^0.1.4-beta6",

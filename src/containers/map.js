@@ -10,11 +10,15 @@ export class MapContainer extends React.Component {
 			showMarker: false,
 			markerCount: 0,
 			drawPolyline: false,
-			car: this.props.car
+			car: this.props.car, 
+			poly: []
 		} ;
 		this.handleClick = this.handleClick.bind(this);
 		this.displayMaps = this.displayMaps.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.getPolySourceDestination = this.getPolySourceDestination.bind(this);
+		this.getPolyFromDirections = this.getPolyFromDirections.bind(this);
+		this.directionsCallback = this.directionsCallback.bind(this);
 
 	}
 
@@ -27,7 +31,8 @@ export class MapContainer extends React.Component {
 					showMarker: car.showMarker,
 					markerCount: car.markerCount,
 					drawPolyline: car.drawPolyline,
-					car: nextProps.car
+					car: nextProps.car, 
+					poly: nextProps.car.poly
 				});
 			}else{			//Rendering new map for unsaved car
 				this.setState({
@@ -41,36 +46,44 @@ export class MapContainer extends React.Component {
 		}
   	}
 
+  	getGranularPts(payload){
+  		var apiBaseUrl = "http://192.168.1.18:8090/granular/";
+	     axios.post(apiBaseUrl+'getGranularPoints', payload, {
+	     auth: {
+		    username: '5a8bcb8fbc66197777de2d90',
+		    password: 'test' }
+		  }).then(function (response) {
+			 console.log(response);
+			 if(response.status === 200){
+			 	console.log("Rest Hit successful");
+			 }
+			 else{
+			 	console.log("Oops...! Rest HIT failed with--------" + response.status);
+			 }
+			}).catch(function (error) {
+			 console.log("The error is------------", error);
+	 	});
+  	}
+
 	handleSubmit(){
 		console.log("Submit Clicked");
+		let selCar = this.props.car;
 		if(this.state.drawPolyline) {
-	    	let h = this.child.method(); // do stuff
-	    	let selCar = this.props.car;
+	    	let h = this.child.method(); // Get path from PolyLine drawn
 	    	if(selCar != null){
-	    		selCar.poly =  this.createPoly(h);
-	    	}
+				selCar.poly =  this.createPoly(h);
+			}
 	    	selCar.poly[0].speed = selCar.speed;
-		    var payload = selCar;
-		    console.log(payload);
-		    var apiBaseUrl = "http://192.168.1.17:8080/granular/";
-		     axios.post(apiBaseUrl+'getGranularPoints', payload).then(function (response) {
-				 console.log(response);
-				 if(response.status === 200){
-				 	console.log("Rest Hit successful");
-				 }
-				 else{
-				 	console.log("Oops...! Rest HIT failed with--------" + response.status);
-				 }
-				 }).catch(function (error) {
-				 console.log("The error is------------", error);
-		 	});
-		 	selCar['isSaved'] = true;
+			let payload = selCar;
+			this.getGranularPts(payload);
+			console.log(payload);
+			selCar['isSaved'] = true;
 		 	selCar['drawPolyline']=this.state.drawPolyline;
 		 	selCar['markerCount'] = this.state.markerCount;
 			selCar['markers'] = this.state.markers;
 		 	selCar['showMarker'] = this.state.showMarker;
 		 	this.props.updateCar(selCar);
-		 }
+	 	}
 	}
 
 	createPoly(poly){
@@ -80,28 +93,85 @@ export class MapContainer extends React.Component {
 		}
 		return p;
 	}
+
+	getPolySourceDestination() {
+		let markers = this.state.markers;
+		let origin=false, destination=false;
+		if(markers.length === 2){
+  		 origin = [markers[0].lat ,markers[0].lng];
+		 destination = [markers[1].lat , markers[1].lng];
+		}
+		console.log("sending props-----" , origin, destination);
+		return [origin, destination];
+	}
+
 	handleClick = (event) => {
 		console.log("Captured click event------------>", event);
 		if(this.state.markerCount < 2){
 		let e = event;
+		let poly = [];
 		let point = {lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
 		let existingMarkers = this.state.markers;
 		existingMarkers.push(point);
-		let drawPolyline = existingMarkers.length === 2;
+		let drawPolyline, routeApiBeCalled;
 		if(existingMarkers.length <= 2){
-			this.setState({
-				car: this.props.car,
-				markerCount: this.state.markerCount + 1,
-				markers: existingMarkers,
-				drawPolyline: drawPolyline,
-				showMarker: true
-			});
-		}
+            if(existingMarkers.length === 2) {
+            	drawPolyline = true;
+                routeApiBeCalled = confirm("Do you want Google to draw the route ?");
+	            if(routeApiBeCalled) {
+	            	console.log("Will call the web service");
+					this.getPolyFromDirections();	                
+            	}else{
+            		poly = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? 
+					this.props.car.poly : existingMarkers;
+            	}
+        	}
+        	this.setState({
+                car: this.props.car,
+                markerCount: this.state.markerCount + 1,
+                markers: existingMarkers,
+                drawPolyline: drawPolyline,
+                poly: poly,
+                showMarker: true
+            });
+       	 }
+	  }	
 	}
+
+	getPolyFromDirections(){
+		  const google = window.google;
+	      const DirectionsService = new google.maps.DirectionsService();
+	      let points = this.getPolySourceDestination();
+	      
+	      let o = points[0];
+	      let d = points[1];
+	      if(o && d) {
+	      	let directionsRequest = {
+	        origin: new google.maps.LatLng(parseFloat(o[0]), parseFloat(o[1])),
+	        destination: new google.maps.LatLng(parseFloat(d[0]), parseFloat(d[1])),
+	        travelMode: 'DRIVING'
+	      };
+	      DirectionsService.route(directionsRequest, this.directionsCallback);
+	  }
+	}
+
+	directionsCallback(result, status) {
+		console.log("result-------->", result);
+        console.log("status----------->", status);
+        let p = [];
+        if (status === "OK") {
+          let polyline = require('polyline');
+	      let z = polyline.decode(result.routes[0].overview_polyline); // returns an array of lat, lng pairs 
+	      for(let k=0; k < z.length; k++) {
+		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
+		  }
+		  this.setState({poly: p}); //ToDo: Handle this so that the component gets rendered only once
+		}else {
+          console.error('error fetching directions ');
+        }
 	}
 
 	displayMaps(){
-		let p = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? this.props.car.poly : this.state.markers;
 	 	return (
 			<div className="gMap">
 			<div className="clearfix">
@@ -111,17 +181,17 @@ export class MapContainer extends React.Component {
 			</div>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 
-		showMarker={this.state.showMarker} 
-		markerCount={this.state.markerCount} 
-		markerPos={this.state.markers}
-		drawPolyline={this.state.drawPolyline} poly={p}
-		onRef={ref => (this.child = ref)}
-		/>
+							showMarker={this.state.showMarker} 
+							markerCount={this.state.markerCount} 
+							markerPos={this.state.markers}
+							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
+							onRef={ref => (this.child = ref)} 
+			/>
 		</div>
 		);
 	}
 
 	render() {
 		return this.displayMaps();
-		}
+	}
 }
