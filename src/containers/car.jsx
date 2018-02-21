@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 //import axios from 'axios';
-import './car.css';
+import '../css/car.css';
 
 export class Car extends Component {
 	constructor(props) {

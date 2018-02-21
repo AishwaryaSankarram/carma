@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
-import {Car} from './containers/car';
-import {MapContainer} from './containers/map';
-import {MyMapComponent} from './components/map';
-import {Header} from './layouts/header';
-import {Footer} from './layouts/footer';
-import './App.css';
+import {Car} from './car.jsx';
+import {MapContainer} from './map.jsx';
+import {MyMapComponent} from '../components/map.jsx';
+import {Header} from '../layouts/header.jsx';
+import {Footer} from '../layouts/footer.jsx';
+import '../css/Hompage.css';
+import Login from './LoginPage.jsx'
 
-class App extends Component {
+export default class HomePage extends Component {
 
 
   constructor(props) {
     super(props);
       this.state = {
+      islogout:false,
       modalIsOpen: false,
       cars: [], //For drawing car icons based on no.of cars set
       count: 0,
@@ -27,6 +29,7 @@ class App extends Component {
     this.showMap = this.showMap.bind(this);
     this.updateCar = this.updateCar.bind(this);
     this.cloneCar = this.cloneCar.bind(this);
+    this.logout=this.logout.bind(this);
 
   }
 
@@ -103,6 +106,8 @@ class App extends Component {
   }
 
   drawMap(){
+    var loginData=localStorage.getItem("loginData");
+    var password=localStorage.getItem("pwd");
   	let isSaved = this.state.selectedCar.isSaved ;
   	let routes = [];
   	if(isSaved){
@@ -118,13 +123,22 @@ class App extends Component {
   			routes.push(route);
   		});
   	}
-    return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar} routes={routes} />;
+    return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar} routes={routes} loginData={loginData} pwd={password} />;
   }
-
+  logout(){
+    localStorage.clear();
+    console.log("local storage cleared---------");
+    this.setState({islogout:true})
+    console.log("go to login---------");
+    // {this.state.islogout ?( <LoginScreen appContext={this}/>): ''}
+    var LoginScreen=[];
+    LoginScreen.push(<Login appContext={this.props.appContext}/>);
+    this.props.appContext.setState({loginPage:LoginScreen});
+  }
  render() {
     return (
       <div className="App">
-        {<Header onBtnClick={this.openModal}/>}
+        {<Header onBtnClick={this.openModal} logout={this.logout}/>}
         {this.displayCars()}
         <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
@@ -141,5 +155,4 @@ class App extends Component {
     );
   }
 }
-export default App;
 

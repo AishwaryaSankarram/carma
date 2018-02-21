@@ -2,10 +2,16 @@ import React, {Component} from 'react';
 export class Header extends Component {
   constructor(props){
     super(props);
+    this.logout = this.logout.bind(this);
     this.handleBtnClick = this.handleBtnClick.bind(this);
   }
   handleBtnClick() {
+    
     this.props.onBtnClick(true);
+  }
+
+  logout(){
+    this.props.logout(true);
   }
   render(){
     return (
@@ -18,6 +24,9 @@ export class Header extends Component {
           <div className="header_title">Route Planner</div>
           <div className="add_car">
               <button onClick={this.handleBtnClick} className="new_car" title="Add Car"><i className="fa fa-plus">Add Car</i></button>
+          </div>
+          <div className="add_car">
+              <button className="logout_icon" title="Logout" onClick={this.logout}><i className="fa fa-sign-out"> </i></button>
           </div>
         </div>
     );

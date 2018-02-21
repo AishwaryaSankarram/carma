@@ -1,0 +1,14 @@
+.App_login {
+    text-align: center;
+}
+
+.login_header {
+    background: #93c849 !important;
+}
+
+.logout_icon {
+    float: right;
+    background: transparent;
+    border: none;
+    outline: none;
+}

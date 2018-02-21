@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {MyMapComponent} from '../components/map';
+import {MyMapComponent} from '../components/map.jsx';
 
 export class MapContainer extends React.Component {
 	constructor(props) {
@@ -51,11 +51,13 @@ export class MapContainer extends React.Component {
   	}
 
   	getGranularPts(payload){
+		var loginResp = JSON.parse(this.props.loginData);
+        var pwd = this.props.pwd;
   		var apiBaseUrl = "http://192.168.1.18:8090/granular/";
-	     axios.post(apiBaseUrl+'getGranularPoints', payload, {
+	     axios.post(apiBaseUrl+'createGranularPoints', payload, {
 	     auth: {
-		    username: '5a8bcb8fbc66197777de2d90',
-		    password: 'test' }
+			username: loginResp.uuid,
+			password: pwd }
 		  }).then(function (response) {
 			 console.log(response);
 			 if(response.status === 200){
@@ -70,6 +72,7 @@ export class MapContainer extends React.Component {
   	}
 
 	handleSubmit(){
+		
 		console.log("Submit Clicked");
 		let selCar = this.props.car;
 		if(this.state.drawPolyline) {
