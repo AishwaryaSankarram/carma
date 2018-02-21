@@ -15,7 +15,7 @@ export class MyMarker extends React.Component {
 
 	render() {
 		let markers = this.props.markerPos.map(function(marker) {
-            return <Marker key={marker.lat+"_"+marker.lng} position={marker} />;
+            return <Marker key={marker.lat+"_"+marker.lng} position={marker} draggable={true}/>;
         });
         console.log("Markers------------>", markers)
         return <div>{markers}</div>;

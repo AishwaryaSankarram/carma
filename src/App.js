@@ -113,7 +113,9 @@ class App extends Component {
          	return car.isSaved;
        });
   		savedCars.map((car) => {
-  			routes.push(car.poly);
+  			let route = car.poly;
+  			route[0].carId = car.carId;
+  			routes.push(route);
   		});
   	}
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar} routes={routes} />;
