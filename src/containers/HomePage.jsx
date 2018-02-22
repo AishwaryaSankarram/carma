@@ -132,8 +132,10 @@ export default class HomePage extends Component {
     console.log("go to login---------");
     // {this.state.islogout ?( <LoginScreen appContext={this}/>): ''}
     var LoginScreen=[];
-    LoginScreen.push(<Login appContext={this.props.appContext}/>);
-    this.props.appContext.setState({loginPage:LoginScreen});
+    window.location.reload();
+
+    // LoginScreen.push(<Login appContext={this.props.appContext}/>);
+    // this.props.ref.setState({loginPage:LoginScreen});
   }
  render() {
     return (
