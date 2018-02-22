@@ -96,27 +96,24 @@ export default class Login extends Component{
 
     populateHomePage(header) {
       let self = this;
-/*      console.log("Api url----------->" + apiUrl);
+      console.log("Api url----------->" + apiUrl);
         var apiBaseUrl = apiUrl + "granular/getGranularPoints/";
-         axios.get(apiBaseUrl + header.id, 
-         {params: {
-              page: 0,
-              size: 10
-          },
-           auth: {
-              username: header.uuid,
-              password: header.password }
-          }).then(function (response) {
+        let params = { page: 0, size: 10};
+        let auth = { username: header.uuid, password: header.password  }
+         axios.get(apiBaseUrl + header.id, {params: params, auth: auth}).then(function (response) {
               console.log(response);
               let cars = self.formCarArray(response.data);
-             if(response.status === 200){
-              console.log("Rest Hit successful");
-             }
-             else{
-              console.log("Oops...! Get Cars failed with--------" + response.status);
-             }*/
-          let homepage = <Home  appContext={self.props.appContext}/> ;
-          self.props.appContext.setState({loginPage:[homepage]});
+               if(response.status === 200){
+                console.log("Rest Hit successful");
+               }
+               else{
+                console.log("Oops...! Get Cars failed with--------" + response.status);
+               }
+               let homepage = <Home appContext={self.props.appContext} cars={cars} count={cars.length}/> ;
+               self.props.appContext.setState({loginPage:[homepage]});
+          }).catch(function (error) {
+                  console.log("The error is------------", error);
+          });
     }
 
     formCarArray(cars){

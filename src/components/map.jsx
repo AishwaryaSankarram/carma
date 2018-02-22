@@ -1,8 +1,8 @@
 import React from 'react';
 import { compose, withProps } from "recompose";
 import {withScriptjs, withGoogleMap, GoogleMap} from "react-google-maps";
-import {MyMarker} from './marker';
-import {PolyLine} from './PolyLine';
+import {MyMarker} from './marker.jsx';
+import {PolyLine} from './PolyLine.jsx';
 import {MultiPolyLine} from './multiPolyLine.jsx';
 
 export const MyMapComponent = compose(
