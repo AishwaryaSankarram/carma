@@ -154,7 +154,7 @@ margin: 5px;
 .new_car_copy{
     position: absolute;
     top: 0px;
-    left: 65px;
+    right:-3px;
     background: #fff;
     width: 25px;
     height: 25px;

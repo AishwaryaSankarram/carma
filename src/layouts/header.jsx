@@ -23,11 +23,16 @@ export class Header extends Component {
           </div>
           <div className="header_title">Route Planner</div>
           <div className="add_car">
-              <button onClick={this.handleBtnClick} className="new_car" title="Add Car"><i className="fa fa-plus">Add Car</i></button>
+              <button className="logout_icon new_car" title="Logout" onClick={this.logout} title="Logout">
+                <i className="fa fa-power-off"> </i>
+              </button>
           </div>
           <div className="add_car">
-              <button className="logout_icon" title="Logout" onClick={this.logout}><i className="fa fa-sign-out"> </i></button>
+              <button onClick={this.handleBtnClick} className="new_car" title="Add Car">
+              <i className="fa fa-plus"> Add Car</i>
+              </button>
           </div>
+
         </div>
     );
   }
