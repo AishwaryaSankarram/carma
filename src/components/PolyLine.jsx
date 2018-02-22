@@ -25,7 +25,6 @@ export class PolyLine extends React.Component {
 
     handleClick(e){
         console.log("click on polyline vertex----------->", e);
-        let latLng = e.latLng;
         let existingLine =  this.refs.gPolyLine;
         let vertex = e.vertex; 
         if(vertex > -1){
