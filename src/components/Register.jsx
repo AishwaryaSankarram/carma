@@ -15,6 +15,9 @@ const style = {
   },
 };
 
+const apiData = require('../utils/api.jsx');
+const apiUrl = apiData.baseUrl;
+
 export default class Register extends Component {
   constructor(props){
     super(props);
@@ -30,7 +33,7 @@ export default class Register extends Component {
     console.log("register page received props: ",nextProps);
   }
   handleClick(event){
-    var apiBaseUrl = "http://192.168.1.18:8090/";
+    var apiBaseUrl = apiUrl;
     // console.log("values in register handler",role);
     var self = this;
     if(this.state.name.length>0  && this.state.email.length>0 && this.state.password.length>0){

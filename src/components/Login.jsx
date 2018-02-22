@@ -4,9 +4,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import AppBar from 'material-ui/AppBar'
-import Home from '../containers/HomePage.jsx'
+import Home from '../containers/HomePage.jsx';
 import '../css/Login.css';
 
+const apiData = require('../utils/api.jsx');
+const apiUrl = apiData.baseUrl;
 const style = {
     margin: 15,
 // backgroundColor:"#93c849",
@@ -43,15 +45,13 @@ export default class Login extends Component{
             password:'',
             loginComponent:loginComponent,
         }
+        this.populateHomePage = this.populateHomePage.bind(this);
     }
     componentWillReceiveProps(nextProps){
         console.log("login component page received props: ",nextProps);
       }
     handleClick(event){
         var self = this;
-
-        //var apiBaseUrl = "http://localhost:8090/";
-        var apiBaseUrl = "http://192.168.1.18:8090/";
 
         var payload={
             "emailId":this.state.emailId,
@@ -61,7 +61,7 @@ export default class Login extends Component{
 
         axios({
             method: 'post',
-            url: apiBaseUrl+"user/login",
+            url: apiUrl + "user/login",
             data: payload,
             validateStatus: (status) => {
               return true; // I'm always returning true, you may want to do it depending on the status received
@@ -72,14 +72,13 @@ export default class Login extends Component{
             if(response.status === 200){
                 console.log("Login successful : "+JSON.stringify(response));
                 console.log("uuid==>"+response.data.uuid);
-                var header={"id":response.data.uuid,"password":payload.password};
+                var header={"uuid":response.data.uuid,"password":payload.password, id: response.data.id};
                 // alert("successfully logged in");
                 localStorage.setItem("loginData",JSON.stringify(response.data));
                 localStorage.setItem("pwd",payload.password);
 
                 // localStorage.setItem("password",payload.password);
-                  let homepage = <Home  appContext={self.props.appContext} /> ;
-                  self.props.appContext.setState({loginPage:[homepage]})
+                  self.populateHomePage(header);
                 }
             else if(response.status === 204){
                 console.log("Username password do not match");
@@ -93,6 +92,58 @@ export default class Login extends Component{
         .catch(function(data){
             console.log("error :"+data);
         });
+    }
+
+    populateHomePage(header) {
+      let self = this;
+/*      console.log("Api url----------->" + apiUrl);
+        var apiBaseUrl = apiUrl + "granular/getGranularPoints/";
+         axios.get(apiBaseUrl + header.id, 
+         {params: {
+              page: 0,
+              size: 10
+          },
+           auth: {
+              username: header.uuid,
+              password: header.password }
+          }).then(function (response) {
+              console.log(response);
+              let cars = self.formCarArray(response.data);
+             if(response.status === 200){
+              console.log("Rest Hit successful");
+             }
+             else{
+              console.log("Oops...! Get Cars failed with--------" + response.status);
+             }*/
+          let homepage = <Home  appContext={self.props.appContext}/> ;
+          self.props.appContext.setState({loginPage:[homepage]});
+    }
+
+    formCarArray(cars){
+      let carArray= [], ids = [];
+      for(let i=0; i< cars.length; i++){
+          let c=cars[i];
+          if(ids.indexOf(c.carId) === -1){
+            c.isSaved=true;
+            let poly = [];
+            c.poly.map(function(p) {
+                if(p.parent){
+                  poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng)});
+                }
+            });
+            c.poly = poly;
+            c.drawPolyline = true;
+            c.markerCount = 2;
+            c.showMarker = true;
+            c.markers = [
+              {lat: parseFloat(poly[0].lat), lng: parseFloat(poly[0].lng)}, 
+              {lat: parseFloat(poly[poly.length -1].lat), lng: parseFloat(poly[poly.length -1].lng)}
+            ];
+            carArray.push(c);
+            ids.push(c.carId);  
+          }
+      }
+      return carArray;
     }
 
     render() {

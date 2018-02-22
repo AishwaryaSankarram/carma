@@ -2,6 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import {MyMapComponent} from '../components/map.jsx';
 
+const apiData = require('../utils/api.jsx');
+const apiUrl = apiData.baseUrl;
+
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
@@ -67,7 +70,7 @@ export class MapContainer extends React.Component {
   	getGranularPts(payload){
 		var loginResp = JSON.parse(this.props.loginData);
         var pwd = this.props.pwd;
-  		var apiBaseUrl = "http://192.168.1.18:8090/granular/";
+  		var apiBaseUrl =  apiUrl + "granular/";
 	     axios.post(apiBaseUrl+'createGranularPoints', payload, {
 	     auth: {
 			username: loginResp.uuid,
