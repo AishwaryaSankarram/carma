@@ -4,6 +4,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Login from '../components/Login.jsx';
 import Register from '../components/Register.jsx';
 
+const style={
+  margin: 15,
+};
+
 export default class LoginPage extends Component {
   constructor(props){
     super(props);
@@ -37,12 +41,10 @@ export default class LoginPage extends Component {
                     })
   }
   handleClick(event){
-    var loginmessage;
+    var loginmessage, loginscreen=[], loginButtons=[];
     if(this.state.isLogin){
-      var loginscreen=[];
       loginscreen.push(<Register parentContext={this} appContext={this.props.appContext}/>);
       loginmessage = "Already registered.Go to Login";
-      var loginButtons=[];
       loginButtons.push(
         <div>
         <MuiThemeProvider>
@@ -60,8 +62,6 @@ export default class LoginPage extends Component {
                    })
     }
     else{
-      var loginButtons=[];
-      var loginscreen=[];
       loginButtons.push(
         <div>
         <MuiThemeProvider>
@@ -94,7 +94,5 @@ export default class LoginPage extends Component {
   }
 }
 
-const style={
-  margin: 15,
-};
+
 

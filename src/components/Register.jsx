@@ -8,6 +8,13 @@ import Login from './Login.jsx';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
+const style = {
+  margin: 15,
+  customWidth:{
+    width:200,
+  },
+};
+
 export default class Register extends Component {
   constructor(props){
     super(props);
@@ -23,7 +30,7 @@ export default class Register extends Component {
     console.log("register page received props: ",nextProps);
   }
   handleClick(event){
-    var apiBaseUrl = "http://localhost:8090";
+    var apiBaseUrl = "http://192.168.1.18:8090/";
     // console.log("values in register handler",role);
     var self = this;
     if(this.state.name.length>0  && this.state.email.length>0 && this.state.password.length>0){
@@ -43,7 +50,7 @@ export default class Register extends Component {
          var loginscreen=[];
          loginscreen.push(<Login parentContext={this} appContext={self.props.appContext}/>);
          
-         var loginmessage = "successfully registered";
+         var loginmessage = "Successfully Registered";
          var loginButtons=[];
         //  loginButtons.push(
         //    <div>
@@ -85,20 +92,20 @@ export default class Register extends Component {
            <TextField
              hintText="Enter your name"
              floatingLabelText="Name"
-             onChange = {(event,newValue) => this.setState({name:newValue})}
+             onChange={(event,newValue) => this.setState({name:newValue})}
              />
            <br/>
           <TextField
              hintText="Enter your email id"
              floatingLabelText="Email Id"
-             onChange = {(event,newValue) => this.setState({email:newValue})}
+             onChange={(event,newValue) => this.setState({email:newValue})}
              />
            <br/>
            <TextField
-             type = "password"
+             type="password"
              hintText="Enter your password"
              floatingLabelText="Password"
-             onChange = {(event,newValue) => this.setState({password:newValue})}
+             onChange={(event,newValue) => this.setState({password:newValue})}
              />
            <br/>
            {/* <div>
@@ -128,10 +135,5 @@ export default class Register extends Component {
 }
 
 
-const style = {
-  margin: 15,
-  customWidth:{
-    width:200,
-  },
-};
+
 

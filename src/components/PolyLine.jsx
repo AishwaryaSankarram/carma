@@ -31,10 +31,10 @@ export class PolyLine extends React.Component {
 
     render() {
         let x = < Polyline ref = "gPolyLine"
-        path = { this.props.pathCoordinates }
-        options = { this.state.lineOptions }
-        editable = { true }
-        draggable = { true }
+        path={ this.props.pathCoordinates }
+        options={ this.state.lineOptions }
+        editable={ true }
+        draggable={ true }
         />;
         return (
             x

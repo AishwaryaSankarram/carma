@@ -7,6 +7,11 @@ import AppBar from 'material-ui/AppBar'
 import Home from '../containers/HomePage.jsx'
 import '../css/Login.css';
 
+const style = {
+    margin: 15,
+// backgroundColor:"#93c849",
+};
+
 export default class Login extends Component{
     constructor(props){
         super(props);
@@ -18,14 +23,14 @@ export default class Login extends Component{
                          <TextField
                            hintText="Enter your email id"
                            floatingLabelText="Email Id"
-                           onChange = {(event,newValue) => this.setState({emailId:newValue})}
+                           onChange={(event,newValue) => this.setState({emailId:newValue})}
                           />
                   <br/>
                          <TextField
                            type="password"
                            hintText="Enter your password"
                            floatingLabelText="Password"
-                           onChange = {(event,newValue) => this.setState({password:newValue})}
+                           onChange={(event,newValue) => this.setState({password:newValue})}
                           />
                   <br/>
                            <RaisedButton className='login_button' label="Login" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
@@ -45,8 +50,8 @@ export default class Login extends Component{
     handleClick(event){
         var self = this;
 
-        var apiBaseUrl = "http://localhost:8090/";
-        // var apiBaseUrl = "http://192.168.1.18:8090/";
+        //var apiBaseUrl = "http://localhost:8090/";
+        var apiBaseUrl = "http://192.168.1.18:8090/";
 
         var payload={
             "emailId":this.state.emailId,
@@ -65,18 +70,16 @@ export default class Login extends Component{
         .then(function(response){
             console.log("====>"+response)
             if(response.status === 200){
-                console.log("Login successfull : "+JSON.stringify(response));
+                console.log("Login successful : "+JSON.stringify(response));
                 console.log("uuid==>"+response.data.uuid);
                 var header={"id":response.data.uuid,"password":payload.password};
                 // alert("successfully logged in");
-                var homepage=[];
                 localStorage.setItem("loginData",JSON.stringify(response.data));
                 localStorage.setItem("pwd",payload.password);
 
                 // localStorage.setItem("password",payload.password);
-
-                homepage.push(<Home  appContext={self.props.appContext}/>)
-                self.props.appContext.setState({loginPage:homepage})
+                  let homepage = <Home  appContext={self.props.appContext} /> ;
+                  self.props.appContext.setState({loginPage:[homepage]})
                 }
             else if(response.status === 204){
                 console.log("Username password do not match");
@@ -91,6 +94,7 @@ export default class Login extends Component{
             console.log("error :"+data);
         });
     }
+
     render() {
         return (
           <div>
@@ -105,9 +109,3 @@ export default class Login extends Component{
       }
     
 }
-
-const style = {
-    margin: 15,
-// backgroundColor:"#93c849",
-  };
-  
