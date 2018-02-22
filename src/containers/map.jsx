@@ -5,15 +5,28 @@ import {MyMapComponent} from '../components/map.jsx';
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			markers: [],
-			showMarker: false,
-			markerCount: 0,
-			drawPolyline: false,
-			car: this.props.car, 
-			poly: [], 
-			routes: this.props.routes 
-		} ;
+		if((typeof(this.props.car.poly) !== 'undefined') && this.props.car.poly.length > 0){
+			this.state = {
+				markers: this.props.car.markers,
+				showMarker: this.props.car.showMarker,
+				markerCount: this.props.car.markerCount,
+				drawPolyline: this.props.car.drawPolyline,
+				car: this.props.car, 
+				poly: this.props.car.poly, 
+				routes: this.props.routes 
+			};
+		}else{
+			this.state = {
+				markers: [],
+				showMarker: false,
+				markerCount: 0,
+				drawPolyline: false,
+				car: this.props.car, 
+				poly: [], 
+				routes: this.props.routes 
+				};
+		}
+		
 		this.handleClick = this.handleClick.bind(this);
 		this.displayMaps = this.displayMaps.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,6 +38,7 @@ export class MapContainer extends React.Component {
 
 	componentWillReceiveProps(nextProps) { 
 		if(nextProps.car.carId !== this.state.car.carId){ //Reload the map on a different car
+			console.log("Update render------------", nextProps.car);
 			if(typeof nextProps.car.poly !== 'undefined' && nextProps.car.poly && nextProps.car.poly.length > 0){ //Old map props retrieved for saved cars
 				let car = nextProps.car;
 				this.setState({
@@ -78,9 +92,11 @@ export class MapContainer extends React.Component {
 		if(this.state.drawPolyline) {
 	    	let h = this.child.method(); // Get path from PolyLine drawn
 	    	if(selCar != null){
-				selCar.poly =  this.createPoly(h);
+				selCar.poly =  h; 
 			}
-	    	selCar.poly[0].speed = selCar.speed;
+			if(typeof selCar.poly[0].speed === 'undefined'){
+				selCar.poly[0].speed = selCar.speed;
+			}
 			let payload = selCar;
 			this.getGranularPts(payload);
 			console.log(payload);
@@ -91,14 +107,6 @@ export class MapContainer extends React.Component {
 		 	selCar['showMarker'] = this.state.showMarker;
 		 	this.props.updateCar(selCar);
 	 	}
-	}
-
-	createPoly(poly){
-		let p = [];
-		for(let i=0; i< poly.length; i++) {
-			p.push({lat: poly[i].lat(), lng: poly[i].lng()});
-		}
-		return p;
 	}
 
 	getPolySourceDestination() {
@@ -112,37 +120,36 @@ export class MapContainer extends React.Component {
 		return [origin, destination];
 	}
 
-	handleClick = (event) => {
-		console.log("Captured click event------------>", event);
+	handleClick = (e) => {
+		console.log("Captured click event------------>", e);
 		if(this.state.markerCount < 2){
-		let e = event;
-		let poly = [];
-		let point = {lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
-		let existingMarkers = this.state.markers;
-		existingMarkers.push(point);
-		let drawPolyline, routeApiBeCalled;
-		if(existingMarkers.length <= 2){
-            if(existingMarkers.length === 2) {
-            	drawPolyline = true;
-                routeApiBeCalled = confirm("Do you want Google to draw the route ?");
-	            if(routeApiBeCalled) {
-	            	console.log("Will call the web service");
-					this.getPolyFromDirections();	                
-            	}else{
-            		poly = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? 
-					this.props.car.poly : existingMarkers;
-            	}
-        	}
-        	this.setState({
-                car: this.props.car,
-                markerCount: this.state.markerCount + 1,
-                markers: existingMarkers,
-                drawPolyline: drawPolyline,
-                poly: poly,
-                showMarker: true
-            });
-       	 }
-	  }	
+			let poly = [];
+			let point = {lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
+			let existingMarkers = this.state.markers;
+			existingMarkers.push(point);
+			let drawPolyline, routeApiBeCalled;
+			if(existingMarkers.length <= 2){
+	            if(existingMarkers.length === 2) {
+	            	drawPolyline = true;
+	                routeApiBeCalled = confirm("Do you want us to draw the route ?");
+		            if(routeApiBeCalled) {
+		            	console.log("Will call the web service");
+						this.getPolyFromDirections();	                
+	            	}else{
+	            		poly = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? 
+						this.props.car.poly : existingMarkers;
+	            	}
+	        	}
+	        	this.setState({
+	                car: this.props.car,
+	                markerCount: this.state.markerCount + 1,
+	                markers: existingMarkers,
+	                drawPolyline: drawPolyline,
+	                poly: poly,
+	                showMarker: true
+	            });
+	       	}
+	    }	
 	}
 
 	getPolyFromDirections(){
@@ -182,7 +189,7 @@ export class MapContainer extends React.Component {
 	 	return (
 			<div className="gMap">
 			<div className="clearfix">
-			<div className="pull-left route_label">Route for Car {this.props.car.carId} </div>
+			<div className="pull-left route_label">Plan your route for Car {this.props.car.carId} </div>
 			<div id="btn-submit-container"  className="pull-right ">
 				<button onClick={this.handleSubmit} className={this.props.car.isSaved ? "car_submit_disable" : ""}> Submit </button>
 			</div>
