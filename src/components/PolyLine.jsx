@@ -8,8 +8,8 @@ export class PolyLine extends React.Component {
                 strokeColor: '#FF0000',
                 strokeOpacity: 1.0,
                 strokeWeight: 2,
-                editable: true,
-                draggable: true
+                editable: this.props.allowEdit,
+                draggable: this.props.allowEdit
             }
         }
         this.method = this.method.bind(this);
@@ -61,8 +61,6 @@ export class PolyLine extends React.Component {
         let x = <Polyline ref="gPolyLine"
         path={ this.props.pathCoordinates }
         options={ this.state.lineOptions }
-        editable={ true }
-        draggable={ true }
         onClick={this.handleClick}
         />;
         return (

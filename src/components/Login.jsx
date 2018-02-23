@@ -20,7 +20,7 @@ export default class Login extends Component{
         var loginComponent=[];
         
         loginComponent.push(
-            <MuiThemeProvider>
+            <MuiThemeProvider key="login-fields">
                 <div>
                          <TextField
                            hintText="Enter your email id"
@@ -109,8 +109,9 @@ export default class Login extends Component{
                else{
                 console.log("Oops...! Get Cars failed with--------" + response.status);
                }
-               let homepage = <Home appContext={self.props.appContext} cars={cars} count={cars.length}/> ;
-               self.props.appContext.setState({loginPage:[homepage]});
+               let homepage = [];
+               homepage.push(<Home key="home-page" appContext={self.props.appContext} cars={cars} count={cars.length} />);
+               self.props.appContext.setState({loginPage: homepage});
           }).catch(function (error) {
                   console.log("The error is------------", error);
           });
@@ -132,10 +133,10 @@ export default class Login extends Component{
             c.drawPolyline = true;
             c.markerCount = 2;
             c.showMarker = true;
-            c.markers = [
-              {lat: parseFloat(poly[0].lat), lng: parseFloat(poly[0].lng)}, 
-              {lat: parseFloat(poly[poly.length -1].lat), lng: parseFloat(poly[poly.length -1].lng)}
-            ];
+            let last_index = poly.length -1;
+            c.markers = [];
+            c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
+            c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
             carArray.push(c);
             ids.push(c.carId);  
           }

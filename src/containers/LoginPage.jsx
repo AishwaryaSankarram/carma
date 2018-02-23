@@ -33,7 +33,7 @@ export default class LoginPage extends Component {
   }
   componentWillMount(){
     var loginscreen=[];
-    loginscreen.push(<Login parentContext={this} appContext={this.props.appContext}/>);
+    loginscreen.push(<Login key="login-page"  parentContext={this} appContext={this.props.appContext}/>);
     var loginmessage = "New user, Register Now";
     this.setState({
                   loginscreen:loginscreen,
@@ -43,7 +43,7 @@ export default class LoginPage extends Component {
   handleClick(event){
     var loginmessage, loginscreen=[], loginButtons=[];
     if(this.state.isLogin){
-      loginscreen.push(<Register parentContext={this} appContext={this.props.appContext}/>);
+      loginscreen.push(<Register key="register-page" parentContext={this} appContext={this.props.appContext}/>);
       loginmessage = "Already registered.Go to Login";
       loginButtons.push(
         <div>
@@ -71,7 +71,7 @@ export default class LoginPage extends Component {
          </MuiThemeProvider>
          </div>
       )
-      loginscreen.push(<Login parentContext={this} appContext={this.props.appContext}/>);
+      loginscreen.push(<Login key="login-page" parentContext={this} appContext={this.props.appContext}/>);
       loginmessage="Not Registered yet.Go to registration";
       this.setState({
                      loginscreen:loginscreen,

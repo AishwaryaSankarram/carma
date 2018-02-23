@@ -10,8 +10,8 @@ export default class App extends Component {
     
     var localData=[];
     localData=localStorage.getItem("loginData");
-    loginPage.push(<LoginPage appContext={this}/>);
-    homePage.push(<Home appContext={this}/>);
+    loginPage.push(<LoginPage key="login-page" appContext={this}/>);
+    homePage.push(<Home key="home-page" appContext={this}/>);
 
     this.state={
       loginPage:loginPage,

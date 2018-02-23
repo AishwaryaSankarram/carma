@@ -28,9 +28,10 @@ export const MyMapComponent = compose(
           rotateControl: false,
           fullscreenControl: false
       }} disableDefaultUI /> : 
-      <GoogleMap defaultZoom={16} defaultCenter={props.markerCount > 0 ? props.markerPos[props.markerCount] : {lat: 37.35209000546612, lng: -121.95941368730672}} mapTypeId="roadmap" onClick={props.onClick}>
-       {props.showMarker && <MyMarker markerPos={props.markerPos} /> }
-       {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} /> }
+      <GoogleMap defaultZoom={16} defaultCenter={{lat: 37.35209000546612, lng: -121.95941368730672}} mapTypeId="roadmap"
+       onClick={props.onClick}>
+       {props.showMarker && <MyMarker markerPos={props.markerPos} allowEdit={props.allowEdit} /> }
+       {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} allowEdit={props.allowEdit} /> }
        {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} /> }
 
      </GoogleMap>
