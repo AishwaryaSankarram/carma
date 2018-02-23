@@ -89,9 +89,12 @@ export default class Register extends Component {
       <div>
         <MuiThemeProvider>
           <div>
-          <AppBar  className="login_header"
-             title="Register"
-           />
+              <div className="header_part">
+                  <div className="page_logo">
+                      <figure className="logo"><img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" /></figure>
+                  </div>
+              </div>
+           <div className="sing_in_wrapper clearfix">   
            <TextField
              hintText="Enter your name"
              floatingLabelText="Name"
@@ -120,6 +123,8 @@ export default class Register extends Component {
            </MuiThemeProvider>
            </div> */}
            <RaisedButton label="Register" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+           <RaisedButton label="Login" primary={true} style={style} />
+          </div>
           </div>
          </MuiThemeProvider>
       </div>

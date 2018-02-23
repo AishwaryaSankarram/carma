@@ -5,3 +5,13 @@
 .register_btn {
     background: #93c849 !important;
 }
+.sing_in_wrapper{
+	width: 400px;
+	    min-height: 270px;
+	margin: 60px auto;
+    border: 1px solid #ccc;
+        padding-bottom: 36px;
+}
+.sing_in_wrapper button{
+ 	background-color: #93c849 !important;
+}

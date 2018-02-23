@@ -21,7 +21,7 @@ export default class Login extends Component{
         
         loginComponent.push(
             <MuiThemeProvider>
-                <div>
+                <div className="sing_in_wrapper clearfix">
                          <TextField
                            hintText="Enter your email id"
                            floatingLabelText="Email Id"
@@ -36,6 +36,7 @@ export default class Login extends Component{
                           />
                   <br/>
                            <RaisedButton className='login_button' label="Login" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+                           <RaisedButton className='login_button' label="Sing Up" primary={true} style={style}/>
                </div>
            </MuiThemeProvider>
         )
@@ -150,9 +151,11 @@ export default class Login extends Component{
         return (
           <div>
             <MuiThemeProvider>
-            <AppBar className="login_header"
-                 title="Login"
-               />
+              <div className="header_part">
+                  <div className="page_logo">
+                      <figure className="logo"><img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" /></figure>
+                  </div>
+              </div>
             </MuiThemeProvider>
            {this.state.loginComponent}
           </div>

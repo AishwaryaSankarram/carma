@@ -3,3 +3,13 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.clearfix {
+    overflow: auto;
+}
+
+.clearfix::after {
+    display: block;
+    content: "";
+    clear: both;
+  }
