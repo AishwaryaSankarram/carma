@@ -7,7 +7,6 @@ import axios from 'axios';
 import Login from './Login.jsx';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
-
 const style = {
   margin: 15,
   customWidth:{
@@ -51,10 +50,11 @@ export default class Register extends Component {
        if(response.status === 200){
         //  console.log("registration successfull");
          var loginscreen=[];
-         loginscreen.push(<Login parentContext={this} appContext={self.props.appContext}/>);
-         
          var loginmessage = "Successfully Registered";
-         var loginButtons=[];
+
+         loginscreen.push(<Login parentContext={this} appContext={self.props.appContext} loginmessage={loginmessage} isLogin={true}/>);
+         
+        //  var loginButtons=[];
         //  loginButtons.push(
         //    <div>
         //    <MuiThemeProvider>
@@ -64,11 +64,16 @@ export default class Register extends Component {
         //     </MuiThemeProvider>
         //    </div>
         //  )
-         self.props.parentContext.setState({loginscreen:loginscreen,
-         loginmessage:loginmessage,
-         loginButtons:loginButtons,
-         isLogin:true
-          });
+
+        // let loginPage = <Register  appContext={self.props.appContext}/> ;
+        self.props.appContext.setState({loginPage:[loginscreen]
+      });
+
+        //  self.props.parentContext.setState({loginscreen:loginscreen,
+        //  loginmessage:loginmessage,
+        // //  loginButtons:loginButtons,
+        //  isLogin:true
+        //   });
        }
        else{
          console.log("some error ocurred",response.status);
@@ -123,12 +128,18 @@ export default class Register extends Component {
            </MuiThemeProvider>
            </div> */}
            <RaisedButton label="Register" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
-           <RaisedButton label="Login" primary={true} style={style} />
+           <RaisedButton label="Login" primary={true} style={style} onClick={(event) => this.login(event)}/>
           </div>
           </div>
          </MuiThemeProvider>
       </div>
     );
+  }
+  login(event){
+    let self=this;
+    let registerPage = <Login  appContext={self.props.appContext}/> ;
+    self.props.appContext.setState({loginPage:[registerPage]});
+
   }
   // handleMenuChange(value){
   //   var registerRole1;

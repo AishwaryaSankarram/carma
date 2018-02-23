@@ -6,6 +6,7 @@ import axios from 'axios';
 import AppBar from 'material-ui/AppBar'
 import Home from '../containers/HomePage.jsx';
 import '../css/Login.css';
+import Register from './Register'
 
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
@@ -36,7 +37,7 @@ export default class Login extends Component{
                           />
                   <br/>
                            <RaisedButton className='login_button' label="Login" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
-                           <RaisedButton className='login_button' label="Sing Up" primary={true} style={style}/>
+                           <RaisedButton className='login_button' label="Sing Up" primary={true} style={style} onClick={(event) => this.register(event)}/>
                </div>
            </MuiThemeProvider>
         )
@@ -51,6 +52,11 @@ export default class Login extends Component{
     componentWillReceiveProps(nextProps){
         console.log("login component page received props: ",nextProps);
       }
+    register(event){
+        let self = this;
+        let registerPage = <Register  appContext={self.props.appContext}/> ;
+        self.props.appContext.setState({loginPage:[registerPage]});
+    }
     handleClick(event){
         var self = this;
 
@@ -158,6 +164,7 @@ export default class Login extends Component{
               </div>
             </MuiThemeProvider>
            {this.state.loginComponent}
+           {this.props.loginmessage}
           </div>
         );
       }

@@ -1,47 +1,51 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 40px;
-  padding: 20px;
-  color: white;
+    background-color: #222;
+    height: 40px;
+    padding: 20px;
+    color: white;
 }
 
 .App-intro {
-  font-size: large;
+    font-size: large;
 }
-.new_car{
-      background: transparent;
+
+.new_car {
+    background: transparent;
     border: none;
 }
-.ReactModal__Content{
+
+.ReactModal__Content {
     width: 500px !important;
     max-height: 380px;
     left: 50% !important;
     margin-left: -250px;
-    margin-top:50px; 
+    margin-top: 50px;
 }
-.modal-title{
+
+.modal-title {
     font-size: 22px;
     text-align: center;
     margin-bottom: 20px;
-
 }
-.modal-title .icon-close{
-   background: transparent;
-   outline: none;
+
+.modal-title .icon-close {
+    background: transparent;
+    outline: none;
     border: none;
     margin: -46px -16px 10px 0px;
     font-size: 16px
 }
-.footer{
+
+.footer {
     position: fixed;
     width: 100%;
     bottom: 0;
@@ -50,91 +54,113 @@
     padding: 7px;
     margin-top: 20px;
 }
-.gMap{
-  height: 100%;
-  clear: both;
-}
-.route_label{
-  font-size: 16px;
-  font-weight: bold;
-  margin: 20px 20px 0px 10px;
-}
-.header_part {
-     -moz-transition: 0.4s ease-in-out all;
-     -webkit-transition: 0.4s ease-in-out all;
-     transition: 0.4s ease-in-out all;
-     -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
-     -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
-     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
-     background-color: #fff;
-     display: table;
-     width: 100%;
-     height: 60px;
-     -webkit-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
-     -moz-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
-     box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
 
- }
-.page_logo{
-  width: 200px;
-  float: left;
+.gMap {
+    height: 100%;
+    clear: both;
 }
-.page_logo .logo{
-   width: 200px;
-   margin: 13px 25px;
- }
-.page_logo .logo img{
-          width: 100%;
- }
-.new_car{
-  background: #4dadf7;
-  outline: none;
-  border:1px solid #fff;
-  padding: 6px;
-  color: #fff;
+
+.route_label {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px 20px 0px 10px;
 }
-.new_car .fa{margin: 0 5px;}
+
+.header_part {
+    -moz-transition: 0.4s ease-in-out all;
+    -webkit-transition: 0.4s ease-in-out all;
+    transition: 0.4s ease-in-out all;
+    -moz-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    display: table;
+    width: 100%;
+    height: 60px;
+    -webkit-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.3);
+}
+
+.page_logo {
+    width: 200px;
+    float: left;
+}
+
+.page_logo .logo {
+    width: 200px;
+    margin: 13px 25px;
+}
+
+.page_logo .logo img {
+    width: 100%;
+}
+
+.new_car {
+    background: #4dadf7;
+    outline: none;
+    border: 1px solid #fff;
+    padding: 6px;
+    color: #fff;
+}
+
+.new_car .fa {
+    margin: 0 5px;
+}
+
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
-.load_car{
-  background: transparent;
-  outline: none;
-  border:1px solid #93c84a;
-  margin: 10px;
-  padding: 0;
+
+.load_car {
+    background: transparent;
+    outline: none;
+    border: 1px solid #93c84a;
+    margin: 10px;
+    padding: 0;
 }
-.load_car .car_name_no{
+
+.load_car .car_name_no {
     border-top: 1px solid #93c84a;
     padding: 5px 10px;
 }
-.load_car .fa{
-font-size: 22px;
-margin: 5px;
+
+.load_car .fa {
+    font-size: 22px;
+    margin: 5px;
 }
-#btn-submit-container button{
-      background: #4dadf7;
-  outline: none;
-  border:1px solid #fff;
-  padding: 6px;
-  color: #fff;
-  margin: 10px;
+
+#btn-submit-container button {
+    background: #4dadf7;
+    outline: none;
+    border: 1px solid #fff;
+    padding: 6px;
+    color: #fff;
+    margin: 10px;
 }
-.add_car{
-  float: right;
-  margin: 10px;
+
+.add_car {
+    float: right;
+    margin: 10px;
 }
-.map-container{
-  height: 100%;
+
+.map-container {
+    height: 100%;
 }
+
 .clearfix::after {
     display: block;
     content: "";
     clear: both;
 }
-.header_title{
-    width: calc(100% - 400px);
+
+.header_title {
+    width: calc(100% - 500px);
     font-size: 25px;
     color: #93c84a;
     text-transform: uppercase;
@@ -142,19 +168,21 @@ margin: 5px;
     float: left;
     margin: 13px 0px;
 }
+
 .green {
-  color: #93c84a;
-}
-#car-panel {
-  height: 85px;
-  margin-top: 15px;
-  position: relative;
+    color: #93c84a;
 }
 
-.new_car_copy{
+#car-panel {
+    height: 85px;
+    margin-top: 15px;
+    position: relative;
+}
+
+.new_car_copy {
     position: absolute;
     top: 0px;
-    right:-3px;
+    right: -3px;
     background: #fff;
     width: 25px;
     height: 25px;
@@ -164,16 +192,18 @@ margin: 5px;
     border-radius: 15px;
     display: none;
 }
-.green .new_car_copy{
-  display: block;
+
+.green .new_car_copy {
+    display: block;
 }
-.car_submit_disable{
+
+.car_submit_disable {
     background: #afd8f7 !important;
     cursor: no-drop;
 }
 
-.car-btn{
-  position: relative;
-  float: left;
-  display: inline;
+.car-btn {
+    position: relative;
+    float: left;
+    display: inline;
 }

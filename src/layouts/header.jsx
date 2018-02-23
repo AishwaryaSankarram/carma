@@ -27,6 +27,11 @@ export class Header extends Component {
                 <i className="fa fa-power-off"> </i>
               </button>
           </div>
+          <div className="add_car hide">
+              <button className="logout_icon new_car" title="Start Simulation">
+                <i className="fa fa-play"> </i>
+              </button>
+          </div>
           <div className="add_car">
               <button onClick={this.handleBtnClick} className="new_car" title="Add Car">
               <i className="fa fa-plus"> Add Car</i>
