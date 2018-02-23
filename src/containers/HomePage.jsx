@@ -206,6 +206,7 @@ export default class HomePage extends Component {
 
   displayContent(){
     let content;
+    let mapCenter = apiData.mapCenter;
     if(this.state.mapOpen){
       content = this.drawMap();
     }else{
@@ -221,9 +222,10 @@ export default class HomePage extends Component {
             route[0].carId = car.carId;
             routes.push(route);
           });
+          mapCenter = routes[0][0];
           mapHeader = "Displaying routes for saved cars"
        }
-        content = <div className="gMap"><div className="clearfix"><div className="pull-left route_label">{mapHeader} </div> </div><MyMapComponent disabled="true" routes={routes} /></div>
+        content = <div className="gMap"><div className="clearfix"><div className="pull-left route_label">{mapHeader} </div> </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter}/></div>
     }
       return content;
   }

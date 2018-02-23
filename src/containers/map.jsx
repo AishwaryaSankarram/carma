@@ -36,6 +36,7 @@ export class MapContainer extends React.Component {
 		this.getPolySourceDestination = this.getPolySourceDestination.bind(this);
 		this.getPolyFromDirections = this.getPolyFromDirections.bind(this);
 		this.directionsCallback = this.directionsCallback.bind(this);
+		this.deriveMapCenter = this.deriveMapCenter.bind(this);
 
 	}
 
@@ -188,7 +189,26 @@ export class MapContainer extends React.Component {
         }
 	}
 
+	deriveMapCenter(){
+		let mapCenter;
+		if(this.props.car.isSaved){
+			 mapCenter = this.props.car.markers[0]; //Using saved car mapCenter
+		}else{
+			if(this.state.markers[0]){
+				mapCenter = this.state.markers[0]; //Using current car mapCenter
+			}else if(this.state.routes[0]){
+				mapCenter = this.state.routes[0][0]; //Using mapCenter from first route
+			}else{
+				const constants = require("../utils/constants.jsx"); 
+				mapCenter = constants.mapCenter; //Using mapCenter from constants
+			}
+		}
+		return mapCenter;
+	}
+
 	displayMaps(){
+		let mapCenter = this.deriveMapCenter();
+
 	 	return (
 			<div className="gMap">
 			<div className="clearfix">
@@ -204,6 +224,7 @@ export class MapContainer extends React.Component {
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)} 
 							routes={this.state.routes} allowEdit={!this.props.car.isSaved}
+							mapCenter={mapCenter}
 			/>
 		</div>
 		);
