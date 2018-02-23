@@ -21,7 +21,7 @@ export default class Login extends Component{
         var loginComponent=[];
         
         loginComponent.push(
-            <MuiThemeProvider>
+            <MuiThemeProvider key="login-fields">
                 <div className="sing_in_wrapper clearfix">
                          <TextField
                            hintText="Enter your email id"
@@ -103,27 +103,25 @@ export default class Login extends Component{
 
     populateHomePage(header) {
       let self = this;
-/*      console.log("Api url----------->" + apiUrl);
+      console.log("Api url----------->" + apiUrl);
         var apiBaseUrl = apiUrl + "granular/getGranularPoints/";
-         axios.get(apiBaseUrl + header.id, 
-         {params: {
-              page: 0,
-              size: 10
-          },
-           auth: {
-              username: header.uuid,
-              password: header.password }
-          }).then(function (response) {
+        let params = { page: 0, size: 10};
+        let auth = { username: header.uuid, password: header.password  }
+         axios.get(apiBaseUrl + header.id, {params: params, auth: auth}).then(function (response) {
               console.log(response);
               let cars = self.formCarArray(response.data);
-             if(response.status === 200){
-              console.log("Rest Hit successful");
-             }
-             else{
-              console.log("Oops...! Get Cars failed with--------" + response.status);
-             }*/
-          let homepage = <Home  appContext={self.props.appContext}/> ;
-          self.props.appContext.setState({loginPage:[homepage]});
+               if(response.status === 200){
+                console.log("Rest Hit successful");
+               }
+               else{
+                console.log("Oops...! Get Cars failed with--------" + response.status);
+               }
+               let homepage = [];
+               homepage.push(<Home key="home-page" appContext={self.props.appContext} cars={cars} count={cars.length} />);
+               self.props.appContext.setState({loginPage: homepage});
+          }).catch(function (error) {
+                  console.log("The error is------------", error);
+          });
     }
 
     formCarArray(cars){
@@ -142,10 +140,10 @@ export default class Login extends Component{
             c.drawPolyline = true;
             c.markerCount = 2;
             c.showMarker = true;
-            c.markers = [
-              {lat: parseFloat(poly[0].lat), lng: parseFloat(poly[0].lng)}, 
-              {lat: parseFloat(poly[poly.length -1].lat), lng: parseFloat(poly[poly.length -1].lng)}
-            ];
+            let last_index = poly.length -1;
+            c.markers = [];
+            c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
+            c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
             carArray.push(c);
             ids.push(c.carId);  
           }
