@@ -27,7 +27,7 @@ export const MyMapComponent = compose(
           zoomControl: false,
           rotateControl: false,
           fullscreenControl: false
-      }} disableDefaultUI /> : 
+      }} disableDefaultUI >  {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} /> } </GoogleMap> : 
       <GoogleMap defaultZoom={16} defaultCenter={{lat: 37.35209000546612, lng: -121.95941368730672}} mapTypeId="roadmap"
        onClick={props.onClick}>
        {props.showMarker && <MyMarker markerPos={props.markerPos} allowEdit={props.allowEdit} /> }

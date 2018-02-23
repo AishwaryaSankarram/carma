@@ -54,7 +54,7 @@ export default class Login extends Component{
       }
     register(event){
         let self = this;
-        let registerPage = <Register  appContext={self.props.appContext}/> ;
+        let registerPage = <Register key="register-page" appContext={self.props.appContext} /> ;
         self.props.appContext.setState({loginPage:[registerPage]});
     }
     handleClick(event){
@@ -85,7 +85,7 @@ export default class Login extends Component{
                 localStorage.setItem("pwd",payload.password);
 
                 // localStorage.setItem("password",payload.password);
-                  self.populateHomePage(header);
+                  self.populateHomePage();
                 }
             else if(response.status === 204){
                 console.log("Username password do not match");
@@ -101,55 +101,12 @@ export default class Login extends Component{
         });
     }
 
-    populateHomePage(header) {
-      let self = this;
-      console.log("Api url----------->" + apiUrl);
-        var apiBaseUrl = apiUrl + "granular/getGranularPoints/";
-        let params = { page: 0, size: 10};
-        let auth = { username: header.uuid, password: header.password  }
-         axios.get(apiBaseUrl + header.id, {params: params, auth: auth}).then(function (response) {
-              console.log(response);
-              let cars = self.formCarArray(response.data);
-               if(response.status === 200){
-                console.log("Rest Hit successful");
-               }
-               else{
-                console.log("Oops...! Get Cars failed with--------" + response.status);
-               }
-               let homepage = [];
-               homepage.push(<Home key="home-page" appContext={self.props.appContext} cars={cars} count={cars.length} />);
-               self.props.appContext.setState({loginPage: homepage});
-          }).catch(function (error) {
-                  console.log("The error is------------", error);
-          });
+    populateHomePage() {
+       let homepage = [];
+       homepage.push(<Home key="home-page" appContext={this.props.appContext}/>);
+       this.props.appContext.setState({loginPage: homepage});
     }
 
-    formCarArray(cars){
-      let carArray= [], ids = [];
-      for(let i=0; i< cars.length; i++){
-          let c=cars[i];
-          if(ids.indexOf(c.carId) === -1){
-            c.isSaved=true;
-            let poly = [];
-            c.poly.map(function(p) {
-                if(p.parent){
-                  poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng)});
-                }
-            });
-            c.poly = poly;
-            c.drawPolyline = true;
-            c.markerCount = 2;
-            c.showMarker = true;
-            let last_index = poly.length -1;
-            c.markers = [];
-            c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
-            c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
-            carArray.push(c);
-            ids.push(c.carId);  
-          }
-      }
-      return carArray;
-    }
 
     render() {
         return (

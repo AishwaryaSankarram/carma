@@ -7,13 +7,16 @@ import {Header} from '../layouts/header.jsx';
 import {Footer} from '../layouts/footer.jsx';
 import '../css/Hompage.css';
 import Login from './LoginPage.jsx'
+import axios from 'axios';
+const apiData = require('../utils/api.jsx');
+const apiUrl = apiData.baseUrl;
 
 export default class HomePage extends Component {
 
-
   constructor(props) {
     super(props);
-      this.state = {
+    this.loadCars = this.loadCars.bind(this);
+    this.state = {
           islogout:false,
           modalIsOpen: false,
           cars: this.props.cars, //For drawing car icons based on no.of cars set
@@ -22,6 +25,7 @@ export default class HomePage extends Component {
           sourceCar: {},
           mapOpen: false
     };
+
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.createCar = this.createCar.bind(this);
@@ -30,12 +34,67 @@ export default class HomePage extends Component {
     this.updateCar = this.updateCar.bind(this);
     this.cloneCar = this.cloneCar.bind(this);
     this.logout=this.logout.bind(this);
-
+    this.displayContent=this.displayContent.bind(this);
+    this.displayRoutes=this.displayRoutes.bind(this);
   }
 
+  loadCars(){
+    let self = this;
+    let localData=localStorage.getItem("loginData");
+    let password=localStorage.getItem("pwd");
+    let header = JSON.parse(localData);
+    console.log("Component bef render---->", localData);
+    let apiBaseUrl = apiUrl + 'granular/getGranularPoints/';
+    let params = { page: 0, size: 10};
+    let auth = { username: header.uuid, password: password  }
+     axios.get(apiBaseUrl + header.id, {params: params, auth: auth}).then(function (response) {
+          console.log(response);
+          let cars = self.formCarArray(response.data);
+           if(response.status === 200){
+            console.log("Get Cars Hit successful");
+           }
+           else{
+            console.log("Oops...! Get Cars failed with--------" + response.status);
+           }
+           self.setState({cars: cars, count: cars.length});
+      }).catch(function (error) {
+              console.log("The error is------------", error);
+      });
+  }
+
+
+  formCarArray(cars){
+      let carArray= [], ids = [];
+      for(let i=0; i< cars.length; i++){
+          let c=cars[i];
+          if(ids.indexOf(c.carId) === -1){
+            c.isSaved=true;
+            let poly = [];
+            c.poly.map(function(p) {
+                if(p.parent){
+                  poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng)});
+                }
+            });
+            c.poly = poly;
+            c.drawPolyline = true;
+            c.markerCount = 2;
+            c.showMarker = true;
+            let last_index = poly.length -1;
+            c.markers = [];
+            c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
+            c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
+            carArray.push(c);
+            ids.push(c.carId);  
+          }
+      }
+      return carArray;
+    }
+
   componentWillReceiveProps(nextProps){
-      if(nextProps.cars !== this.props.cars) {
+      if(nextProps.cars && nextProps.cars !== this.props.cars) {
         this.setState({cars: nextProps.cars, count: nextProps.count});
+      }else{
+        this.loadCars();  
       }
   }
 
@@ -63,7 +122,6 @@ export default class HomePage extends Component {
     if(typeof carId !== 'undefined' && carId != null){
       let cars = this.state.cars;
       let selectedCar = cars.filter(function(car) {
-         //console.log("Comparing--------->",  car.carId, carId)
          return car.carId  == carId;
        })[0];
       console.log(selectedCar);
@@ -73,6 +131,7 @@ export default class HomePage extends Component {
 
   componentWillMount() {
     Modal.setAppElement('div');
+    this.loadCars();
   }
 
   cloneCar(car) {
@@ -132,22 +191,45 @@ export default class HomePage extends Component {
   	}
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar} routes={routes} loginData={loginData} pwd={password} />;
   }
+
+  displayRoutes(){
+    this.setState({mapOpen: false, selectedCar: {}});
+  }
+
   logout(){
     localStorage.clear();
     console.log("local storage cleared---------");
     this.setState({islogout:true})
     console.log("go to login---------");
-    // {this.state.islogout ?( <LoginScreen appContext={this}/>): ''}
-    var LoginScreen=[];
     window.location.reload();
-
-    // LoginScreen.push(<Login appContext={this.props.appContext}/>);
-    // this.props.ref.setState({loginPage:LoginScreen});
   }
+
+  displayContent(){
+    let content;
+    if(this.state.mapOpen){
+      content = this.drawMap();
+    }else{
+      let cars = this.state.cars;
+      let routes = [];
+      let savedCars = cars.filter(function(car) {
+          return car.isSaved;
+       });
+       if(savedCars.length > 0){
+            savedCars.map((car) => {
+            let route = car.poly;
+            route[0].carId = car.carId;
+            routes.push(route);
+          });
+       }
+        content = <MyMapComponent disabled="true" routes={routes} />
+    }
+      return content;
+  }
+
  render() {
     return (
       <div className="App">
-        {<Header onBtnClick={this.openModal} logout={this.logout}/>}
+        {<Header onBtnClick={this.openModal} logout={this.logout} viewRoutes={this.displayRoutes}/>}
         {this.displayCars()}
         <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
@@ -158,7 +240,7 @@ export default class HomePage extends Component {
           </div>
             <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar}/>
         </Modal>
-        {this.state.mapOpen ?  this.drawMap() :  <MyMapComponent disabled="true" />}
+        {this.displayContent()}
         {<Footer />}
       </div>
     );

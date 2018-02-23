@@ -4,15 +4,22 @@ export class Header extends Component {
     super(props);
     this.logout = this.logout.bind(this);
     this.handleBtnClick = this.handleBtnClick.bind(this);
+    this.openRoutes = this.openRoutes.bind(this);
+
   }
+
   handleBtnClick() {
-    
     this.props.onBtnClick(true);
   }
 
   logout(){
     this.props.logout(true);
   }
+
+  openRoutes(){
+    this.props.viewRoutes();
+  }
+
   render(){
     return (
         <div className="header_part">
@@ -30,6 +37,11 @@ export class Header extends Component {
           <div className="add_car hide">
               <button className="logout_icon new_car" title="Start Simulation">
                 <i className="fa fa-play"> </i>
+              </button>
+          </div>
+          <div className="add_car">
+              <button className="logout_icon new_car" title="View Routes" onClick={this.openRoutes}>
+                <i className="fa fa-eye"> </i>
               </button>
           </div>
           <div className="add_car">

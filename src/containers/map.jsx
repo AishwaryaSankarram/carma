@@ -71,7 +71,7 @@ export class MapContainer extends React.Component {
 		var loginResp = JSON.parse(this.props.loginData);
         var pwd = this.props.pwd;
   		var apiBaseUrl =  apiUrl + "granular/";
-	     axios.post(apiBaseUrl+'createGranularPoints', payload, {
+	     axios.post(apiBaseUrl +'createGranularPoints', payload, {
 	     auth: {
 			username: loginResp.uuid,
 			password: pwd }

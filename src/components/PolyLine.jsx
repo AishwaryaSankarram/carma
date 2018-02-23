@@ -16,6 +16,13 @@ export class PolyLine extends React.Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    componentWillReceiveProps(nextProps){
+        let lineOptions = this.state.lineOptions;
+        lineOptions.editable = nextProps.allowEdit;
+        lineOptions.draggable = nextProps.allowEdit;
+        this.setState({lineOptions: lineOptions});
+    }
+
     componentDidMount() {
         this.props.onRef(this)
     }
@@ -58,9 +65,11 @@ export class PolyLine extends React.Component {
     }
 
     render() {
+        let lineOptions = this.state.lineOptions;
+        console.log("Rendering red polyline----------");
         let x = <Polyline ref="gPolyLine"
         path={ this.props.pathCoordinates }
-        options={ this.state.lineOptions }
+        options={ lineOptions }
         onClick={this.handleClick}
         />;
         return (

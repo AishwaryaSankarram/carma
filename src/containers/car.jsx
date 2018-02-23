@@ -3,7 +3,6 @@ import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 //import axios from 'axios';
 import '../css/car.css';
 const apiData = require('../utils/api.jsx');
-const apiUrl = apiData.baseUrl;
 
 
 export class Car extends Component {
