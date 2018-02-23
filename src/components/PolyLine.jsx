@@ -8,19 +8,10 @@ export class PolyLine extends React.Component {
                 strokeColor: '#FF0000',
                 strokeOpacity: 1.0,
                 strokeWeight: 2,
-                editable: this.props.allowEdit,
-                draggable: this.props.allowEdit
             }
         }
         this.method = this.method.bind(this);
         this.handleClick = this.handleClick.bind(this);
-    }
-
-    componentWillReceiveProps(nextProps){
-        let lineOptions = this.state.lineOptions;
-        lineOptions.editable = nextProps.allowEdit;
-        lineOptions.draggable = nextProps.allowEdit;
-        this.setState({lineOptions: lineOptions});
     }
 
     componentDidMount() {
@@ -65,12 +56,13 @@ export class PolyLine extends React.Component {
     }
 
     render() {
-        let lineOptions = this.state.lineOptions;
         console.log("Rendering red polyline----------");
         let x = <Polyline ref="gPolyLine"
         path={ this.props.pathCoordinates }
-        options={ lineOptions }
+        options={ this.state.lineOptions }
         onClick={this.handleClick}
+        editable={this.props.allowEdit}
+        draggable={this.props.allowEdit}
         />;
         return (
             x

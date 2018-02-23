@@ -211,6 +211,7 @@ export default class HomePage extends Component {
     }else{
       let cars = this.state.cars;
       let routes = [];
+      let mapHeader = "";
       let savedCars = cars.filter(function(car) {
           return car.isSaved;
        });
@@ -220,8 +221,9 @@ export default class HomePage extends Component {
             route[0].carId = car.carId;
             routes.push(route);
           });
+          mapHeader = "Displaying routes for saved cars"
        }
-        content = <MyMapComponent disabled="true" routes={routes} />
+        content = <div className="gMap"><div className="clearfix"><div className="pull-left route_label">{mapHeader} </div> </div><MyMapComponent disabled="true" routes={routes} /></div>
     }
       return content;
   }
