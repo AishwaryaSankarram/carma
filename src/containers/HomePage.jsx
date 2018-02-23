@@ -14,13 +14,13 @@ export default class HomePage extends Component {
   constructor(props) {
     super(props);
       this.state = {
-      islogout:false,
-      modalIsOpen: false,
-      cars: [], //For drawing car icons based on no.of cars set
-      count: 0,
-      selectedCar: {},
-      sourceCar: {},
-      mapOpen: false
+          islogout:false,
+          modalIsOpen: false,
+          cars: this.props.cars, //For drawing car icons based on no.of cars set
+          count: this.props.count,
+          selectedCar: {},
+          sourceCar: {},
+          mapOpen: false
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -31,6 +31,12 @@ export default class HomePage extends Component {
     this.cloneCar = this.cloneCar.bind(this);
     this.logout=this.logout.bind(this);
 
+  }
+
+  componentWillReceiveProps(nextProps){
+      if(nextProps.cars !== this.props.cars) {
+        this.setState({cars: nextProps.cars, count: nextProps.count});
+      }
   }
 
   openModal() {
@@ -52,12 +58,13 @@ export default class HomePage extends Component {
   }
 
   showMap(e) {
-    console.log("Display map for the selected car---------",  e.target.dataset.carid);
     let carId = typeof e.target.dataset.carid === 'undefined' ? e.target.parentElement.dataset.carid : e.target.dataset.carid;
+    console.log("Display map for the selected car---------",  carId);
     if(typeof carId !== 'undefined' && carId != null){
       let cars = this.state.cars;
       let selectedCar = cars.filter(function(car) {
-         return car.carId  === carId;
+         //console.log("Comparing--------->",  car.carId, carId)
+         return car.carId  == carId;
        })[0];
       console.log(selectedCar);
       this.setState({mapOpen: true, selectedCar: selectedCar});
@@ -157,4 +164,9 @@ export default class HomePage extends Component {
     );
   }
 }
+
+HomePage.defaultProps = {
+  cars: [],
+  count: 0
+};
 

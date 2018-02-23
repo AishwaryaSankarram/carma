@@ -3,7 +3,7 @@ import { Marker } from "react-google-maps";
 export class MyMarker extends React.Component {
 	constructor(props) {
 		super(props);
-	    this.state = { 'markerCount': 0 };
+	    this.state = { markerCount: 0 };
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -14,8 +14,9 @@ export class MyMarker extends React.Component {
   	}
 
 	render() {
+		let self = this;
 		let markers = this.props.markerPos.map(function(marker) {
-            return <Marker key={marker.lat+"_"+marker.lng} position={marker} draggable={true}/>;
+            return <Marker key={marker.lat+"_"+marker.lng} position={marker} draggable={self.props.allowEdit}/>;
         });
         console.log("Markers------------>", markers)
         return <div>{markers}</div>;

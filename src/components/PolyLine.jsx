@@ -8,8 +8,8 @@ export class PolyLine extends React.Component {
                 strokeColor: '#FF0000',
                 strokeOpacity: 1.0,
                 strokeWeight: 2,
-                editable: true,
-                draggable: true
+                editable: this.props.allowEdit,
+                draggable: this.props.allowEdit
             }
         }
         this.method = this.method.bind(this);
@@ -25,7 +25,6 @@ export class PolyLine extends React.Component {
 
     handleClick(e){
         console.log("click on polyline vertex----------->", e);
-        let latLng = e.latLng;
         let existingLine =  this.refs.gPolyLine;
         let vertex = e.vertex; 
         if(vertex > -1){
@@ -62,8 +61,6 @@ export class PolyLine extends React.Component {
         let x = <Polyline ref="gPolyLine"
         path={ this.props.pathCoordinates }
         options={ this.state.lineOptions }
-        editable={ true }
-        draggable={ true }
         onClick={this.handleClick}
         />;
         return (
