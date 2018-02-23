@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 //import axios from 'axios';
 import '../css/car.css';
+const apiData = require('../utils/api.jsx');
+const apiUrl = apiData.baseUrl;
+
 
 export class Car extends Component {
 	constructor(props) {
@@ -32,10 +35,10 @@ export class Car extends Component {
       startAtSec: new Date().getTime(), 
       v2xServer: v2xServers[this.props.carIndex % 5],
       gpsCanServer: gpsCanServers[this.props.carIndex % 5],
-      remoteIp: "192.168.1.17",
-      remotePath:"/tmp/",
-      remotePass:"Cis_123@co",
-      remoteUser:"mouli"
+      remoteIp: apiData.remoteIp,
+      remotePath:apiData.remotePath,
+      remotePass:apiData.remotePass,
+      remoteUser:apiData.remoteUser
     };  
     let sourceCar = this.props.sourceCar;
     if(Object.keys(sourceCar).length > 0){
