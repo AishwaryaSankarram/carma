@@ -37,7 +37,7 @@ export default class Login extends Component{
                           />
                   <br/>
                            <RaisedButton className='login_button' label="Login" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
-                           <RaisedButton className='login_button' label="Sing Up" primary={true} style={style} onClick={(event) => this.register(event)}/>
+                           <RaisedButton className='login_button' label="Sign Up" primary={true} style={style} onClick={(event) => this.register(event)}/>
                </div>
            </MuiThemeProvider>
         )

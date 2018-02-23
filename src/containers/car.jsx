@@ -73,7 +73,7 @@ export class Car extends Component {
             <FormControl
               type="text"
               value={this.state.speed}
-              placeholder="Meters per second"
+              placeholder="Miles per hour"
               onChange={this.handleChange}
             />
             </FormGroup>
