@@ -159,6 +159,7 @@ export default class Login extends Component{
                   <div className="page_logo">
                       <figure className="logo"><img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" /></figure>
                   </div>
+                  <div className="header_title">Carma Route Planner</div>
               </div>
             </MuiThemeProvider>
            {this.state.loginComponent}

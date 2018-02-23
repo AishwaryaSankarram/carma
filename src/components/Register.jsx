@@ -98,6 +98,7 @@ export default class Register extends Component {
                   <div className="page_logo">
                       <figure className="logo"><img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" /></figure>
                   </div>
+                  <div className="header_title">Carma Route Planner</div>
               </div>
            <div className="sing_in_wrapper clearfix">   
            <TextField

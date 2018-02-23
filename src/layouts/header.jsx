@@ -21,7 +21,7 @@ export class Header extends Component {
                 <img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks"/>
               </figure>
           </div>
-          <div className="header_title">Route Planner</div>
+          <div className="header_title">Carma Route Planner</div>
           <div className="add_car">
               <button className="logout_icon new_car" title="Logout" onClick={this.logout}>
                 <i className="fa fa-power-off"> </i>
