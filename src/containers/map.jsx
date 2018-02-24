@@ -126,34 +126,50 @@ export class MapContainer extends React.Component {
 
 	handleClick = (e) => {
 		console.log("Captured click event------------>", e);
-		if(this.state.markerCount < 2){
-			let poly = [];
-			let point = {lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
-			let existingMarkers = this.state.markers;
-			existingMarkers.push(point);
-			let drawPolyline, routeApiBeCalled;
-			if(existingMarkers.length <= 2){
-	            if(existingMarkers.length === 2) {
-	            	drawPolyline = true;
-	                routeApiBeCalled = confirm("Do you want us to draw the route ?");
-		            if(routeApiBeCalled) {
-		            	console.log("Will call the web service");
-						this.getPolyFromDirections();	                
-	            	}else{
-	            		poly = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? 
-						this.props.car.poly : existingMarkers;
-	            	}
-	        	}
-	        	this.setState({
-	                car: this.props.car,
-	                markerCount: this.state.markerCount + 1,
-	                markers: existingMarkers,
-	                drawPolyline: drawPolyline,
-	                poly: poly,
-	                showMarker: true
-	            });
-	       	}
-	    }	
+        let self = this;
+        if(this.state.markerCount < 2){
+            let poly = [];
+            let point = {lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
+            let existingMarkers = this.state.markers;
+            existingMarkers.push(point);
+            let drawPolyline, routeApiBeCalled;
+            if(existingMarkers.length <= 2){
+                if(existingMarkers.length === 2) {
+                    drawPolyline = true;
+                    routeApiBeCalled = confirm("Do you want us to draw the route ?");
+                    if(routeApiBeCalled) {
+                        console.log("Will call the web service");
+                        this.getPolyFromDirections();                    
+                    }else{
+                        poly = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? 
+                        this.props.car.poly : existingMarkers;
+                    }
+                }
+                if(this.state.markerCount + 1 === 1 || routeApiBeCalled){
+                	this.setState({
+                    	markerCount: this.state.markerCount + 1,
+                    	markers: existingMarkers,
+                    	car: self.props.car,
+	                    drawPolyline: drawPolyline,
+	                    poly: poly,
+	                    showMarker: true
+               		 });
+                }else{
+                	this.setState({
+                    markerCount: this.state.markerCount + 1,
+                    markers: existingMarkers
+                	});
+	                setTimeout(function(){ 
+	                    self.setState({
+		                    car: self.props.car,
+		                    drawPolyline: drawPolyline,
+		                    poly: poly,
+		                    showMarker: true
+	                });
+	                },500);
+               }
+            }
+        }
 	}
 
 	getPolyFromDirections(){
