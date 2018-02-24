@@ -224,7 +224,9 @@ html, body {
     width: 100%;
     display: none;
 }
-
+.car_selected .load_car{
+    border-width: 2px;
+}
 .new_car_copy {
     position: absolute;
     top: 6px;
