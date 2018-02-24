@@ -145,6 +145,7 @@ html, body {
     border: 1px solid #93c84a;
     margin: 10px;
     padding: 0;
+    position: relative;
 }
 
 .load_car .car_name_no {
@@ -206,18 +207,50 @@ html, body {
     position: relative;
 }
 
+.car_active .new_car_copy ,.car_active .car_item_delete{
+    display: block !important;
+}
+.car_active .load_car{
+    border-width: 2px;
+    height: 64px;
+    margin: 10px 8px 8px 8px;
+}
+.car_active .load_car{
+    border-width: 2px;
+}
+.car_copy_btn{
+    position: absolute;
+    width: 100%;
+    display: none;
+}
+
 .new_car_copy {
     position: absolute;
-    top: 0px;
-    right: -3px;
+    top: 6px;
+    left: 5px;
     background: #fff;
-    width: 25px;
-    height: 25px;
+    width: 16px;
+    height: 16px;
     border: 1px solid #4dadf7;
-    font-size: 16px !important;
-    padding: 4px;
+    font-size: 10px !important;
+    padding: 2px;
     border-radius: 15px;
-    display: none;
+    display: none !important;
+    cursor: pointer;
+}
+.car_item_delete {
+    position: absolute;
+    top: 6px;
+    right: 2px;
+    background: #fff;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #4dadf7;
+    font-size: 12px !important;
+    padding: 2px;
+    border-radius: 15px;
+    display: none !important;
+    cursor: pointer;
 }
 
 .green .new_car_copy {
