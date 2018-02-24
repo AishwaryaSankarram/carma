@@ -176,19 +176,20 @@ export default class HomePage extends Component {
     var password=localStorage.getItem("pwd");
   	let isSaved = this.state.selectedCar.isSaved ;
   	let routes = [];
-  	if(isSaved){
+    let self = this;
+/*  	if(isSaved){
   		routes = [];
-  	}else{
+  	}else{*/
   		let cars = this.state.cars;
   		let savedCars = cars.filter(function(car) {
-         	return car.isSaved;
+         	return car.isSaved && car.carId != self.state.selectedCar.carId;
        });
   		savedCars.map((car) => {
   			let route = car.poly;
   			route[0].carId = car.carId;
   			routes.push(route);
   		});
-  	}
+  	// }
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar} routes={routes} loginData={loginData} pwd={password} />;
   }
 
