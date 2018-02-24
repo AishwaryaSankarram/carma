@@ -5,7 +5,7 @@ export class PolyLine extends React.Component {
         super(props);
         this.state = {
             lineOptions: {
-                strokeColor: '#FF0000',
+                strokeColor: this.props.color,
                 strokeOpacity: 1.0,
                 strokeWeight: 2,
             }
@@ -24,7 +24,7 @@ export class PolyLine extends React.Component {
     handleClick(e){
         console.log("click on polyline vertex----------->", e);
         let existingLine =  this.refs.gPolyLine;
-        let vertex = e.vertex; 
+        let vertex = e.vertex;
         if(vertex > -1){
             let speed = prompt("Please enter the speed at this point.");
             if(speed > 0){
@@ -33,15 +33,15 @@ export class PolyLine extends React.Component {
                existingLine.getPath().setAt(vertex, point);
             }
         }
-        
+
     }
 
     createPoly(poly){
-        let p = []; 
+        let p = [];
         for(let i=0; i< poly.length; i++) {
-            let obj = {lat: poly[i].lat(), lng: poly[i].lng()};    
-             if(typeof(poly[i].speed) !== 'undefined') 
-                obj.speed = poly[i].speed; 
+            let obj = {lat: poly[i].lat(), lng: poly[i].lng()};
+             if(typeof(poly[i].speed) !== 'undefined')
+                obj.speed = poly[i].speed;
             p.push(obj);
         }
         return p;
@@ -56,10 +56,16 @@ export class PolyLine extends React.Component {
     }
 
     render() {
-        console.log("Rendering red polyline----------");
+        let lineOptions = {
+            strokeColor: this.props.color,
+            strokeOpacity: 1.0,
+            strokeWeight: 2,
+            zIndex: 150
+        };
+        console.log("Rendering red polyline----------" , lineOptions , this.props);
         let x = <Polyline ref="gPolyLine"
         path={ this.props.pathCoordinates }
-        options={ this.state.lineOptions }
+        options={lineOptions}
         onClick={this.handleClick}
         editable={this.props.allowEdit}
         draggable={this.props.allowEdit}
