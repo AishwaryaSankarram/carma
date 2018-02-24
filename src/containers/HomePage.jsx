@@ -10,7 +10,9 @@ import Login from './LoginPage.jsx'
 import axios from 'axios';
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
-
+const localData=localStorage.getItem("loginData");
+const password=localStorage.getItem("pwd");
+const header = JSON.parse(localData);
 export default class HomePage extends Component {
 
   constructor(props) {
@@ -40,9 +42,9 @@ export default class HomePage extends Component {
 
   loadCars(){
     let self = this;
-    let localData=localStorage.getItem("loginData");
-    let password=localStorage.getItem("pwd");
-    let header = JSON.parse(localData);
+    // let localData=localStorage.getItem("loginData");
+    // let password=localStorage.getItem("pwd");
+    // let header = JSON.parse(localData);
     console.log("Component bef render---->", localData);
     let apiBaseUrl = apiUrl + 'granular/getGranularPoints/';
     let params = { page: 0, size: 10};
@@ -138,6 +140,31 @@ export default class HomePage extends Component {
     this.setState({sourceCar: car, modalIsOpen: true});
   }
 
+  deleteCar(car){
+    let self = this;
+    let url = apiUrl + 'granular/deleteCarDetails/'+ header.id+'?carId='+car.carId;
+    let auth = { username: header.uuid, password: password  }
+    console.log("carid==>"+car.carId);
+    let confimation="Do you want to delete the car "+car.carId+" ?";
+    let isDelete=confirm(confimation);
+    if(isDelete){
+      axios.delete(url, { auth: auth}).then(function (response) {
+        console.log(response);
+         if(response.status === 200){
+          console.log("Get Cars Hit successful");
+          // do the stuff after deleted....
+          window.location.reload();
+        }
+         else{
+          console.log("Oops...! Get Cars failed with--------" + response.status);
+         }
+    }).catch(function (error) {
+            console.log("The error is------------", error);
+    });
+    }
+    
+  }
+
   displayCars(){ 
      console.log("displaying cars---------");
      let buttons = [];
@@ -150,7 +177,7 @@ export default class HomePage extends Component {
                        className={"pull-left load_car " } onClick={this.showMap}><div className="fa fa-car "></div> 
                        <div className="car_name_no">Car {this.state.cars[i].carId} </div></button>
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
-                       <i key={'icon_' + car.carId} title="Delete" className='fa fa-trash-o car_item_delete '></i>
+                       <i key={'icon_' + car.carId} title="Delete" className='fa fa-trash-o car_item_delete ' onClick={() => this.deleteCar(car)}></i>
                        </div>
             buttons.push(
                btnHtml
