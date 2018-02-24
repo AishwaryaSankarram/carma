@@ -86,7 +86,7 @@ export default class HomePage extends Component {
             c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
             c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
             carArray.push(c);
-            ids.push(c.carId);  
+            ids.push(c.carId);
           }
       }
       return carArray;
@@ -96,7 +96,7 @@ export default class HomePage extends Component {
       if(nextProps.cars && nextProps.cars !== this.props.cars) {
         this.setState({cars: nextProps.cars, count: nextProps.count});
       }else{
-        this.loadCars();  
+        this.loadCars();
       }
   }
 
@@ -108,7 +108,7 @@ export default class HomePage extends Component {
     this.setState({modalIsOpen: false});
   }
 
-  createCar(carData){ 
+  createCar(carData){
     console.log("Creating a car");
     this.closeModal();
     let oldCars = this.state.cars;
@@ -141,20 +141,21 @@ export default class HomePage extends Component {
     this.setState({sourceCar: car, modalIsOpen: true});
   }
 
-  displayCars(){ 
+  displayCars(){
      console.log("displaying cars---------");
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
             let car = this.state.cars[i];
-            let t = (car === this.state.selectedCar) ? 'car_active ' : '' ;
-            let hideClass = (car.isSaved && car === this.state.selectedCar)? '' : 'hide';
+            // let t = (car === this.state.selectedCar) ? 'car_active ' : '' ;
+            let cloneIcon = (car.isSaved && car === this.state.selectedCar) ?  'car_active ' : '' ;
+            // let hideClass = (car.isSaved && car === this.state.selectedCar)? '' : '';
             let colorClass = constants.color_classes[constants.color_codes.indexOf(car.color)];
-            let btnHtml = <div key={car.carId}  className={"car-btn "+ t + colorClass}>
-                        <button key={car.carId} data-carid={car.carId} 
-                       className={"pull-left load_car " } onClick={this.showMap}><div className="fa fa-car "></div> 
+            let btnHtml = <div key={'div_' + car.carId}  className={"car-btn "+ cloneIcon + colorClass}>
+                        <button key={'btn_' + car.carId} data-carid={car.carId}
+                       className={"pull-left load_car " } onClick={this.showMap}><div className="fa fa-car "></div>
                        <div className="car_name_no">Car {this.state.cars[i].carId} </div></button>
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
-                       <i key={'icon_' + car.carId} title="Delete" className='fa fa-trash-o car_item_delete '></i>
+                       <i key={'icon_trash_' + car.carId} title="Delete" className='fa fa-trash-o car_item_delete '></i>
                        </div>
             buttons.push(
                btnHtml
@@ -247,7 +248,7 @@ export default class HomePage extends Component {
         {this.displayCars()}
         <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
-          shouldCloseOnOverlayClick={false} 
+          shouldCloseOnOverlayClick={false}
           contentLabel="Car Details">
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details
           <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" onClick={this.closeModal}><div></div></button></div>
@@ -264,4 +265,3 @@ HomePage.defaultProps = {
   cars: [],
   count: 0
 };
-

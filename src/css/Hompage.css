@@ -207,7 +207,7 @@ html, body {
     position: relative;
 }
 
-.car_active .new_car_copy ,.car_active .car_item_delete{
+.car_active .new_car_copy{
     display: block !important;
 }
 .car_active .load_car{
@@ -237,6 +237,7 @@ html, body {
     border-radius: 15px;
     display: none !important;
     cursor: pointer;
+    color: #4dadf7;
 }
 .car_item_delete {
     position: absolute;
@@ -245,12 +246,12 @@ html, body {
     background: #fff;
     width: 16px;
     height: 16px;
-    border: 1px solid #4dadf7;
+    border: 1px solid #f29d67;
     font-size: 12px !important;
     padding: 2px;
     border-radius: 15px;
-    display: none !important;
     cursor: pointer;
+    color: #f29d67;
 }
 
 .green .new_car_copy {
