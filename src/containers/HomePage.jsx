@@ -143,13 +143,14 @@ export default class HomePage extends Component {
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
             let car = this.state.cars[i];
-            let t = (car === this.state.selectedCar) ? 'green' : '' ;
+            let t = (car === this.state.selectedCar) ? 'car_active' : '' ;
             let hideClass = (car.isSaved && car === this.state.selectedCar)? '' : 'hide';
            
-            let btnHtml = <div key={car.carId} className="car-btn"><button key={car.carId} data-carid={car.carId} 
-                       className={"pull-left load_car " + t} onClick={this.showMap}><div className="fa fa-car "></div> 
+            let btnHtml = <div key={car.carId}  className={"car-btn "+ t}><button key={car.carId} data-carid={car.carId} 
+                       className={"pull-left load_car " } onClick={this.showMap}><div className="fa fa-car "></div> 
                        <div className="car_name_no">Car {this.state.cars[i].carId} </div></button>
-                       <i key={'icon_' + car.carId} className={'fa fa-copy new_car_copy pull-left ' + hideClass} onClick={() => this.cloneCar(car)}></i>
+                       <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
+                       <i key={'icon_' + car.carId} title="Delete" className='fa fa-trash-o car_item_delete '></i>
                        </div>
             buttons.push(
                btnHtml
@@ -228,7 +229,7 @@ export default class HomePage extends Component {
           mapCenter = routes[0][0];
           mapHeader = "Displaying routes for saved cars"
        }
-        content = <div className="gMap"><div className="clearfix"><div className="pull-left route_label">{mapHeader} </div> </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter}/></div>
+        content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div> </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter}/></div>
     }
       return content;
   }
@@ -248,7 +249,6 @@ export default class HomePage extends Component {
             <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar}/>
         </Modal>
         {this.displayContent()}
-        {<Footer />}
       </div>
     );
   }
