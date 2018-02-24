@@ -17,8 +17,9 @@ export class MyMarker extends React.Component {
 		let self = this;
 		let icon = self.props.icon || ""
 		let title = self.props.title || "";
+		let zIndex = self.props.allowEdit ? 150 : 137 ;
 		let markers = this.props.markerPos.map(function(marker) {
-            return <Marker key={marker.lat+"_"+marker.lng} position={marker} draggable={self.props.allowEdit} icon={icon} title={title}/>;
+            return <Marker key={marker.lat+"_"+marker.lng} position={marker} zIndex={zIndex} draggable={self.props.allowEdit} icon={icon} title={title}/>;
         });
         console.log("Markers------------>", markers)
         return <div>{markers}</div>;
