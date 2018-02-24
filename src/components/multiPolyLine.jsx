@@ -1,5 +1,6 @@
 import React from 'react';
 import { Polyline, Marker } from "react-google-maps";
+import {MyMarker} from './marker.jsx';
 export class MultiPolyLine extends React.Component {
 	constructor(props){
 		super(props);
@@ -15,10 +16,13 @@ export class MultiPolyLine extends React.Component {
 	render(){
     console.log("Rendering Multiple Polylines--------------");
     let that = this;
+    let lineOptions = that.state.lineOptions;
+
     let pl = this.props.routes.map(function(line, index) {
+    lineOptions.strokeColor = '#0000FF' ; //ToDo set strokeColor from props
             return (
               <div key={"multi_" + index}>
-              <Marker key={line[0].lat+"_"+line[1].lng} position={line[0]} title={"Route of Car " + line[0].carId} icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"/>
+              <MyMarker markerPos={line[0].markerPos} allowEdit={false} title={"Route of Car " + line[0].carId} icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" />
               <Polyline key={index + "_polyline"}  path={line} options={that.state.lineOptions} editable={false} draggable={false}/> 
               </div>
               );

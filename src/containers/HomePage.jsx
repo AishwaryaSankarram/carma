@@ -187,6 +187,7 @@ export default class HomePage extends Component {
   		savedCars.map((car) => {
   			let route = car.poly;
   			route[0].carId = car.carId;
+        route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
   			routes.push(route);
   		});
   	// }
@@ -217,11 +218,12 @@ export default class HomePage extends Component {
       let savedCars = cars.filter(function(car) {
           return car.isSaved;
        });
-       if(savedCars.length > 0){
+       if(savedCars.length > 0){ /* Whether to view routes or display disabled map*/
             savedCars.map((car) => {
-            let route = car.poly;
-            route[0].carId = car.carId;
-            routes.push(route);
+              let route = car.poly;
+              route[0].carId = car.carId;
+              route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
+              routes.push(route);
           });
           mapCenter = routes[0][0];
           mapHeader = "Displaying routes for saved cars"
