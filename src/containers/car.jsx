@@ -68,7 +68,7 @@ export class Car extends Component {
             />
           </FormGroup>
           <FormGroup controlId="speed" bsSize="large">
-            <ControlLabel>Speed</ControlLabel>
+            <ControlLabel>Initial Speed</ControlLabel>
             <FormControl
               type="text"
               value={this.state.speed}
