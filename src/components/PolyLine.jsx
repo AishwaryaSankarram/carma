@@ -56,10 +56,12 @@ export class PolyLine extends React.Component {
     }
 
     render() {
+        let lineOptions = this.state.lineOptions;
+        lineOptions.strokeColor = this.props.color;
         console.log("Rendering red polyline----------");
         let x = <Polyline ref="gPolyLine"
         path={ this.props.pathCoordinates }
-        options={ this.state.lineOptions }
+        options={ lineOptions}
         onClick={this.handleClick}
         editable={this.props.allowEdit}
         draggable={this.props.allowEdit}

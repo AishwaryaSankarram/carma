@@ -19,7 +19,7 @@ export class MultiPolyLine extends React.Component {
     let lineOptions = that.state.lineOptions;
 
     let pl = this.props.routes.map(function(line, index) {
-    lineOptions.strokeColor = '#0000FF' ; //ToDo set strokeColor from props
+    lineOptions.strokeColor = line[0].color; //ToDo set strokeColor from props
             return (
               <div key={"multi_" + index}>
               <MyMarker markerPos={line[0].markerPos} allowEdit={false} title={"Route of Car " + line[0].carId} icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png" />

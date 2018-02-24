@@ -224,7 +224,7 @@ export class MapContainer extends React.Component {
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)} 
 							routes={this.state.routes} allowEdit={true}
-							mapCenter={mapCenter}
+							mapCenter={mapCenter} color={this.props.car.color}
 			/>
 		</div>
 		);

@@ -192,6 +192,7 @@ export default class HomePage extends Component {
   		savedCars.map((car) => {
   			let route = car.poly;
   			route[0].carId = car.carId;
+        route[0].color = car.color;
         route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
   			routes.push(route);
   		});
@@ -228,6 +229,7 @@ export default class HomePage extends Component {
               let route = car.poly;
               route[0].carId = car.carId;
               route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
+              route[0].color = car.color;
               routes.push(route);
           });
           mapCenter = routes[0][0];
