@@ -7,4 +7,35 @@
     margin: 0 auto;
     max-width: 320px;
   }
+
+  .car-icon-1 {
+  	color: #93c849;
+  }
+  .car-icon-2 {
+  	color: #3933ff;
+  }
+  .car-icon-3 {
+  	color: #d63715;
+  }
+  .car-icon-4 {
+  	color: #e084da;
+  }
+  .car-icon-5 {
+  	color: #23d6c;
+  }
+  .car-icon-6 {
+  	color: #d69823;
+  }
+  .car-icon-7 {
+  	color: #687154;
+  }
+  .car-icon-8 {
+  	color: #009c40;
+  }
+  .car-icon-9 {
+  	color: #d080cd;
+  }
+  .car-icon-10 {
+  	color: #aea5f3;
+  }
 }

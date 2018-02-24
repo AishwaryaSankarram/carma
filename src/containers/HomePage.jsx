@@ -9,6 +9,7 @@ import '../css/Hompage.css';
 import Login from './LoginPage.jsx'
 import axios from 'axios';
 const apiData = require('../utils/api.jsx');
+const constants = require('../utils/constants.jsx');
 const apiUrl = apiData.baseUrl;
 
 export default class HomePage extends Component {
@@ -79,6 +80,7 @@ export default class HomePage extends Component {
             c.drawPolyline = true;
             c.markerCount = 2;
             c.showMarker = true;
+            c.color = constants.color_codes[i % 10];
             let last_index = poly.length -1;
             c.markers = [];
             c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
@@ -110,8 +112,9 @@ export default class HomePage extends Component {
     console.log("Creating a car");
     this.closeModal();
     let oldCars = this.state.cars;
-    oldCars.push(carData);
     let oldCount = this.state.count;
+    carData.color = constants.color_codes[oldCount % 10];
+    oldCars.push(carData);
     let newCount = oldCount + 1;
     this.setState({cars: oldCars, count: newCount});
   }
@@ -143,10 +146,11 @@ export default class HomePage extends Component {
      let buttons = [];
      for(let i = 0; i < this.state.count ; i++) {
             let car = this.state.cars[i];
-            let t = (car === this.state.selectedCar) ? 'car_active' : '' ;
+            let t = (car === this.state.selectedCar) ? 'car_active ' : '' ;
             let hideClass = (car.isSaved && car === this.state.selectedCar)? '' : 'hide';
-           
-            let btnHtml = <div key={car.carId}  className={"car-btn "+ t}><button key={car.carId} data-carid={car.carId} 
+            let colorClass = constants.color_classes[constants.color_codes.indexOf(car.color)];
+            let btnHtml = <div key={car.carId}  className={"car-btn "+ t + colorClass}>
+                        <button key={car.carId} data-carid={car.carId} 
                        className={"pull-left load_car " } onClick={this.showMap}><div className="fa fa-car "></div> 
                        <div className="car_name_no">Car {this.state.cars[i].carId} </div></button>
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>

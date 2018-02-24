@@ -1,5 +1,5 @@
 import React from 'react';
-import { Polyline, Marker } from "react-google-maps";
+import { Polyline } from "react-google-maps";
 import {MyMarker} from './marker.jsx';
 export class MultiPolyLine extends React.Component {
 	constructor(props){
