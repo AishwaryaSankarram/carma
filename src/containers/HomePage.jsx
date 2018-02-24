@@ -4,9 +4,9 @@ import {Car} from './car.jsx';
 import {MapContainer} from './map.jsx';
 import {MyMapComponent} from '../components/map.jsx';
 import {Header} from '../layouts/header.jsx';
-import {Footer} from '../layouts/footer.jsx';
+// import {Footer} from '../layouts/footer.jsx';
 import '../css/Hompage.css';
-import Login from './LoginPage.jsx'
+// import Login from './LoginPage.jsx'
 import axios from 'axios';
 const apiData = require('../utils/api.jsx');
 const constants = require('../utils/constants.jsx');
@@ -36,7 +36,9 @@ export default class HomePage extends Component {
     this.cloneCar = this.cloneCar.bind(this);
     this.logout=this.logout.bind(this);
     this.displayContent=this.displayContent.bind(this);
+    this.updateCarPanel = this.updateCarPanel.bind(this);
     this.displayRoutes=this.displayRoutes.bind(this);
+    this.deleteCar = this.deleteCar.bind(this);
   }
 
   loadCars(){
@@ -117,7 +119,15 @@ export default class HomePage extends Component {
     this.closeModal();
     let oldCars = this.state.cars;
     let oldCount = this.state.count;
-    carData.color = constants.color_codes[oldCount % 10];
+    let index = oldCount;
+    if(oldCount > 0){
+      let oldColor = oldCars[oldCount -1].color;
+      let oldIndex = constants.color_codes.indexOf(oldColor);
+      if(oldIndex !== oldCount -1){
+        index = oldIndex + 1;
+      }
+    }
+    carData.color = constants.color_codes[index % 10];
     oldCars.push(carData);
     let newCount = oldCount + 1;
     this.setState({cars: oldCars, count: newCount});
@@ -146,32 +156,53 @@ export default class HomePage extends Component {
   }
 
   deleteCar(car){
-    const localData=localStorage.getItem("loginData");
-    const password=localStorage.getItem("pwd");
-    const header = JSON.parse(localData);
-
     let self = this;
-    let url = apiUrl + 'granular/deleteCarDetails/'+ header.id+'?carId='+car.carId;
-    let auth = { username: header.uuid, password: password  }
+    let carId = car.carId ;
     console.log("carid==>"+car.carId);
-    let confimation="Do you want to delete the car "+car.carId+" ?";
-    let isDelete=confirm(confimation);
+    let confimation = "Do you want to delete the car "+ car.carId + " ?";
+    let isDelete = confirm(confimation);
     if(isDelete){
-      axios.delete(url, { auth: auth}).then(function (response) {
-        console.log(response);
-         if(response.status === 200){
-          console.log("Get Cars Hit successful");
-          // do the stuff after deleted....
-          window.location.reload();
-        }
-         else{
-          console.log("Oops...! Get Cars failed with--------" + response.status);
-         }
-    }).catch(function (error) {
-            console.log("The error is------------", error);
-    });
+       if(car.isSaved){
+          const localData=localStorage.getItem("loginData");
+          const password=localStorage.getItem("pwd");
+          const header = JSON.parse(localData);
+          let url = apiUrl + 'granular/deleteCarDetails/' + header.id + '?carId=' + car.carId;
+          let auth = { username: header.uuid, password: password  };
+          axios.delete(url, { auth: auth}).then(function (response) {
+            console.log(response);
+             if(response.status === 200){
+              console.log("Delete Cars Hit successful");
+              self.updateCarPanel(carId, self);
+              window.reload();
+              // self.forceUpdate();
+            }
+             else{
+              console.log("Oops...! Get Cars failed with--------" + response.status);
+             }
+        }).catch(function (error) {
+                console.log("The error is------------" + error);
+        });
+      }else{
+          self.updateCarPanel(carId, self);
+      }
     }
-    
+  }
+
+  updateCarPanel(carId, self){
+      console.log("Updating cars------------");
+      let oldCars = self.state.cars;
+      let newCars = oldCars.filter(function(car) {
+          return car.carId != carId;
+       });
+      let oldCount = self.state.count;
+      let newCount = oldCount- 1;
+      if(newCount === 0){
+        self.setState({cars: newCars, count: newCount, selectedCar: {}, mapOpen: false});
+      }else{
+        let selCar = self.state.selectedCar.carId ? self.state.selectedCar : newCars[newCount -1];
+        self.setState({cars: newCars, count: newCount, selectedCar: selCar});
+      }
+      console.log("Updating cars complete------------");
   }
 
   displayCars(){
@@ -188,7 +219,7 @@ export default class HomePage extends Component {
                        className={"pull-left load_car " } onClick={this.showMap}><div className="fa fa-car "></div>
                        <div className="car_name_no">Car {this.state.cars[i].carId} </div></button>
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
-                       <i key={'icon_trash_' + car.carId} title="Delete" className='fa fa-trash-o car_item_delete '></i>
+                       <i key={'icon_trash_' + car.carId} title="Delete" className='fa fa-trash-o car_item_delete ' onClick={() => this.deleteCar(car)} ></i>
                        </div>
             buttons.push(
                btnHtml
@@ -213,7 +244,7 @@ export default class HomePage extends Component {
   drawMap(){
     var loginData=localStorage.getItem("loginData");
     var password=localStorage.getItem("pwd");
-  	let isSaved = this.state.selectedCar.isSaved ;
+  	// let isSaved = this.state.selectedCar.isSaved ;
   	let routes = [];
     let self = this;
 /*  	if(isSaved){
@@ -250,6 +281,7 @@ export default class HomePage extends Component {
     let content;
     let mapCenter = apiData.mapCenter;
     if(this.state.mapOpen){
+      console.log("Displaying content for car-------");
       content = this.drawMap();
     }else{
       let cars = this.state.cars;
@@ -258,6 +290,7 @@ export default class HomePage extends Component {
       let savedCars = cars.filter(function(car) {
           return car.isSaved;
        });
+
        if(savedCars.length > 0){ /* Whether to view routes or display disabled map*/
             savedCars.map((car) => {
               let route = car.poly;
@@ -268,6 +301,9 @@ export default class HomePage extends Component {
           });
           mapCenter = routes[0][0];
           mapHeader = "Displaying routes for saved cars"
+          console.log("Displaying routes for saved cars-------");
+       }else{
+            console.log("Displaying disabled true map-------");
        }
         content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div> </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter}/></div>
     }

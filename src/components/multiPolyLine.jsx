@@ -15,8 +15,6 @@ export class MultiPolyLine extends React.Component {
 
 	render(){
     console.log("Rendering Multiple Polylines--------------");
-    let that = this;
-
     let pl = this.props.routes.map(function(line, index) {
 		let lineOptions =  {
 																strokeColor: line[0].color,

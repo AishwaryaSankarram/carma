@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import RaisedButton from 'material-ui/RaisedButton';
 import Login from '../components/Login.jsx';
 import Register from '../components/Register.jsx';
 
-const style={
+/*const style={
   margin: 15,
-};
+};*/
 
 export default class LoginPage extends Component {
   constructor(props){
@@ -41,7 +41,7 @@ export default class LoginPage extends Component {
                     })
   }
   handleClick(event){
-    var loginmessage, loginscreen=[], loginButtons=[];
+    var loginmessage, loginscreen=[];
     if(this.state.isLogin){
       loginscreen.push(<Register key="register-page" parentContext={this} appContext={this.props.appContext}/>);
       loginmessage ='';
