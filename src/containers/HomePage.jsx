@@ -225,7 +225,7 @@ export default class HomePage extends Component {
           mapCenter = routes[0][0];
           mapHeader = "Displaying routes for saved cars"
        }
-        content = <div className="gMap"><div className="clearfix"><div className="pull-left route_label">{mapHeader} </div> </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter}/></div>
+        content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div> </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter}/></div>
     }
       return content;
   }
@@ -245,7 +245,6 @@ export default class HomePage extends Component {
             <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar}/>
         </Modal>
         {this.displayContent()}
-        {<Footer />}
       </div>
     );
   }
