@@ -10,9 +10,7 @@ import Login from './LoginPage.jsx'
 import axios from 'axios';
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
-const localData=localStorage.getItem("loginData");
-const password=localStorage.getItem("pwd");
-const header = JSON.parse(localData);
+
 export default class HomePage extends Component {
 
   constructor(props) {
@@ -45,7 +43,11 @@ export default class HomePage extends Component {
     // let localData=localStorage.getItem("loginData");
     // let password=localStorage.getItem("pwd");
     // let header = JSON.parse(localData);
+    const localData=localStorage.getItem("loginData");
+    const password=localStorage.getItem("pwd");
     console.log("Component bef render---->", localData);
+    const header = JSON.parse(localData);
+
     let apiBaseUrl = apiUrl + 'granular/getGranularPoints/';
     let params = { page: 0, size: 10};
     let auth = { username: header.uuid, password: password  }
@@ -141,6 +143,10 @@ export default class HomePage extends Component {
   }
 
   deleteCar(car){
+    const localData=localStorage.getItem("loginData");
+    const password=localStorage.getItem("pwd");
+    const header = JSON.parse(localData);
+
     let self = this;
     let url = apiUrl + 'granular/deleteCarDetails/'+ header.id+'?carId='+car.carId;
     let auth = { username: header.uuid, password: password  }
