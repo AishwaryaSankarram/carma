@@ -1,4 +1,4 @@
-@media all and (min-width: 480px) {
+
   .Car {
     padding: 25px 0;
   }
@@ -8,34 +8,45 @@
     max-width: 320px;
   }
 
-  .car-icon-1 {
+
+
+  .car-icon-1 .load_car ,.car-icon-1 .load_car .car_name_no{
   	color: #93c849;
+    border-color: #93c849 !important;
   }
-  .car-icon-2 {
+  .car-icon-2 .load_car ,.car-icon-2 .load_car .car_name_no{
   	color: #3933ff;
+    border-color: #3933ff  !important;
   }
-  .car-icon-3 {
+  .car-icon-3 .load_car ,.car-icon-3 .load_car .car_name_no{
   	color: #d63715;
+    border-color: #d63715 !important;
   }
-  .car-icon-4 {
+  .car-icon-4 .load_car ,.car-icon-4 .load_car .car_name_no{
   	color: #e084da;
+    border-color: #e084da !important;
   }
-  .car-icon-5 {
+  .car-icon-5 .load_car ,.car-icon-5 .load_car .car_name_no{
   	color: #23d6c;
+    border-color: #23d6c !important;
   }
-  .car-icon-6 {
+  .car-icon-6 .load_car ,.car-icon-6 .load_car .car_name_no{
   	color: #d69823;
+    border-color: #d69823 !important;
   }
-  .car-icon-7 {
+  .car-icon-7 .load_car ,.car-icon-7 .load_car .car_name_no{
   	color: #687154;
+    border-color: #687154 !important;
   }
-  .car-icon-8 {
+  .car-icon-8 .load_car ,.car-icon-8 .load_car .car_name_no{
   	color: #009c40;
+    border-color: #009c40 !important;
   }
-  .car-icon-9 {
+  .car-icon-9 .load_car ,.car-icon-9 .load_car .car_name_no{
   	color: #d080cd;
+    border-color: #d080cd !important;
   }
-  .car-icon-10 {
+  .car-icon-10 .load_car ,.car-icon-10 .load_car .car_name_no{
   	color: #aea5f3;
+    border-color: #aea5f3 !important;
   }
-}
