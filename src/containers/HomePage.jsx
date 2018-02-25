@@ -171,10 +171,10 @@ export default class HomePage extends Component {
           axios.delete(url, { auth: auth}).then(function (response) {
             console.log(response);
              if(response.status === 200){
-              console.log("Delete Cars Hit successful");
-              self.updateCarPanel(carId, self);
-              window.reload();
-              // self.forceUpdate();
+                console.log("Delete Cars Hit successful");
+                self.updateCarPanel(carId, self);
+                window.reload();
+                // self.forceUpdate();
             }
              else{
               console.log("Oops...! Get Cars failed with--------" + response.status);
@@ -199,7 +199,8 @@ export default class HomePage extends Component {
       if(newCount === 0){
         self.setState({cars: newCars, count: newCount, selectedCar: {}, mapOpen: false});
       }else{
-        let selCar = self.state.selectedCar.carId ? self.state.selectedCar : newCars[newCount -1];
+         //condition if the focus car is deleted
+        let selCar = (self.state.selectedCar.carId == carId) ? newCars[newCount -1] : self.state.selectedCar ;
         self.setState({cars: newCars, count: newCount, selectedCar: selCar});
       }
       console.log("Updating cars complete------------");
