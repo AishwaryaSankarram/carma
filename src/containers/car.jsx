@@ -58,12 +58,12 @@ export class Car extends Component {
       <div className="Car">
         <form onSubmit={this.handleSubmit}>
         <FormGroup controlId="carId" bsSize="large">
-            <ControlLabel>Car ID</ControlLabel>
+            <ControlLabel>Car Label</ControlLabel>
             <FormControl
               autoFocus
               type="text"
               value={this.state.carId}
-              placeholder="Number"
+              placeholder="Car Label"
               onChange={this.handleChange}
             />
           </FormGroup>

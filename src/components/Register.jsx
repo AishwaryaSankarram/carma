@@ -44,7 +44,7 @@ export default class Register extends Component {
       }
       console.log("payload : " +payload);
 
-      axios.post(apiBaseUrl+'/user/create', payload)
+      axios.post(apiBaseUrl+'user/create', payload)
       .then(function (response) {
        console.log(response);
        if(response.status === 200){
