@@ -212,13 +212,15 @@ export default class HomePage extends Component {
             // let t = (car === this.state.selectedCar) ? 'car_active ' : '' ;
             let cloneIcon = (car.isSaved && car === this.state.selectedCar) ?  'car_active ' : '' ;
             let activeClass = ( car === this.state.selectedCar )? ' car_selected' : '';
+            let showDelete = ( car === this.state.selectedCar )? ' ' : ' hide';
             let colorClass = constants.color_classes[constants.color_codes.indexOf(car.color)];
             let btnHtml = <div key={'div_' + car.carId}  className={"car-btn "+ cloneIcon + colorClass + activeClass}>
                         <button key={'btn_' + car.carId} data-carid={car.carId}
                        className={"pull-left load_car " } onClick={this.showMap}><div className="fa fa-car "></div>
                        <div className="car_name_no">{this.state.cars[i].carId} </div></button>
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
-                       <i key={'icon_trash_' + car.carId} title="Delete" className='fa fa-trash-o car_item_delete ' onClick={() => this.deleteCar(car)} ></i>
+                       <i key={'icon_trash_' + car.carId} title="Delete" className={'fa fa-trash-o car_item_delete' + showDelete}
+                        onClick={() => this.deleteCar(car)} ></i>
                        </div>
             buttons.push(
                btnHtml
