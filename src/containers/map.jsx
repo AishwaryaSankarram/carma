@@ -230,7 +230,7 @@ export class MapContainer extends React.Component {
 			<div className="clearfix">
 			<div className="pull-left route_label">Plan your route for Car {this.props.car.carId} </div>
 			<div id="btn-submit-container"  className="pull-right ">
-				<button onClick={this.handleSubmit} className={this.props.car.isSaved ? "car_submit_disable" : ""}> Submit </button>
+				<button onClick={this.handleSubmit} className={this.props.car.isSaved ? "car_submit_disable" : ""}> Save </button>
 			</div>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 
