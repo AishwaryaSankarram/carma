@@ -229,7 +229,7 @@ export class MapContainer extends React.Component {
 	      for(let k=0; k < z.length; k++) {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
-		  this.setState({poly: p}); //ToDo: Handle this so that the component gets rendered only once
+		  this.setState({poly: p, markers: [p[0], p[p.length -1]] }); //ToDo: Handle this so that the component gets rendered only once
 		}else {
           console.error('error fetching directions ');
         }
