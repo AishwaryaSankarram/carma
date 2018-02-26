@@ -12,6 +12,7 @@ export class PolyLine extends React.Component {
         }
         this.method = this.method.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleDrag = this.handleDrag.bind(this);
     }
 
     componentDidMount() {
@@ -55,6 +56,15 @@ export class PolyLine extends React.Component {
         return gPolyLine;
     }
 
+    handleDrag() {
+        console.log("Handling drag event on the polyline--------");
+        let p = this.refs.gPolyLine;
+        let pathArray = p.getPath().getArray();
+        let pathData = this.createPoly(pathArray);
+        this.props.dragHandler(pathData);
+    }
+
+
     render() {
         let lineOptions = {
             strokeColor: this.props.color,
@@ -67,6 +77,7 @@ export class PolyLine extends React.Component {
         path={ this.props.pathCoordinates }
         options={lineOptions}
         onClick={this.handleClick}
+        onDragEnd={this.handleDrag}
         editable={this.props.allowEdit}
         draggable={this.props.allowEdit}
         />;

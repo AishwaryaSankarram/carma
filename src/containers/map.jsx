@@ -37,7 +37,8 @@ export class MapContainer extends React.Component {
 		this.getPolyFromDirections = this.getPolyFromDirections.bind(this);
 		this.directionsCallback = this.directionsCallback.bind(this);
 		this.deriveMapCenter = this.deriveMapCenter.bind(this);
-
+		this.handleMarkerDrag = this.handleMarkerDrag.bind(this);
+		this.handlePolyDrag = this.handlePolyDrag.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) { 
@@ -172,6 +173,35 @@ export class MapContainer extends React.Component {
         }
 	}
 
+	handleMarkerDrag(markerPos, index) {
+		if(this.state.drawPolyline) {
+		  	let poly = this.child.method(); 
+		  	// let poly =  this.createPoly(h);
+		  	poly[0] = markerPos[0];
+		  	if(index === 1){  //Extend the poly line 
+		  		poly.pop();
+		  		poly.push(markerPos[1]);	
+		  	}else{ // alter the source of the poly line
+		  		poly.shift();
+		  		poly.unshift(markerPos[0]);
+		  	}
+			this.setState({
+				markers: markerPos,
+				poly: poly
+			});	  	
+		  }else{  //Maintain consistent marker states
+		  	this.setState({
+				markers: markerPos
+			});
+		  }
+	}
+
+	handlePolyDrag(poly){
+		this.setState({
+			markers: [poly[0], poly[poly.length - 1]]
+		});
+	}
+
 	getPolyFromDirections(){
 		  const google = window.google;
 	      const DirectionsService = new google.maps.DirectionsService();
@@ -241,6 +271,7 @@ export class MapContainer extends React.Component {
 							onRef={ref => (this.child = ref)} 
 							routes={this.state.routes} allowEdit={true}
 							mapCenter={mapCenter} color={this.props.car.color}
+							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 			/>
 		</div>
 		);
