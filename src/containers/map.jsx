@@ -41,7 +41,7 @@ export class MapContainer extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) { 
-		if(nextProps.car.carId !== this.state.car.carId){ //Reload the map on a different car
+		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes){ //Reload the map on a different car
 			console.log("Update render------------", nextProps.car);
 			if(typeof nextProps.car.poly !== 'undefined' && nextProps.car.poly && nextProps.car.poly.length > 0){ //Old map props retrieved for saved cars
 				let car = nextProps.car;

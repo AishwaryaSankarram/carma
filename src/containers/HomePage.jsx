@@ -170,7 +170,8 @@ export default class HomePage extends Component {
              if(response.status === 200){
                 console.log("Delete Cars Hit successful");
                 self.updateCarPanel(carId, self);
-                window.location.reload();
+                self.forceUpdate();
+                //window.location.reload();
                 // self.forceUpdate();
             }
              else{
