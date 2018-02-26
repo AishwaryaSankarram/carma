@@ -227,6 +227,7 @@ html, body {
 .car_selected .load_car{
     border-width: 2px;
     height: 64px;
+    background-color: #d6d6d6;
 }
 .new_car_copy {
     position: absolute;
