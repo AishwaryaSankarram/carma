@@ -83,7 +83,7 @@ export default class HomePage extends Component {
             c.drawPolyline = true;
             c.markerCount = 2;
             c.showMarker = true;
-            // c.color = constants.color_codes[i % 10];
+            c.color = c.color || constants.color_codes[i % 10];
             let last_index = poly.length -1;
             c.markers = [];
             c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
@@ -170,7 +170,7 @@ export default class HomePage extends Component {
              if(response.status === 200){
                 console.log("Delete Cars Hit successful");
                 self.updateCarPanel(carId, self);
-                window.reload();
+                window.location.reload();
                 // self.forceUpdate();
             }
              else{

@@ -107,7 +107,7 @@ export class MapContainer extends React.Component {
 			selCar['isSaved'] = true;
 		 	selCar['drawPolyline']=this.state.drawPolyline;
 		 	selCar['markerCount'] = this.state.markerCount;
-			selCar['markers'] = this.state.markers;
+			selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
 		 	selCar['showMarker'] = this.state.showMarker;
 		 	this.props.updateCar(selCar);
 	 	}
