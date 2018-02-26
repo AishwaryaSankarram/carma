@@ -43,9 +43,6 @@ export default class HomePage extends Component {
 
   loadCars(){
     let self = this;
-    // let localData=localStorage.getItem("loginData");
-    // let password=localStorage.getItem("pwd");
-    // let header = JSON.parse(localData);
     const localData=localStorage.getItem("loginData");
     const password=localStorage.getItem("pwd");
     console.log("Component bef render---->", localData);
@@ -86,7 +83,7 @@ export default class HomePage extends Component {
             c.drawPolyline = true;
             c.markerCount = 2;
             c.showMarker = true;
-            c.color = constants.color_codes[i % 10];
+            // c.color = constants.color_codes[i % 10];
             let last_index = poly.length -1;
             c.markers = [];
             c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
@@ -159,7 +156,7 @@ export default class HomePage extends Component {
     let self = this;
     let carId = car.carId ;
     console.log("carid==>"+car.carId);
-    let confimation = "Do you want to delete the car "+ car.carId + " ?";
+    let confimation = "Do you want to delete " + car.carId + " ?";
     let isDelete = confirm(confimation);
     if(isDelete){
        if(car.isSaved){
