@@ -37,8 +37,7 @@ export class MapContainer extends React.Component {
 		this.getPolyFromDirections = this.getPolyFromDirections.bind(this);
 		this.directionsCallback = this.directionsCallback.bind(this);
 		this.deriveMapCenter = this.deriveMapCenter.bind(this);
-		this.handleMarkerDrag = this.handleMarkerDrag.bind(this);
-		this.handlePolyDrag = this.handlePolyDrag.bind(this);
+
 	}
 
 	componentWillReceiveProps(nextProps) { 
@@ -136,15 +135,19 @@ export class MapContainer extends React.Component {
             let drawPolyline, routeApiBeCalled;
             if(existingMarkers.length <= 2){
                 if(existingMarkers.length === 2) {
-                    drawPolyline = true;
-                    routeApiBeCalled = confirm("Do you want us to draw the route ?");
-                    if(routeApiBeCalled) {
-                        console.log("Will call the web service");
-                        this.getPolyFromDirections();                    
-                    }else{
-                        poly = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? 
-                        this.props.car.poly : existingMarkers;
-                    }
+					drawPolyline = true;
+					setTimeout(function(){
+						routeApiBeCalled = confirm("Do you want us to draw the route ?");
+						if(routeApiBeCalled) {
+							console.log("Will call the web service");
+							this.getPolyFromDirections();                    
+						}else{
+							poly = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? 
+							this.props.car.poly : existingMarkers;
+						}
+					}.bind(this),200);
+                  
+					
                 }
                 if(this.state.markerCount + 1 === 1 || routeApiBeCalled){
                 	this.setState({
@@ -160,46 +163,15 @@ export class MapContainer extends React.Component {
                     markerCount: this.state.markerCount + 1,
                     markers: existingMarkers
                 	});
-	                setTimeout(function(){ 
 	                    self.setState({
 		                    car: self.props.car,
 		                    drawPolyline: drawPolyline,
 		                    poly: poly,
 		                    showMarker: true
 	                });
-	                },500);
                }
             }
         }
-	}
-
-	handleMarkerDrag(markerPos, index) {
-		if(this.state.drawPolyline) {
-		  	let poly = this.child.method(); 
-		  	// let poly =  this.createPoly(h);
-		  	poly[0] = markerPos[0];
-		  	if(index === 1){  //Extend the poly line 
-		  		poly.pop();
-		  		poly.push(markerPos[1]);	
-		  	}else{ // alter the source of the poly line
-		  		poly.shift();
-		  		poly.unshift(markerPos[0]);
-		  	}
-			this.setState({
-				markers: markerPos,
-				poly: poly
-			});	  	
-		  }else{  //Maintain consistent marker states
-		  	this.setState({
-				markers: markerPos
-			});
-		  }
-	}
-
-	handlePolyDrag(poly){
-		this.setState({
-			markers: [poly[0], poly[poly.length - 1]]
-		});
 	}
 
 	getPolyFromDirections(){
@@ -213,7 +185,9 @@ export class MapContainer extends React.Component {
 	      	let directionsRequest = {
 	        origin: new google.maps.LatLng(parseFloat(o[0]), parseFloat(o[1])),
 	        destination: new google.maps.LatLng(parseFloat(d[0]), parseFloat(d[1])),
-	        travelMode: 'DRIVING'
+			travelMode: 'DRIVING',
+			provideRouteAlternatives: true
+			
 	      };
 	      DirectionsService.route(directionsRequest, this.directionsCallback);
 	  }
@@ -222,17 +196,36 @@ export class MapContainer extends React.Component {
 	directionsCallback(result, status) {
 		console.log("result-------->", result);
         console.log("status----------->", status);
-        let p = [];
+		let p = [];
         if (status === "OK") {
+		let key=this.getShortestPath(result);
+		console.log(JSON.stringify(result.routes[key]));
           let polyline = require('polyline');
-	      let z = polyline.decode(result.routes[0].overview_polyline); // returns an array of lat, lng pairs 
+	      let z = polyline.decode(result.routes[key].overview_polyline); // returns an array of lat, lng pairs 
 	      for(let k=0; k < z.length; k++) {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
-		  this.setState({poly: p, markers: [p[0], p[p.length -1]] }); //ToDo: Handle this so that the component gets rendered only once
+		  this.setState({poly: p}); //ToDo: Handle this so that the component gets rendered only once
+
 		}else {
           console.error('error fetching directions ');
         }
+	}
+
+	getShortestPath(result){
+		let distanceArray={};
+		let count=0;
+		result.routes.forEach(route => {
+			let dist=route.legs[0].distance.value;
+			distanceArray[dist]=count;
+			count=count+1;
+			console.log("dist===>"+JSON.stringify(distanceArray));
+		});
+		let dist1=[];
+		dist1=Object.keys(distanceArray);
+		let minVal=Math.min.apply(null,dist1);
+		console.log(distanceArray[minVal]);
+		return distanceArray[minVal];
 	}
 
 	deriveMapCenter(){
@@ -240,9 +233,7 @@ export class MapContainer extends React.Component {
 		if(this.props.car.isSaved){
 			 mapCenter = this.props.car.markers[0]; //Using saved car mapCenter
 		}else{
-			if(this.state.markers[0]){
-				mapCenter = this.state.markers[0]; //Using current car mapCenter
-			}else if(this.state.routes[0]){
+			if(this.state.routes[0]){
 				mapCenter = this.state.routes[0][0]; //Using mapCenter from first route
 			}else{
 				const constants = require("../utils/constants.jsx"); 
@@ -271,7 +262,6 @@ export class MapContainer extends React.Component {
 							onRef={ref => (this.child = ref)} 
 							routes={this.state.routes} allowEdit={true}
 							mapCenter={mapCenter} color={this.props.car.color}
-							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 			/>
 		</div>
 		);
