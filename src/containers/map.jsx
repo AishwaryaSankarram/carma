@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {MyMapComponent} from '../components/map.jsx';
+import {MyModal} from '../popup/Modal.jsx';
 
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
@@ -15,8 +16,9 @@ export class MapContainer extends React.Component {
 				markerCount: this.props.car.markerCount,
 				drawPolyline: this.props.car.drawPolyline,
 				car: this.props.car, 
-				poly: this.props.car.poly, 
-				routes: this.props.routes 
+				poly: this.props.car.poly,
+				routes: this.props.routes,
+				modalIsVisible: false
 			};
 		}else{
 			this.state = {
@@ -26,19 +28,23 @@ export class MapContainer extends React.Component {
 				drawPolyline: false,
 				car: this.props.car, 
 				poly: [], 
-				routes: this.props.routes 
-				};
+				routes: this.props.routes,
+				modalIsVisible: false 
+			};
 		}
 		
 		this.handleClick = this.handleClick.bind(this);
 		this.displayMaps = this.displayMaps.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleSave = this.handleSave.bind(this);
 		this.getPolySourceDestination = this.getPolySourceDestination.bind(this);
 		this.getPolyFromDirections = this.getPolyFromDirections.bind(this);
+		this.constructPolyLine = this.constructPolyLine.bind(this);
 		this.directionsCallback = this.directionsCallback.bind(this);
 		this.deriveMapCenter = this.deriveMapCenter.bind(this);
 		this.handleMarkerDrag = this.handleMarkerDrag.bind(this);
 		this.handlePolyDrag = this.handlePolyDrag.bind(this);
+		this.deleteMarkers = this.deleteMarkers.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) { 
@@ -53,7 +59,8 @@ export class MapContainer extends React.Component {
 					drawPolyline: car.drawPolyline,
 					car: nextProps.car, 
 					poly: nextProps.car.poly,
-					routes: nextProps.routes
+					routes: nextProps.routes,
+					modalIsVisible: false 		
 				});
 			}else{			//Rendering new map for unsaved car
 				this.setState({
@@ -63,7 +70,8 @@ export class MapContainer extends React.Component {
 					drawPolyline: false,
 					car: nextProps.car,
 					poly: [],
-					routes: nextProps.routes
+					routes: nextProps.routes,
+					modalIsVisible: false 
 				});
 			}
 		}
@@ -91,7 +99,6 @@ export class MapContainer extends React.Component {
   	}
 
 	handleSubmit(){
-		
 		console.log("Submit Clicked");
 		let selCar = this.props.car;
 		if(this.state.drawPolyline) {
@@ -114,6 +121,25 @@ export class MapContainer extends React.Component {
 	 	}
 	}
 
+	handleSave(){
+		let selCar = this.props.car;
+		if(this.state.drawPolyline) {
+	    	let h = this.child.method(); // Get path from PolyLine drawn
+	    	if(selCar != null){
+				selCar.poly =  h; 
+			}
+			if(typeof selCar.poly[0].speed === 'undefined'){
+				selCar.poly[0].speed = selCar.speed;
+			}
+		}
+	 	selCar['drawPolyline']=this.state.drawPolyline;
+	 	selCar['markerCount'] = this.state.markerCount;
+		selCar['markers'] = this.state.drawPolyline ? [selCar.poly[0], selCar.poly[selCar.poly.length - 1]] : this.state.markers;
+	 	selCar['showMarker'] = this.state.showMarker;
+	 	console.log("Saving car as------", selCar);
+	 	this.props.updateCar(selCar);
+	}
+
 	getPolySourceDestination() {
 		let markers = this.state.markers;
 		let origin=false, destination=false;
@@ -133,7 +159,7 @@ export class MapContainer extends React.Component {
             let point = {lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
             let existingMarkers = this.state.markers;
             existingMarkers.push(point);
-            let drawPolyline = false, routeApiBeCalled = false;
+            let drawPolyline = false;
             if(existingMarkers.length <= 2){
             	if(this.state.markerCount === 0){ //adding first marker
                 	this.setState({
@@ -151,29 +177,45 @@ export class MapContainer extends React.Component {
                 	markers: existingMarkers
             	});
                 setTimeout(function(){ //Load the confirm box and start drawing routes after a delay so that the user can see the marker
-                	drawPolyline = true;
-                	routeApiBeCalled = confirm("Do you want us to draw the route ?");
-                if(routeApiBeCalled) { //Set other props; Markers set bef and poly at direction service
-                    console.log("Will call the web service");
-                    self.getPolyFromDirections();  
-                }else if(drawPolyline){ //2 Markers; normal PolyLine
-                    poly = (typeof(self.props.car.poly) !== 'undefined' && self.props.car.poly && self.props.car.poly.length > 0) ? 
-                    self.props.car.poly : existingMarkers;
-                    self.setState({
-	                    drawPolyline: drawPolyline,
-	                    poly: poly,
-               		 });
-                }
-                },300);	
+                   self.setState({modalIsVisible: true});
+                },200);	
             }
           }
         }
 	}
 
+	constructPolyLine(){
+		let self = this;
+		let poly = (typeof(self.state.car.poly) !== 'undefined' && self.state.car.poly && self.state.car.poly.length > 0) ? 
+                    self.props.car.poly : self.state.markers;
+        console.log("Draw normal poly line------" , poly);
+        self.setState({
+        	modalIsVisible: false,
+            drawPolyline: true,
+            poly: poly,
+   		 });
+        setTimeout(function(){
+        	self.handleSave();
+        }, 200);
+        
+	}
+
+	deleteMarkers(){
+		console.log("The new cancel btn------------");
+		let self = this;
+		self.setState({
+        	modalIsVisible: false,
+            drawPolyline: false,
+            showMarker: false,
+            markers: [], 
+            markerCount: 0
+   		 });
+		self.handleSave();
+	}
+
 	handleMarkerDrag(markerPos, index) {
 		if(this.state.drawPolyline) {
 		  	let poly = this.child.method(); 
-		  	// let poly =  this.createPoly(h);
 		  	poly[0] = markerPos[0];
 		  	if(index === 1){  //Extend the poly line 
 		  		poly.pop();
@@ -186,20 +228,23 @@ export class MapContainer extends React.Component {
 				markers: markerPos,
 				poly: poly
 			});	  	
-		  }else{  //Maintain consistent marker states
+		}else{  //Maintain consistent marker states
 		  	this.setState({
 				markers: markerPos
 			});
-		  }
+		}
+	  this.handleSave();
 	}
 
 	handlePolyDrag(poly){
 		this.setState({
 			markers: [poly[0], poly[poly.length - 1]]
 		});
+		this.handleSave();
 	}
 
 	getPolyFromDirections(){
+		console.log("call the web service");
 		  const google = window.google;
 	      const DirectionsService = new google.maps.DirectionsService();
 	      let points = this.getPolySourceDestination();
@@ -220,7 +265,7 @@ export class MapContainer extends React.Component {
 	directionsCallback(result, status) {
 		console.log("result-------->", result);
         console.log("status----------->", status);
-        let p = [];
+        let p = [], self=this;
         if (status === "OK") { 
           let key=this.getShortestPath(result);
           let polyline = require('polyline');
@@ -228,7 +273,10 @@ export class MapContainer extends React.Component {
 	      for(let k=0; k < z.length; k++) {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
-		  this.setState({poly: p, markers: [p[0], p[p.length -1]], drawPolyline: true });
+		  this.setState({modalIsVisible: false, poly: p, markers: [p[0], p[p.length -1]], drawPolyline: true });
+		  setTimeout(function(){
+	        self.handleSave();
+          }, 200);
 		}else {
           console.error('error fetching directions ');
         }
@@ -271,9 +319,8 @@ export class MapContainer extends React.Component {
 
 	displayMaps(){
 		let mapCenter = this.deriveMapCenter();
-
 	 	return (
-			<div className="gMap">
+	 		<div className="gMap">
 			<div className="clearfix">
 			<div className="pull-left route_label">Plan your route for {this.props.car.carId} </div>
 			<div id="btn-submit-container"  className="pull-right ">
@@ -289,8 +336,14 @@ export class MapContainer extends React.Component {
 							routes={this.state.routes} allowEdit={true}
 							mapCenter={mapCenter} color={this.props.car.color}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
+							onChangeAttr={this.handleSave}
 			/>
-		</div>
+			{this.state.modalIsVisible && 
+		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="Do you want us to draw the route ?" 
+		          okAction={this.getPolyFromDirections} cancelAction={this.deleteMarkers} 
+		          addBtn={this.constructPolyLine} labelOk="Use Google to draw the routes"  
+		          addBtnLabel="Draw free hand route" labelCancel="Cancel" />}
+			</div>	
 		);
 	}
 

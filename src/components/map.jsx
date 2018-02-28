@@ -34,7 +34,8 @@ export const MyMapComponent = compose(
       <GoogleMap defaultZoom={16} defaultCenter={props.mapCenter || constants.mapCenter} center={props.mapCenter || constants.mapCenter} mapTypeId="roadmap"
        onClick={props.onClick}>
        {props.showMarker && <MyMarker markerPos={props.markerPos} allowEdit={props.allowEdit} color={props.color} dragHandler={props.onDragMarker}/> }
-       {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} allowEdit={props.allowEdit} color={props.color} dragHandler={props.onDragPoly} /> }
+       {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} allowEdit={props.allowEdit}
+        color={props.color} dragHandler={props.onDragPoly} saveHandler={props.onChangeAttr} /> }
        {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} color={props.color} /> }
      </GoogleMap>
 ));

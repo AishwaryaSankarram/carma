@@ -6,7 +6,7 @@ import {MyMapComponent} from '../components/map.jsx';
 import {Header} from '../layouts/header.jsx';
 // import {Footer} from '../layouts/footer.jsx';
 import '../css/Hompage.css';
-// import Login from './LoginPage.jsx'
+import {MyModal} from '../popup/Modal.jsx';
 import axios from 'axios';
 const apiData = require('../utils/api.jsx');
 const constants = require('../utils/constants.jsx');
@@ -24,21 +24,27 @@ export default class HomePage extends Component {
           count: this.props.count,
           selectedCar: {},
           sourceCar: {},
-          mapOpen: false
+          mapOpen: false,
+          dialogVisible: false,
+          action: {},
+          modalHeading: ""
     };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
     this.createCar = this.createCar.bind(this);
     this.displayCars = this.displayCars.bind(this);
     this.showMap = this.showMap.bind(this);
     this.updateCar = this.updateCar.bind(this);
     this.cloneCar = this.cloneCar.bind(this);
-    this.logout=this.logout.bind(this);
-    this.displayContent=this.displayContent.bind(this);
+    this.logout = this.logout.bind(this);
+    this.displayContent = this.displayContent.bind(this);
     this.updateCarPanel = this.updateCarPanel.bind(this);
-    this.displayRoutes=this.displayRoutes.bind(this);
+    this.displayRoutes = this.displayRoutes.bind(this);
     this.deleteCar = this.deleteCar.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   loadCars(){
@@ -152,18 +158,27 @@ export default class HomePage extends Component {
     this.setState({sourceCar: car, modalIsOpen: true});
   }
 
+  closeDialog(){
+    this.setState({dialogVisible: false, action: {}, modalHeading: ""});
+  }
+
   deleteCar(car){
     let self = this;
     let carId = car.carId ;
     console.log("carid==>"+car.carId);
-    let confimation = "Do you want to delete " + car.carId + " ?";
-    let isDelete = confirm(confimation);
-    if(isDelete){
-       if(car.isSaved){
+    let confimation = "Do you want to delete " + carId + " ?";
+    self.setState({dialogVisible: true, action: this.handleDelete, message: confimation, modalHeading: "Delete Car" });
+  }
+
+  handleDelete(car){
+     console.log("Comes to delete------------");
+     let self = this;
+     let carId = car.carId;
+     if(car.isSaved){
           const localData=localStorage.getItem("loginData");
           const password=localStorage.getItem("pwd");
           const header = JSON.parse(localData);
-          let url = apiUrl + 'granular/deleteCarDetails/' + header.id + '?carId=' + car.carId;
+          let url = apiUrl + 'granular/deleteCarDetails/' + header.id + '?carId=' + carId;
           let auth = { username: header.uuid, password: password  };
           axios.delete(url, { auth: auth}).then(function (response) {
             console.log(response);
@@ -171,8 +186,6 @@ export default class HomePage extends Component {
                 console.log("Delete Cars Hit successful");
                 self.updateCarPanel(carId, self);
                 self.forceUpdate();
-                //window.location.reload();
-                // self.forceUpdate();
             }
              else{
               console.log("Oops...! Get Cars failed with--------" + response.status);
@@ -183,7 +196,6 @@ export default class HomePage extends Component {
       }else{
           self.updateCarPanel(carId, self);
       }
-    }
   }
 
   updateCarPanel(carId, self){
@@ -230,6 +242,7 @@ export default class HomePage extends Component {
   }
 
   updateCar(car) {
+      let self = this;
       const cars = this.state.cars;
       cars.map((obj) => {
       if(obj.carId === car.carId){
@@ -238,8 +251,13 @@ export default class HomePage extends Component {
         }
       });
       this.setState({
-        cars: cars
+        cars: cars, showHeader: car.isSaved
       });
+      if(car.isSaved){
+       setTimeout(function(){ 
+          self.setState({showHeader: false});
+        }, 5000);
+      }
   }
 
   drawMap(){
@@ -270,7 +288,13 @@ export default class HomePage extends Component {
     this.setState({mapOpen: false, selectedCar: {}});
   }
 
-  logout(){
+  logout() {
+    let confimation = "Are you sure you would want to log out ?";
+    this.setState({dialogVisible: true, action: this.handleLogout, message: confimation, modalHeading: "Log Out"});
+  }
+
+  handleLogout(){
+    console.log("Comes to logout---------");
     localStorage.clear();
     console.log("local storage cleared---------");
     this.setState({islogout:true})
@@ -315,8 +339,12 @@ export default class HomePage extends Component {
     return (
       <div className="App">
         {<Header onBtnClick={this.openModal} logout={this.logout} viewRoutes={this.displayRoutes}/>}
+        {this.state.dialogVisible && 
+          <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message} 
+          okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}/>}
         {this.displayCars()}
-        <Modal isOpen={this.state.modalIsOpen}
+        {this.state.showHeader && <div className="alert-success" id="hideMe">Route for {this.state.selectedCar.carId} has been saved</div> }
+        {this.state.modalIsOpen && <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
           shouldCloseOnOverlayClick={false}
           contentLabel="Car Details">
@@ -324,7 +352,7 @@ export default class HomePage extends Component {
           <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" onClick={this.closeModal}><div></div></button></div>
           </div>
             <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar}/>
-        </Modal>
+        </Modal> }
         {this.displayContent()}
       </div>
     );
