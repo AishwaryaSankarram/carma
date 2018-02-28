@@ -127,7 +127,7 @@ export default class HomePage extends Component {
     carData.color = constants.color_codes[index % 10];
     oldCars.push(carData);
     let newCount = oldCount + 1;
-    this.setState({cars: oldCars, count: newCount});
+    this.setState({cars: oldCars, count: newCount, selectedCar: carData, mapOpen: true});
   }
 
   showMap(e) {
