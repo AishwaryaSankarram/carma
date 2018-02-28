@@ -22,6 +22,7 @@ export default class Login extends Component{
         
         loginComponent.push(
             <MuiThemeProvider key="login-fields">
+             <form action="/" method="POST" onSubmit={(event) => this.handleClick(event)}>
                 <div className="sing_in_wrapper clearfix">
                          <TextField
                            hintText="Enter your email id"
@@ -36,9 +37,10 @@ export default class Login extends Component{
                            onChange={(event,newValue) => this.setState({password:newValue})}
                           />
                   <br/>
-                           <RaisedButton className='login_button' label="Login" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+                           <RaisedButton className='login_button' label="Login" type="submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
                            <RaisedButton className='login_button' label="Sign Up" primary={true} style={style} onClick={(event) => this.register(event)}/>
                </div>
+               </form>
            </MuiThemeProvider>
         )
 
@@ -58,6 +60,7 @@ export default class Login extends Component{
         self.props.appContext.setState({loginPage:[registerPage]});
     }
     handleClick(event){
+        event.preventDefault();
         var self = this;
 
         var payload={
@@ -79,22 +82,18 @@ export default class Login extends Component{
             if(response.status === 200){
                 console.log("Login successful : "+JSON.stringify(response));
                 console.log("uuid==>"+response.data.uuid);
-                var header={"uuid":response.data.uuid,"password":payload.password, id: response.data.id};
-                // alert("successfully logged in");
                 localStorage.setItem("loginData",JSON.stringify(response.data));
                 localStorage.setItem("pwd",payload.password);
-
-                // localStorage.setItem("password",payload.password);
-                  self.populateHomePage();
-                }
+                self.populateHomePage();
+            }
             else if(response.status === 204){
                 console.log("Username password do not match");
                 alert(response.status)
-              }
+            }
             else{
                 console.log(response.data.message);
                 alert(response.data.message);
-              }
+            }
         })
         .catch(function(data){
             console.log("error :"+data);

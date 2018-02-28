@@ -32,6 +32,7 @@ export default class Register extends Component {
     console.log("register page received props: ",nextProps);
   }
   handleClick(event){
+    event.preventDefault();
     var apiBaseUrl = apiUrl;
     // console.log("values in register handler",role);
     var self = this;
@@ -93,6 +94,7 @@ export default class Register extends Component {
     return (
       <div>
         <MuiThemeProvider>
+         <form action="/" method="POST" onSubmit={(event) => this.handleClick(event)}>
           <div>
               <div className="header_part">
                   <div className="page_logo">
@@ -128,10 +130,11 @@ export default class Register extends Component {
                        </DropDownMenu>
            </MuiThemeProvider>
            </div> */}
-           <RaisedButton label="Register" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
+           <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
            <RaisedButton label="Login" primary={true} style={style} onClick={(event) => this.login(event)}/>
           </div>
           </div>
+          </form>
          </MuiThemeProvider>
       </div>
     );
