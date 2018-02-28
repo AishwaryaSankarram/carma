@@ -127,26 +127,15 @@ export class MapContainer extends React.Component {
 
 	handleClick = (e) => {
 		console.log("Captured click event------------>", e);
-        let self = this;
+		let self = this;
         if(this.state.markerCount < 2){
             let poly = [];
             let point = {lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
             let existingMarkers = this.state.markers;
             existingMarkers.push(point);
-            let drawPolyline, routeApiBeCalled;
+            let drawPolyline = false, routeApiBeCalled = false;
             if(existingMarkers.length <= 2){
-                if(existingMarkers.length === 2) {
-                    drawPolyline = true;
-                    routeApiBeCalled = confirm("Do you want us to draw the route ?");
-                    if(routeApiBeCalled) {
-                        console.log("Will call the web service");
-                        this.getPolyFromDirections();                    
-                    }else{
-                        poly = (typeof(this.props.car.poly) !== 'undefined' && this.props.car.poly && this.props.car.poly.length > 0) ? 
-                        this.props.car.poly : existingMarkers;
-                    }
-                }
-                if(this.state.markerCount + 1 === 1 || routeApiBeCalled){
+            	if(this.state.markerCount === 0){ //adding first marker
                 	this.setState({
                     	markerCount: this.state.markerCount + 1,
                     	markers: existingMarkers,
@@ -155,21 +144,29 @@ export class MapContainer extends React.Component {
 	                    poly: poly,
 	                    showMarker: true
                		 });
-                }else{
-                	this.setState({
-                    markerCount: this.state.markerCount + 1,
-                    markers: existingMarkers
-                	});
-	                setTimeout(function(){ 
-	                    self.setState({
-		                    car: self.props.car,
-		                    drawPolyline: drawPolyline,
-		                    poly: poly,
-		                    showMarker: true
-	                });
-	                },500);
-               }
+            	   	return;	
+            	}else{ //Adding 2nd marker
+            	self.setState({ //Add the markers first
+                	markerCount: self.state.markerCount + 1,
+                	markers: existingMarkers
+            	});
+                setTimeout(function(){ //Load the confirm box and start drawing routes after a delay so that the user can see the marker
+                	drawPolyline = true;
+                	routeApiBeCalled = confirm("Do you want us to draw the route ?");
+                if(routeApiBeCalled) { //Set other props; Markers set bef and poly at direction service
+                    console.log("Will call the web service");
+                    self.getPolyFromDirections();  
+                }else if(drawPolyline){ //2 Markers; normal PolyLine
+                    poly = (typeof(self.props.car.poly) !== 'undefined' && self.props.car.poly && self.props.car.poly.length > 0) ? 
+                    self.props.car.poly : existingMarkers;
+                    self.setState({
+	                    drawPolyline: drawPolyline,
+	                    poly: poly,
+               		 });
+                }
+                },300);	
             }
+          }
         }
 	}
 
@@ -229,7 +226,7 @@ export class MapContainer extends React.Component {
 	      for(let k=0; k < z.length; k++) {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
-		  this.setState({poly: p, markers: [p[0], p[p.length -1]] }); //ToDo: Handle this so that the component gets rendered only once
+		  this.setState({poly: p, markers: [p[0], p[p.length -1]], drawPolyline: true });
 		}else {
           console.error('error fetching directions ');
         }
