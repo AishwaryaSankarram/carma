@@ -224,7 +224,7 @@ export class MapContainer extends React.Component {
         if (status === "OK") { 
           let key=this.getShortestPath(result);
           let polyline = require('polyline');
-	      let z = polyline.decode(result.routes[0].overview_polyline); // returns an array of lat, lng pairs 
+	      let z = polyline.decode(result.routes[key].overview_polyline); // returns an array of lat, lng pairs 
 	      for(let k=0; k < z.length; k++) {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
@@ -242,7 +242,7 @@ export class MapContainer extends React.Component {
 		result.routes.forEach(route => {
 			let dist=route.legs[0].distance.value;
 			distanceIndexObj[dist]=count;
-			count=count+1;
+			count += 1;
 			console.log("dist===>"+JSON.stringify(distanceIndexObj));
 		});
 		let distObj=[];
