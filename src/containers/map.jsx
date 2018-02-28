@@ -210,7 +210,9 @@ export class MapContainer extends React.Component {
 	      	let directionsRequest = {
 	        origin: new google.maps.LatLng(parseFloat(o[0]), parseFloat(o[1])),
 	        destination: new google.maps.LatLng(parseFloat(d[0]), parseFloat(d[1])),
-	        travelMode: 'DRIVING'
+	        travelMode: 'DRIVING',
+			provideRouteAlternatives: true
+
 	      };
 	      DirectionsService.route(directionsRequest, this.directionsCallback);
 	  }
@@ -220,9 +222,10 @@ export class MapContainer extends React.Component {
 		console.log("result-------->", result);
         console.log("status----------->", status);
         let p = [];
-        if (status === "OK") {
+        if (status === "OK") { 
+          let key=this.getShortestPath(result);
           let polyline = require('polyline');
-	      let z = polyline.decode(result.routes[0].overview_polyline); // returns an array of lat, lng pairs 
+	      let z = polyline.decode(result.routes[key].overview_polyline); // returns an array of lat, lng pairs 
 	      for(let k=0; k < z.length; k++) {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
@@ -232,14 +235,31 @@ export class MapContainer extends React.Component {
         }
 	}
 
+	getShortestPath(result){
+		let distanceIndexObj={};
+		let count=0;
+		console.log(result.routes.length);
+		result.routes.forEach(route => {
+			let dist=route.legs[0].distance.value;
+			distanceIndexObj[dist]=count;
+			count=count+1;
+			console.log("dist===>"+JSON.stringify(distanceIndexObj));
+		});
+		let distObj=[];
+		distObj=Object.keys(distanceIndexObj);//Fetch all distances
+		let minVal=Math.min.apply(null,distObj); //Get the min distance
+		console.log(distanceIndexObj[minVal]); //Get the key in routes for the distance
+		return distanceIndexObj[minVal];
+	}
+
 	deriveMapCenter(){
 		let mapCenter;
 		if(this.props.car.isSaved){
 			 mapCenter = this.props.car.markers[0]; //Using saved car mapCenter
 		}else{
-			if(this.state.markers[0]){
+			/*if(this.state.markers[0]){
 				mapCenter = this.state.markers[0]; //Using current car mapCenter
-			}else if(this.state.routes[0]){
+			}else */if(this.state.routes[0]){
 				mapCenter = this.state.routes[0][0]; //Using mapCenter from first route
 			}else{
 				const constants = require("../utils/constants.jsx"); 
