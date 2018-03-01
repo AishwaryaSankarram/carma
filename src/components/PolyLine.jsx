@@ -1,6 +1,7 @@
 import React from 'react';
 import { Polyline } from "react-google-maps";
 import {SpeedModal} from "../popup/SpeedModal.jsx";
+let isDragging = false;
 export class PolyLine extends React.Component {
     constructor(props) {
         super(props);
@@ -19,12 +20,46 @@ export class PolyLine extends React.Component {
         this.setSpeed = this.setSpeed.bind(this);
         this.closeDialog = this.closeDialog.bind(this);
         this.polyLineEle = this.polyLineEle.bind(this);
+        this.handleDragStart = this.handleDragStart.bind(this);
     }
 
     componentDidMount() {
         this.props.onRef(this);
     }
+
+    componentDidUpdate() {
+        var path = this.refs.gPolyLine.getPath();
+        let google = window.google;
+        
+        let self = this;
+        google.maps.event.addListener(path, 'insert_at', function(e){
+            // console.error("componentDidUpdate path insert_at event ", e);
+            self.props.saveHandler();
+        }); 
+        google.maps.event.addListener(path, 'remove_at', function(e){
+            // console.error("componentDidUpdate path remove_at event", e);
+            self.props.saveHandler();
+        }); 
+        google.maps.event.addListener(path, 'set_at', function(e){
+            // console.log("isDragging----------" + isDragging);
+            if(!isDragging) {
+                // console.error("componentDidUpdate  path set_at event==============>", e);
+                let poly = self.refs.gPolyLine.getPath().getArray();
+                let pathData = self.createPoly(poly);
+                self.props.dragHandler(pathData);
+                // self.props.saveHandler();
+            }
+            
+        }); 
+    }
+
     componentWillUnmount() {
+        isDragging=false;
+        let google = window.google;
+        var path = this.refs.gPolyLine.getPath();
+        google.maps.event.clearListeners(path, 'insert_at');
+        google.maps.event.clearListeners(path, 'remove_at');
+        google.maps.event.clearListeners(path, 'set_at');
         this.props.onRef(undefined);
     }
 
@@ -76,7 +111,12 @@ export class PolyLine extends React.Component {
         let p = this.refs.gPolyLine;
         let pathArray = p.getPath().getArray();
         let pathData = this.createPoly(pathArray);
+        isDragging = false;
         this.props.dragHandler(pathData);
+    }
+
+    handleDragStart(){
+        isDragging = true;
     }
 
     polyLineEle() {
@@ -96,9 +136,10 @@ export class PolyLine extends React.Component {
                 onDragEnd={this.handleDrag}
                 editable={this.props.allowEdit}
                 draggable={this.props.allowEdit}
+                onDragStart={this.handleDragStart}
                 />
                 {this.state.modalIsVisible && 
-                      <SpeedModal title="Enter Speed" modalIsOpen={this.state.modalIsVisible} 
+                      <SpeedModal title="Enter Speed" modalIsOpen={this.state.modalIsVisible}
                       okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex}/> }
             </div>
         );
