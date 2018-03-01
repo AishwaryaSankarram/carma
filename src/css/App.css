@@ -12,3 +12,23 @@
     border: none;
     outline: none;
 }
+.confirmation-modal{
+
+}
+.confirmation-modal .modal-header{
+  padding: 5px;
+border: none;
+}
+.confirmation-modal .modal-header .modal-title{
+  float: left;
+}
+.confirmation-modal .icon-close{
+  background: transparent;
+margin: 5px 0px;
+}
+.confirmation-modal .modal-body{
+      min-height: 140px;
+}
+.confirmation-modal .modal-footer{
+  
+}

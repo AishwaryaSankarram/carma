@@ -254,7 +254,7 @@ export default class HomePage extends Component {
         cars: cars, showHeader: car.isSaved
       });
       if(car.isSaved){
-       setTimeout(function(){ 
+       setTimeout(function(){
           self.setState({showHeader: false});
         }, 5000);
       }
@@ -339,8 +339,8 @@ export default class HomePage extends Component {
     return (
       <div className="App">
         {<Header onBtnClick={this.openModal} logout={this.logout} viewRoutes={this.displayRoutes}/>}
-        {this.state.dialogVisible && 
-          <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message} 
+        {this.state.dialogVisible &&
+          <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}/>}
         {this.displayCars()}
         {this.state.showHeader && <div className="alert-success" id="hideMe">Route for {this.state.selectedCar.carId} has been saved</div> }
