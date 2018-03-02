@@ -186,13 +186,12 @@ export class MapContainer extends React.Component {
 
 	constructPolyLine(){
 		let self = this;
-		let poly = (typeof(self.state.car.poly) !== 'undefined' && self.state.car.poly && self.state.car.poly.length > 0) ? 
-                    self.props.car.poly : self.state.markers;
+		let poly =  self.state.markers;           
         console.log("Draw normal poly line------" , poly);
         self.setState({
         	modalIsVisible: false,
             drawPolyline: true,
-            poly: poly,
+            poly: poly
    		 });
         setTimeout(function(){
         	self.handleSave();
@@ -203,19 +202,34 @@ export class MapContainer extends React.Component {
 	deleteMarkers(){
 		console.log("The new cancel btn------------");
 		let self = this;
-		self.setState({
-        	modalIsVisible: false,
-            drawPolyline: false,
-            showMarker: false,
-            markers: [], 
-            markerCount: 0
-   		 });
-		self.handleSave();
+		if(self.state.drawPolyline){
+			let poly = this.child.method();
+			self.setState({
+				modalIsVisible: false,
+				markers: [poly[0], poly[poly.length -1]]
+			});
+		}else{
+			self.setState({
+	        	modalIsVisible: false,
+	            drawPolyline: false,
+	            showMarker: false,
+	            markers: [], 
+	            markerCount: 0
+   		 	});	
+		}
+		setTimeout(function(){
+        	self.handleSave();
+        }, 200);
 	}
 
 	handleMarkerDrag(markerPos, index) {
-		if(this.state.drawPolyline) {
-		  	let poly = this.child.method(); 
+		let self = this;
+		if(this.state.drawPolyline) { //Redraw routes
+			this.setState({markers: markerPos});
+			setTimeout(function(){ //Load the confirm box and start drawing routes after a delay so that the user can see the marker
+              self.setState({modalIsVisible: true});
+            },200);	
+		  	/*let poly = this.child.method(); 
 		  	poly[0] = markerPos[0];
 		  	if(index === 1){  //Extend the poly line 
 		  		poly.pop();
@@ -227,13 +241,15 @@ export class MapContainer extends React.Component {
 			this.setState({
 				markers: markerPos,
 				poly: poly
-			});	  	
+			});	 */ 	
 		}else{  //Maintain consistent marker states
 		  	this.setState({
 				markers: markerPos
 			});
+			setTimeout(function(){
+				self.handleSave();
+			}, 200);
 		}
-	  this.handleSave();
 	}
 
 	handlePolyDrag(poly){
