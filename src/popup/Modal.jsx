@@ -38,6 +38,7 @@ export class MyModal extends Component {
 		<Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
           contentLabel={this.props.title}>
+           <div id={this.props.title.toLowerCase().replace(/\s/g, "-")}>
 					 <div className="confirmation-modal">
 					<div className="modal-header">
 					<h4 className="modal-title" ref={subtitle => this.subtitle = subtitle}>{this.props.title}</h4>
@@ -52,6 +53,7 @@ export class MyModal extends Component {
               <Button bsSize="sm" onClick={this.closeModal} type="button"> {this.props.labelCancel || "No"}  </Button>
               </div>
 					</div>
+          </div>
     </Modal>
     );
 	}

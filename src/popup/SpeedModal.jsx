@@ -41,6 +41,8 @@ export class SpeedModal extends Component {
 	   	<Modal isOpen={this.state.modalIsOpen}
 	         onRequestClose={this.closeModal}
 	         contentLabel={this.props.title}>
+	         <div id="speed-collector">
+	         <div className="confirmation-modal">
 	         <h2 ref={subtitle => this.subtitle = subtitle}>{this.props.title}
 	         <button className="btn btn-xs pull-right remove icon-close" onClick={this.closeModal}>Close</button>
 	         </h2>
@@ -61,6 +63,8 @@ export class SpeedModal extends Component {
 		             	<Button bsSize="sm" onClick={this.closeModal} type="button"> Cancel </Button>
 		           </div>
 	             </form>
+	         </div>
+	         </div>
 	         </div>
 	   	</Modal> 
    	);
