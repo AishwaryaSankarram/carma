@@ -25,8 +25,8 @@ export default class Login extends Component{
              <form action="/" method="POST" onSubmit={(event) => this.handleClick(event)}>
                 <div className="sing_in_wrapper clearfix">
                          <TextField
-                           hintText="Enter your email id"
-                           floatingLabelText="Email Id"
+                           hintText="Enter your email address"
+                           floatingLabelText="Email Address"
                            onChange={(event,newValue) => this.setState({emailId:newValue})}
                           />
                   <br/>
@@ -86,13 +86,10 @@ export default class Login extends Component{
                 localStorage.setItem("pwd",payload.password);
                 self.populateHomePage();
             }
-            else if(response.status === 204){
+            else {
                 console.log("Username password do not match");
-                alert(response.status)
-            }
-            else{
-                console.log(response.data.message);
-                alert(response.data.message);
+                self.setState({loginmessage: 'Incorect Email Address or Password. Please try again.'});
+                console.log(response.status);
             }
         })
         .catch(function(data){
@@ -118,8 +115,8 @@ export default class Login extends Component{
                   <div className="header_title">Carma Route Planner</div>
               </div>
             </MuiThemeProvider>
-           {this.state.loginComponent}
            {this.props.loginmessage}
+           {this.state.loginComponent}
           </div>
         );
       }

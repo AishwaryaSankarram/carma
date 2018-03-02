@@ -27,7 +27,6 @@ export default class LoginPage extends Component {
       password:'',
       loginscreen:[],
       loginmessage:'',
-      // loginButtons:loginButtons,
       isLogin:true
     }
   }

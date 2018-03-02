@@ -51,23 +51,11 @@ export default class Register extends Component {
        if(response.status === 200){
         //  console.log("registration successfull");
          var loginscreen=[];
-         var loginmessage = "Successfully Registered";
+         var loginmessage = <div className="alert-success">Successfully Registered</div>;
 
          loginscreen.push(<Login parentContext={this} appContext={self.props.appContext} loginmessage={loginmessage} isLogin={true}/>);
-         
-        //  var loginButtons=[];
-        //  loginButtons.push(
-        //    <div>
-        //    <MuiThemeProvider>
-        //      <div>
-        //         <RaisedButton label={"Register Here"} primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
-        //     </div>
-        //     </MuiThemeProvider>
-        //    </div>
-        //  )
-
-        // let loginPage = <Register  appContext={self.props.appContext}/> ;
-        self.props.appContext.setState({loginPage:[loginscreen]
+  //
+         self.props.appContext.setState({loginPage:[loginscreen]
       });
 
         //  self.props.parentContext.setState({loginscreen:loginscreen,
@@ -110,8 +98,8 @@ export default class Register extends Component {
              />
            <br/>
           <TextField
-             hintText="Enter your email id"
-             floatingLabelText="Email Id"
+             hintText="Enter your email address"
+             floatingLabelText="Email Address"
              onChange={(event,newValue) => this.setState({email:newValue})}
              />
            <br/>
