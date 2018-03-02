@@ -364,6 +364,7 @@ export class MapContainer extends React.Component {
 		let mapCenter = this.deriveMapCenter();
 		let saveBtnClass = this.props.car.isSaved ? "car_submit_disable" : (this.state.drawPolyline ? "save-highlight" : "") ;
 		let bounds = this.getBounds();
+		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
 			<div className="clearfix">
@@ -381,7 +382,8 @@ export class MapContainer extends React.Component {
 							routes={this.state.routes} allowEdit={true}
 							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carId}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
-							onChangeAttr={this.handleSave} bounds={bounds}
+							onChangeAttr={this.handleSave}
+							 bounds={bounds}
 			/>
 			{this.state.modalIsVisible && 
 		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="Do you want us to draw the route ?" 

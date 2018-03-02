@@ -67,6 +67,7 @@ export default class HomePage extends Component {
             console.log("Oops...! Get Cars failed with--------" + response.status);
            }
            self.setState({cars: cars, count: cars.length});
+           console.log("test---->"+cars);
       }).catch(function (error) {
               console.log("The error is------------", error);
       });
@@ -311,7 +312,7 @@ export default class HomePage extends Component {
   getBounds(routeArray){
     var latLngBounds = new window.google.maps.LatLngBounds();
     for(let i=0; i<routeArray.length;i++){
-      console.log("Priniting routes array -----------------",routeArray[0]);
+      // console.log("Priniting routes array -----------------",routeArray[0]);
       let routes = routeArray[i][0].markerPos;
       routes.forEach(function(e){
         latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));     
@@ -336,7 +337,7 @@ export default class HomePage extends Component {
        });
        if(savedCars.length > 0){ /* Whether to view routes or display disabled map*/
           routes = this.getRoutes(savedCars);
-          console.log("Routes-------------------->" , routes);
+          // console.log("Routes-------------------->" , routes);
           bounds = this.getBounds(routes);
           mapCenter = routes[0][0];
           mapHeader = "Displaying routes for saved cars"
@@ -348,7 +349,7 @@ export default class HomePage extends Component {
            bounds.extend(new window.google.maps.LatLng({ lat:mapCenter.lat, lng: mapCenter.lng}));
            console.log("Displaying disabled true map-------");
        }
-       console.error("Bounds value===========>", bounds);
+       console.error("Bounds value===========>"+bounds);
         content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div> 
         </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter} bounds={bounds}/></div>
     }

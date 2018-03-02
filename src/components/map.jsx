@@ -1,6 +1,6 @@
 import React from 'react';
-import { compose, withProps} from "recompose";
-import {withGoogleMap, GoogleMap} from "react-google-maps";
+import { compose, withProps, withHandlers, lifecycle} from "recompose";
+import {withGoogleMap, withScriptjs,GoogleMap} from "react-google-maps";
 import {MyMarker} from './marker.jsx';
 import {PolyLine} from './PolyLine.jsx';
 import {MultiPolyLine} from './multiPolyLine.jsx';
@@ -14,14 +14,49 @@ export const MyMapComponent = compose(
     containerElement: <div className="map-container" style={{ height: '100%' }} />,
     mapElement: <div style={{ height: '100%' }} />,
   }),
+  lifecycle({
+    componentWillMount() {
+      const refs = {}
+
+      this.setState({
+        setZoom: ref => {
+          refs.map = ref
+          var bounds = this.props.bounds;
+          // this.props.bounds.forEach((p) => {
+          //   var latLng = new google.maps.LatLng(p.lat, p.lng);
+          //   bounds.extend(latLng);
+          // })
+          console.log("setzooom===>"+this.props.bounds)
+          refs.map.fitBounds(bounds)
+        }
+      })
+    // },
+    // componentWillUpdate(){
+    //   const refs = {};
+
+    //   this.setState({
+    //     setZoom: ref => {
+    //       refs.map = ref
+    //       var bounds = this.props.bounds;
+    //       // this.props.bounds.forEach((p) => {
+    //       //   var latLng = new google.maps.LatLng(p.lat, p.lng);
+    //       //   bounds.extend(latLng);
+    //       // })
+    //       console.log(this.props.bounds)
+    //       refs.map.fitBounds(bounds);
+    //     }
+    //   })
+    }
+  }),
 
   // withScriptjs,
   withGoogleMap
 )((props) => (
-     props.disabled ?  <GoogleMap ref={ref=>ref.fitBounds(props.bounds)}
+  
+     props.disabled ?  <GoogleMap 
         defaultZoom={16}
         defaultCenter={props.mapCenter || constants.mapCenter}
-        center={props.mapCenter || constants.mapCenter}
+        
         defaultOptions={{
           streetViewControl: false,
           scaleControl: false,
@@ -30,9 +65,11 @@ export const MyMapComponent = compose(
           zoomControl: false,
           rotateControl: false,
           fullscreenControl: false
-      }} disableDefaultUI >  {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} /> } </GoogleMap> : 
-      <GoogleMap ref={ref=>ref.fitBounds(props.bounds)} defaultZoom={16} defaultCenter={props.mapCenter || constants.mapCenter} 
-      center={props.mapCenter || constants.mapCenter} mapTypeId="roadmap" onClick={props.onClick}>
+      }} disableDefaultUI > {console.log("---->"+props.bounds)} {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} /> } </GoogleMap> : 
+      <GoogleMap    
+      ref = {props.setZoom}
+      defaultZoom={16} defaultCenter={props.mapCenter || constants.mapCenter} 
+       mapTypeId="roadmap" onClick={props.onClick}>
        {props.showMarker && <MyMarker markerPos={props.markerPos} allowEdit={props.allowEdit} title={"Route of " + props.label}
                              color={props.color} dragHandler={props.onDragMarker}/> }
        {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} allowEdit={props.allowEdit}
