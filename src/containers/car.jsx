@@ -9,8 +9,8 @@ export class Car extends Component {
 	constructor(props) {
     super(props);
     this.state = { 
-      carId:"",
-	    speed: ""
+      carId: this.props.sourceCar.carId ? this.props.sourceCar.carId + "_1" : "",
+	    speed: this.props.sourceCar.speed || ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -53,6 +53,10 @@ export class Car extends Component {
     this.props.onSave(carData);
   }
 
+  handleCancel(){
+    this.props.onClose();
+  }
+
   render() {
     return (
       <div className="Car">
@@ -83,6 +87,13 @@ export class Car extends Component {
             disabled={!this.validateForm()}
             type="submit">
             Save
+          </Button>
+          <Button
+            block
+            bsSize="sm"
+            bsStyle="default" onClick={this.handleCancel}
+            type="button">
+            Cancel
           </Button>
         </form>
       </div>

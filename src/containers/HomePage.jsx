@@ -80,7 +80,8 @@ export default class HomePage extends Component {
           if(ids.indexOf(c.carId) === -1){
             c.isSaved=true;
             let poly = [];
-            c.poly.map(function(p) {
+            c.speed = c.poly[0].speed;
+            c.poly.forEach(function(p) {
                 if(p.parent){
                   poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng)});
                 }
@@ -110,7 +111,7 @@ export default class HomePage extends Component {
   }
 
   openModal() {
-     this.setState({modalIsOpen: true, sourceCar: {}})
+     this.setState({modalIsOpen: true, sourceCar: {}});
   }
 
   closeModal() {
@@ -201,17 +202,19 @@ export default class HomePage extends Component {
   updateCarPanel(carId, self){
       console.log("Updating cars------------");
       let oldCars = self.state.cars;
-      let newCars = oldCars.filter(function(car) {
-          return car.carId != carId;
+      let newCars = [], carIndex;
+      oldCars.forEach(function(car, index) {
+          car.carId !== carId ? newCars.push(car) : carIndex = index ;
        });
       let oldCount = self.state.count;
       let newCount = oldCount- 1;
       if(newCount === 0){
-        self.setState({cars: newCars, count: newCount, selectedCar: {}, mapOpen: false});
+        self.setState({cars: newCars, count: newCount, selectedCar: {}, mapOpen: false, dialogVisible: false});
       }else{
          //condition if the focus car is deleted
-        let selCar = (self.state.selectedCar.carId == carId) ? newCars[newCount -1] : self.state.selectedCar ;
-        self.setState({cars: newCars, count: newCount, selectedCar: selCar});
+        // let selCar = (self.state.selectedCar.carId == carId) ? newCars[newCount -1] : self.state.selectedCar ;
+        let selCar = (newCount === carIndex) ? newCars[newCount -1] : newCars[carIndex]
+        self.setState({cars: newCars, count: newCount, selectedCar: selCar, dialogVisible: false});
       }
       console.log("Updating cars complete------------");
   }
@@ -241,19 +244,19 @@ export default class HomePage extends Component {
     return <div id="car-panel">{buttons}</div> || null;
   }
 
-  updateCar(car) {
+  updateCar(car, isRest) {
       let self = this;
       const cars = this.state.cars;
-      cars.map((obj) => {
-      if(obj.carId === car.carId){
-          obj = car;
-          return obj;
+      for(let index=0; index<cars.length; index ++){
+        if(cars[index].carId === car.carId){
+            cars[index] = car;
+            break;
         }
-      });
+      }
       this.setState({
-        cars: cars, showHeader: car.isSaved
+        cars: cars, showHeader: isRest
       });
-      if(car.isSaved){
+      if(isRest){
        setTimeout(function(){
           self.setState({showHeader: false});
         }, 5000);
@@ -266,21 +269,17 @@ export default class HomePage extends Component {
   	// let isSaved = this.state.selectedCar.isSaved ;
   	let routes = [];
     let self = this;
-/*  	if(isSaved){
-  		routes = [];
-  	}else{*/
   		let cars = this.state.cars;
   		let savedCars = cars.filter(function(car) {
-         	return car.isSaved && car.carId != self.state.selectedCar.carId;
+         	return car.isSaved && car.carId !== self.state.selectedCar.carId;
        });
-  		savedCars.map((car) => {
+  		savedCars.forEach(function(car){
   			let route = car.poly;
   			route[0].carId = car.carId;
         route[0].color = car.color;
         route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
   			routes.push(route);
   		});
-  	// }
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar} routes={routes} loginData={loginData} pwd={password} />;
   }
 
@@ -317,7 +316,7 @@ export default class HomePage extends Component {
        });
 
        if(savedCars.length > 0){ /* Whether to view routes or display disabled map*/
-            savedCars.map((car) => {
+            savedCars.forEach(function(car) {
               let route = car.poly;
               route[0].carId = car.carId;
               route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
@@ -349,9 +348,9 @@ export default class HomePage extends Component {
           shouldCloseOnOverlayClick={false}
           contentLabel="Car Details">
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details
-          <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" onClick={this.closeModal}><div></div></button></div>
+          <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" title="Close" onClick={this.closeModal}><div></div></button></div>
           </div>
-            <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar}/>
+            <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar} onClose={this.closeModal}/>
         </Modal> }
         {this.displayContent()}
       </div>

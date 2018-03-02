@@ -117,7 +117,7 @@ export class MapContainer extends React.Component {
 		 	selCar['markerCount'] = this.state.markerCount;
 			selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
 		 	selCar['showMarker'] = this.state.showMarker;
-		 	this.props.updateCar(selCar);
+		 	this.props.updateCar(selCar, true);
 	 	}
 	}
 
@@ -137,7 +137,7 @@ export class MapContainer extends React.Component {
 		selCar['markers'] = this.state.drawPolyline ? [selCar.poly[0], selCar.poly[selCar.poly.length - 1]] : this.state.markers;
 	 	selCar['showMarker'] = this.state.showMarker;
 	 	console.log("Saving car as------", selCar);
-	 	this.props.updateCar(selCar);
+	 	this.props.updateCar(selCar, false);
 	}
 
 	getPolySourceDestination() {
@@ -334,7 +334,7 @@ export class MapContainer extends React.Component {
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)} 
 							routes={this.state.routes} allowEdit={true}
-							mapCenter={mapCenter} color={this.props.car.color}
+							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carId}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handleSave}
 			/>
