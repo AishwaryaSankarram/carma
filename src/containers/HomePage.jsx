@@ -20,7 +20,7 @@ export default class HomePage extends Component {
     this.state = {
           islogout:false,
           modalIsOpen: false,
-          cars: this.props.cars, //For drawing car icons based on no.of cars set
+          cars: null, //For drawing car icons based on no.of cars set
           count: this.props.count,
           selectedCar: {},
           sourceCar: {},
@@ -357,13 +357,14 @@ export default class HomePage extends Component {
   }
 
  render() {
+    console.info("Rendering HomePage--------------");
     return (
       <div className="App">
         {<Header onBtnClick={this.openModal} logout={this.logout} viewRoutes={this.displayRoutes}/>}
         {this.state.dialogVisible &&
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}/>}
-        {this.displayCars()}
+        {this.state.cars && this.displayCars()}
         {this.state.showHeader && <div className="alert-success" id="hideMe">Route for {this.state.selectedCar.carId} has been saved</div> }
         {this.state.modalIsOpen && <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
@@ -374,13 +375,8 @@ export default class HomePage extends Component {
           </div>
             <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar} onClose={this.closeModal}/>
         </Modal> }
-        {this.displayContent()}
+        {this.state.cars && this.displayContent()}
       </div>
     );
   }
 }
-
-HomePage.defaultProps = {
-  cars: [],
-  count: 0
-};
