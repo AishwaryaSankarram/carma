@@ -13,6 +13,7 @@ export class Car extends Component {
 	    speed: this.props.sourceCar.speed || ""
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
   }
 
   validateForm() {
