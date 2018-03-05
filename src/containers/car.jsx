@@ -8,7 +8,7 @@ const apiData = require('../utils/api.jsx');
 export class Car extends Component {
 	constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       carId: this.props.sourceCar.carId ? this.props.sourceCar.carId + "_1" : "",
 	    speed: this.props.sourceCar.speed || ""
     };
@@ -31,14 +31,14 @@ export class Car extends Component {
     const v2xServers = ["192.168.1.64","192.168.1.65","192.168.1.66","192.168.1.67","192.168.1.68"];
     var defaultParams = {
       stepSize:"1",
-      startAtSec: new Date().getTime(), 
+      startAtSec: new Date().getTime(),
       v2xServer: v2xServers[this.props.carIndex % 5],
       gpsCanServer: gpsCanServers[this.props.carIndex % 5],
       remoteIp: apiData.remoteIp,
       remotePath:apiData.remotePath,
       remotePass:apiData.remotePass,
       remoteUser:apiData.remoteUser
-    };  
+    };
     let sourceCar = this.props.sourceCar;
     if(Object.keys(sourceCar).length > 0){
       defaultParams = Object.assign(defaultParams, sourceCar); //Adding old car params
@@ -80,21 +80,21 @@ export class Car extends Component {
               onChange={this.handleChange}
             />
             </FormGroup>
+				<div className="modal-footer">
           <Button
-            block
-            bsSize="sm"
-            bsStyle="primary"
-            disabled={!this.validateForm()}
-            type="submit">
-            Save
-          </Button>
-          <Button
-            block
             bsSize="sm"
             bsStyle="default" onClick={this.handleCancel}
             type="button">
             Cancel
           </Button>
+					<Button
+						bsSize="sm"
+						bsStyle="primary"
+						disabled={!this.validateForm()}
+						type="submit">
+						Save
+					</Button>
+					</div>
         </form>
       </div>
     );

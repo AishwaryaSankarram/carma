@@ -38,28 +38,6 @@ html, body {
     border: none;
 }
 
-.ReactModal__Content {
-    width: 500px !important;
-    max-height: 380px;
-    left: 50% !important;
-    margin-left: -250px;
-    margin-top: 50px;
-}
-
-.modal-title {
-    font-size: 22px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.modal-title .icon-close {
-    background: transparent;
-    outline: none;
-    border: none;
-    margin: -46px -16px 10px 0px;
-    font-size: 16px
-}
-
 .footer {
     display: none;
     position: fixed;
