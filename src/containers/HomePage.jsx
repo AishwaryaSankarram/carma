@@ -84,7 +84,7 @@ export default class HomePage extends Component {
             c.speed = c.poly[0].speed;
             c.poly.forEach(function(p) {
                 if(p.parent){
-                  poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng)});
+                  poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng), speed: p.speed});
                 }
             });
             c.poly = poly;

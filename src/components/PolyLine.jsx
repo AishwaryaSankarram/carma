@@ -12,6 +12,7 @@ export class PolyLine extends React.Component {
                 strokeWeight: 2,
             },
             modalIsVisible: false,
+            currentSpeed: "",
             vertex: null
         }
         this.method = this.method.bind(this);
@@ -67,7 +68,12 @@ export class PolyLine extends React.Component {
         console.log("click on polyline vertex----------->", e);
         let vertex = e.vertex;
         if(vertex > -1){
-            this.setState({vertex: vertex, modalIsVisible: true});
+            // let existingLine =  this.refs.gPolyLine;
+            // window.polyline = existingLine;
+            // let point = existingLine.getPath().getAt(vertex);
+            console.log(this.props.pathCoordinates[vertex]);
+            let speed = this.props.pathCoordinates[vertex].speed ;
+            this.setState({vertex: vertex, modalIsVisible: true, currentSpeed: speed});
         }
     }
 
@@ -77,12 +83,14 @@ export class PolyLine extends React.Component {
 
     setSpeed(speed, vertex){
          console.log("Comes to setSpeed ---------->" , speed, vertex);
-         this.setState({modalIsVisible: false});   
+            
          if(speed > 0){
            let existingLine =  this.refs.gPolyLine;
            let point = existingLine.getPath().getAt(vertex);
            point.speed = speed;
            existingLine.getPath().setAt(vertex, point);
+           this.props.pathCoordinates[vertex].speed = speed;
+           this.setState({modalIsVisible: false});
            this.props.saveHandler();
           }
     }
@@ -140,7 +148,7 @@ export class PolyLine extends React.Component {
                 />
                 {this.state.modalIsVisible && 
                       <SpeedModal title="Enter Speed" modalIsOpen={this.state.modalIsVisible}
-                      okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex}/> }
+                      okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex} speed={this.state.currentSpeed} /> }
             </div>
         );
     }
