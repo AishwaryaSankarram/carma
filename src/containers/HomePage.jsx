@@ -125,6 +125,11 @@ export default class HomePage extends Component {
     let oldCars = this.state.cars;
     let oldCount = this.state.count;
     let index = oldCount;
+    if(carData.useAsEv){
+      oldCars.forEach(function(c){
+        c.useAsEv = false;
+      });
+    }
     if(oldCount > 0){
       let oldColor = oldCars[oldCount -1].color;
       let oldIndex = constants.color_codes.indexOf(oldColor);
