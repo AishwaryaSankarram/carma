@@ -1,15 +1,4 @@
 
-  .Car {
-    padding: 25px 0;
-  }
-
-  .Car form {
-    margin: 0 auto;
-    max-width: 320px;
-  }
-
-
-
   .car-icon-1 .load_car ,.car-icon-1 .load_car .car_name_no{
   	color: #93c849;
     border-color: #93c849 !important;

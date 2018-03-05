@@ -347,10 +347,8 @@ export default class HomePage extends Component {
           onRequestClose={this.closeModal}
           shouldCloseOnOverlayClick={false}
           contentLabel="Car Details">
-          <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details
-          <div className="modal-close"> <button className="pull-right remove icon-close fa fa-close" title="Close" onClick={this.closeModal}><div></div></button></div>
-          </div>
-            <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar} onClose={this.closeModal}/>
+          <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details</div>
+            <div className="modal-body"> <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar} onClose={this.closeModal}/></div>
         </Modal> }
         {this.displayContent()}
       </div>
