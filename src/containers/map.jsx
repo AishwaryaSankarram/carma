@@ -354,8 +354,10 @@ export class MapContainer extends React.Component {
 		}
 		if(flag){
 			const constants = require("../utils/constants.jsx"); 
-			let mapCenter = constants.mapCenter; //Using mapCenter from constants
-			latLngBounds.extend(new window.google.maps.LatLng({ lat:mapCenter.lat, lng: mapCenter.lng}));
+			let defLatLng = constants.bounds; //Using bounds from constants
+			defLatLng.forEach(function(point){
+              latLngBounds.extend(new window.google.maps.LatLng({ lat:point.lat, lng: point.lng}));
+            });
 		}
 		return latLngBounds;
 	}
@@ -386,10 +388,10 @@ export class MapContainer extends React.Component {
 							 bounds={bounds}
 			/>
 			{this.state.modalIsVisible && 
-		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="Do you want us to draw the route ?" 
+		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="How do you want to draw the route?" 
 		          okAction={this.getPolyFromDirections} cancelAction={this.deleteMarkers} 
 		          addBtn={this.constructPolyLine} labelOk="Use Google to draw the routes"  
-		          addBtnLabel="Draw free hand route" labelCancel="Cancel" />}
+		          addBtnLabel="Use my own route" labelCancel="Cancel" />}
 			</div>	
 		);
 	}

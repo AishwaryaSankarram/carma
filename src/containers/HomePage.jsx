@@ -67,7 +67,6 @@ export default class HomePage extends Component {
             console.log("Oops...! Get Cars failed with--------" + response.status);
            }
            self.setState({cars: cars, count: cars.length});
-           console.log("test---->"+cars);
       }).catch(function (error) {
               console.log("The error is------------", error);
       });
@@ -125,6 +124,7 @@ export default class HomePage extends Component {
     let oldCars = this.state.cars;
     let oldCount = this.state.count;
     let index = oldCount;
+
     if(carData.useAsEv){
       oldCars.forEach(function(c){
         c.useAsEv = false;
@@ -317,7 +317,6 @@ export default class HomePage extends Component {
   getBounds(routeArray){
     var latLngBounds = new window.google.maps.LatLngBounds();
     for(let i=0; i<routeArray.length;i++){
-      // console.log("Priniting routes array -----------------",routeArray[0]);
       let routes = routeArray[i][0].markerPos;
       routes.forEach(function(e){
         latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));     
@@ -349,9 +348,11 @@ export default class HomePage extends Component {
           console.log("Displaying routes for saved cars-------");
        }else{
            const constants = require("../utils/constants.jsx"); 
-           let mapCenter = constants.mapCenter; //Using mapCenter from constants
+           let defLatLng = constants.bounds; //Using bounds from constants
            bounds = new window.google.maps.LatLngBounds();
-           bounds.extend(new window.google.maps.LatLng({ lat:mapCenter.lat, lng: mapCenter.lng}));
+           defLatLng.forEach(function(point){
+              bounds.extend(new window.google.maps.LatLng({ lat:point.lat, lng: point.lng}));
+           });
            console.log("Displaying disabled true map-------");
        }
        console.error("Bounds value===========>"+bounds);
