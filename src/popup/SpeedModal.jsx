@@ -9,7 +9,7 @@ export class SpeedModal extends Component {
 		super(props);
 		this.state = {
 			modalIsOpen: this.props.modalIsOpen, 
-			speed: ""
+			speed: this.props.speed || ""
 		};
 	this.closeModal = this.closeModal.bind(this);
 	this.onSave = this.onSave.bind(this);

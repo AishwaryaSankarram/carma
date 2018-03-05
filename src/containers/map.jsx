@@ -332,15 +332,47 @@ export class MapContainer extends React.Component {
 		}
 		return mapCenter;
 	}
+	getBounds(){
+		let routeArray= this.state.routes;
+		let flag = true;
+		var latLngBounds = new window.google.maps.LatLngBounds();
+		if(routeArray.length > 0){
+			for(let i=0; i<routeArray.length;i++){
+				let routes = routeArray[i][0].markerPos;
+				routes.forEach(function(e){
+					latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));			
+				});
+			}
+			flag=false;
+		}
+		if(this.state.drawPolyline || (this.state.markerCount > 0)){
+			let markers = this.state.markers;
+			markers.forEach(function(e){
+				latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));			
+			});	
+			flag = false;
+		}
+		if(flag){
+			const constants = require("../utils/constants.jsx"); 
+			let defLatLng = constants.bounds; //Using bounds from constants
+			defLatLng.forEach(function(point){
+              latLngBounds.extend(new window.google.maps.LatLng({ lat:point.lat, lng: point.lng}));
+            });
+		}
+		return latLngBounds;
+	}
 
 	displayMaps(){
 		let mapCenter = this.deriveMapCenter();
+		let saveBtnClass = this.props.car.isSaved ? "car_submit_disable" : (this.state.drawPolyline ? "save-highlight" : "") ;
+		let bounds = this.getBounds();
+		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
 			<div className="clearfix">
 			<div className="pull-left route_label">Plan your route for {this.props.car.carId} </div>
 			<div id="btn-submit-container"  className="pull-right ">
-				<button onClick={this.handleSubmit} className={this.props.car.isSaved ? "car_submit_disable" : ""}> Save </button>
+				<button onClick={this.handleSubmit} className={saveBtnClass}> Save </button>
 			</div>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 
@@ -353,12 +385,13 @@ export class MapContainer extends React.Component {
 							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carId}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handleSave}
+							 bounds={bounds}
 			/>
 			{this.state.modalIsVisible && 
-		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="Do you want us to draw the route ?" 
+		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="How do you want to draw the route?" 
 		          okAction={this.getPolyFromDirections} cancelAction={this.deleteMarkers} 
 		          addBtn={this.constructPolyLine} labelOk="Use Google to draw the routes"  
-		          addBtnLabel="Draw free hand route" labelCancel="Cancel" />}
+		          addBtnLabel="Use my own route" labelCancel="Cancel" />}
 			</div>	
 		);
 	}

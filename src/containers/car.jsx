@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Button, FormGroup, FormControl, ControlLabel,Checkbox } from "react-bootstrap";
 //import axios from 'axios';
 import '../css/car.css';
 const apiData = require('../utils/api.jsx');
@@ -8,9 +8,14 @@ const apiData = require('../utils/api.jsx');
 export class Car extends Component {
 	constructor(props) {
     super(props);
-    this.state = {
-      carId: this.props.sourceCar.carId ? this.props.sourceCar.carId + "_1" : "",
-	    speed: this.props.sourceCar.speed || ""
+    let carId = this.props.sourceCar.carId ? this.props.sourceCar.carId + "_1" : "";
+    carId = carId.length === 0 ? this.props.carId || "" : carId ;
+    let speed = this.props.sourceCar.speed || "";
+    speed = speed.length === 0 ? this.props.speed || ""  : speed ;
+    this.state = { 
+      carId: carId,
+	    speed: speed,
+      useAsEv: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
@@ -20,10 +25,17 @@ export class Car extends Component {
     return true; //TODO: Validations for the form
   }
 
-  handleChange = (event) => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
+  handleChange = (event, item) => {
+    if(item){
+      this.setState({
+        [item]: event.target.checked
+      });
+    }else{
+      this.setState({
+        [event.target.id]: event.target.value
+      });  
+    }
+    
   }
 
   handleSubmit = (event) => {
@@ -62,7 +74,7 @@ export class Car extends Component {
     return (
       <div className="Car">
         <form onSubmit={this.handleSubmit}>
-        <FormGroup controlId="carId" bsSize="large">
+        <FormGroup controlId="carId" bsSize="sm">
             <ControlLabel>Car Label</ControlLabel>
             <FormControl
               autoFocus
@@ -72,7 +84,7 @@ export class Car extends Component {
               onChange={this.handleChange}
             />
           </FormGroup>
-          <FormGroup controlId="speed" bsSize="large">
+          <FormGroup controlId="speed" bsSize="sm">
             <ControlLabel>Initial Speed</ControlLabel>
             <FormControl
               type="text"
@@ -80,8 +92,9 @@ export class Car extends Component {
               placeholder="Miles per hour"
               onChange={this.handleChange}
             />
-            </FormGroup>
-				<div className="modal-footer">
+          </FormGroup>        
+          <Checkbox checked={this.state.useAsEv} onChange={(event) => this.handleChange(event, "useAsEv")}>Use as EV </Checkbox> 
+          <div className="modal-footer">
           <Button
             bsSize="sm"
             bsStyle="default" onClick={this.handleCancel}
