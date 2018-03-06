@@ -8,12 +8,12 @@ const apiData = require('../utils/api.jsx');
 export class Car extends Component {
 	constructor(props) {
     super(props);
-    let carId = this.props.sourceCar.carId ? this.props.sourceCar.carId + "_1" : "";
-    carId = carId.length === 0 ? this.props.carId || "" : carId ;
+    let carLabel = this.props.sourceCar.carLabel ? this.props.sourceCar.carLabel + "_1" : "";
+    carLabel = carLabel.length === 0 ? this.props.car.carLabel || "" : carLabel ;
     let speed = this.props.sourceCar.speed || "";
-    speed = speed.length === 0 ? this.props.speed || ""  : speed ;
+    speed = speed.length === 0 ? this.props.car.speed || ""  : speed ;
     this.state = {
-      carId: carId,
+      carLabel: carLabel,
 	    speed: speed,
       useAsEv: false
     };
@@ -62,6 +62,7 @@ export class Car extends Component {
       defaultParams.isSaved = false;
     }
     let carData = Object.assign(defaultParams, this.state); //Adding current params
+    carData.carId = this.props.car? this.props.car.carId : "";
     console.log("saving carData------" , carData);
     this.props.onSave(carData);
   }
@@ -74,12 +75,12 @@ export class Car extends Component {
     return (
       <div className="Car">
         <form onSubmit={this.handleSubmit}>
-        <FormGroup controlId="carId" bsSize="sm">
+        <FormGroup controlId="carLabel" bsSize="sm">
             <ControlLabel>Car Label</ControlLabel>
             <FormControl
               autoFocus
               type="text"
-              value={this.state.carId}
+              value={this.state.carLabel}
               placeholder="Car Label"
               onChange={this.handleChange}
             />

@@ -227,7 +227,7 @@ export class MapContainer extends React.Component {
 		if(this.state.drawPolyline) { //Redraw routes
 			this.setState({markers: markerPos});
 			setTimeout(function(){ //Load the confirm box and start drawing routes after a delay so that the user can see the marker
-              self.setState({modalIsVisible: true});
+           		self.setState({modalIsVisible: true});
             },200);	
 		  	/*let poly = this.child.method(); 
 		  	poly[0] = markerPos[0];
@@ -364,13 +364,13 @@ export class MapContainer extends React.Component {
 
 	displayMaps(){
 		let mapCenter = this.deriveMapCenter();
-		let saveBtnClass = this.props.car.isSaved ? "car_submit_disable" : (this.state.drawPolyline ? "save-highlight" : "") ;
+		let saveBtnClass = this.state.drawPolyline ? "save-highlight" : "" ;
 		let bounds = this.getBounds();
 		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
 			<div className="clearfix">
-			<div className="pull-left route_label">Plan your route for {this.props.car.carId} </div>
+			<div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div>
 			<div id="btn-submit-container"  className="pull-right ">
 				<button onClick={this.handleSubmit} className={saveBtnClass}> Save </button>
 			</div>

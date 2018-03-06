@@ -27,7 +27,8 @@ export default class HomePage extends Component {
           mapOpen: false,
           dialogVisible: false,
           action: {},
-          modalHeading: ""
+          modalHeading: "",
+          isEditing: false
     };
 
     this.openModal = this.openModal.bind(this);
@@ -36,8 +37,10 @@ export default class HomePage extends Component {
     this.createCar = this.createCar.bind(this);
     this.displayCars = this.displayCars.bind(this);
     this.showMap = this.showMap.bind(this);
-    this.updateCar = this.updateCar.bind(this);
+    this.updateCarProps = this.updateCarProps.bind(this);
+    this.updateRoute = this.updateRoute.bind(this);
     this.cloneCar = this.cloneCar.bind(this);
+    this.editCar = this.editCar.bind(this);
     this.logout = this.logout.bind(this);
     this.displayContent = this.displayContent.bind(this);
     this.updateCarPanel = this.updateCarPanel.bind(this);
@@ -65,9 +68,11 @@ export default class HomePage extends Component {
            }
            else{
             console.log("Oops...! Get Cars failed with--------" + response.status);
+            self.setState({cars: [], count: 0});
            }
            self.setState({cars: cars, count: cars.length});
       }).catch(function (error) {
+              self.setState({cars: [], count: 0});
               console.log("The error is------------", error);
       });
   }
@@ -115,32 +120,38 @@ export default class HomePage extends Component {
   }
 
   closeModal() {
-    this.setState({modalIsOpen: false});
+    this.setState({modalIsOpen: false, sourceCar: {}});
   }
 
   createCar(carData){
-    console.log("Creating a car");
-    this.closeModal();
-    let oldCars = this.state.cars;
-    let oldCount = this.state.count;
-    let index = oldCount;
+    if(this.state.isEditing){
+      console.log("Updating a car");
+      this.updateCarProps(carData);
+    }else{
+      console.log("Creating a car");
+      this.closeModal();
+      let oldCars = this.state.cars;
+      let oldCount = this.state.count;
+      let index = oldCount;
 
-    if(carData.useAsEv){
-      oldCars.forEach(function(c){
-        c.useAsEv = false;
-      });
-    }
-    if(oldCount > 0){
-      let oldColor = oldCars[oldCount -1].color;
-      let oldIndex = constants.color_codes.indexOf(oldColor);
-      if(oldIndex !== oldCount -1){
-        index = oldIndex + 1;
+      if(carData.useAsEv){
+        oldCars.forEach(function(c){
+          c.useAsEv = false;
+        });
       }
+      if(oldCount > 0){
+        let oldColor = oldCars[oldCount -1].color;
+        let oldIndex = constants.color_codes.indexOf(oldColor);
+        if(oldIndex !== oldCount -1){
+          index = oldIndex + 1;
+        }
+      }
+      carData.carId = carData.carLabel;  
+      carData.color = constants.color_codes[index % 10];
+      oldCars.push(carData);
+      let newCount = oldCount + 1;
+      this.setState({cars: oldCars, count: newCount, selectedCar: carData, mapOpen: true});
     }
-    carData.color = constants.color_codes[index % 10];
-    oldCars.push(carData);
-    let newCount = oldCount + 1;
-    this.setState({cars: oldCars, count: newCount, selectedCar: carData, mapOpen: true});
   }
 
   showMap(e) {
@@ -171,9 +182,9 @@ export default class HomePage extends Component {
 
   deleteCar(car){
     let self = this;
-    let carId = car.carId ;
+    let carLabel = car.carLabel ;
     console.log("carid==>"+car.carId);
-    let confimation = "Do you want to delete " + carId + " ?";
+    let confimation = "Do you want to delete " + carLabel + " ?";
     self.setState({dialogVisible: true, action: this.handleDelete, message: confimation, modalHeading: "Delete Car" });
   }
 
@@ -225,6 +236,11 @@ export default class HomePage extends Component {
       console.log("Updating cars complete------------");
   }
 
+  editCar(event, car){
+    let self=this;
+    self.setState({isEditing: true, modalIsOpen: true, selectedCar: car});
+  }
+
   displayCars(){
      console.log("displaying cars---------");
      let buttons = [];
@@ -237,8 +253,9 @@ export default class HomePage extends Component {
             let colorClass = constants.color_classes[constants.color_codes.indexOf(car.color)];
             let btnHtml = <div key={'div_' + car.carId}  className={"car-btn "+ cloneIcon + colorClass + activeClass}>
                         <button key={'btn_' + car.carId} data-carid={car.carId}
-                       className={"pull-left load_car " } onClick={this.showMap}><div className="fa fa-car "></div>
-                       <div className="car_name_no">{this.state.cars[i].carId} </div></button>
+                       className={"pull-left load_car " } onClick={this.showMap} onDoubleClick={(event) => this.editCar(event, car)}>
+                       <div className="fa fa-car "></div>
+                       <div className="car_name_no">{this.state.cars[i].carLabel} </div></button>
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
                        <i key={'icon_trash_' + car.carId} title="Delete" className={'fa fa-trash-o car_item_delete' + showDelete}
                         onClick={() => this.deleteCar(car)} ></i>
@@ -251,11 +268,28 @@ export default class HomePage extends Component {
     //EOF
   }
 
-  updateCar(car, isRest) {
+  updateCarProps(car){
+     let self = this;
+     self.closeModal();
+     let cars = self.state.cars;
+     cars.forEach(function(c){
+      if(c.carId === car.carId){
+        c.carLabel = car.carLabel;
+        c.speed = car.speed;
+        c.useAsEv = car.useAsEv;
+      }
+      if(car.useAsEv && c.carId !== car.carId){
+        c.useAsEv = false;
+      }
+     });
+     self.setState({cars: cars, isEditing: false, mapOpen: true});
+  }
+
+  updateRoute(car, isRest) {
       let self = this;
       const cars = this.state.cars;
       for(let index=0; index<cars.length; index ++){
-        if(cars[index].carId === car.carId){
+        if(cars[index].carLabel === car.carLabel){
             cars[index] = car;
             break;
         }
@@ -280,7 +314,7 @@ export default class HomePage extends Component {
        	return car.isSaved && car.carId !== self.state.selectedCar.carId;
      });
     routes = this.getRoutes(savedCars);
-    return <MapContainer car={this.state.selectedCar} updateCar={this.updateCar} routes={routes} loginData={loginData} pwd={password} />;
+    return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute} routes={routes} loginData={loginData} pwd={password} />;
     //
   }
 
@@ -358,7 +392,7 @@ export default class HomePage extends Component {
        console.error("Bounds value===========>"+bounds);
         content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div> 
         </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter} bounds={bounds}/></div>
-    }
+     }
       return content;
   }
 
@@ -371,13 +405,17 @@ export default class HomePage extends Component {
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}/>}
         {this.state.cars && this.displayCars()}
-        {this.state.showHeader && <div className="alert-success" id="hideMe">Route for {this.state.selectedCar.carId} has been saved</div> }
+        {this.state.showHeader && <div className="alert-success" id="hideMe">Route for {this.state.selectedCar.carLabel} has been saved</div> }
         {this.state.modalIsOpen && <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
           shouldCloseOnOverlayClick={false}
           contentLabel="Car Details">
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details</div>
-            <div className="modal-body"> <Car onSave={this.createCar} carIndex={this.state.count} sourceCar={this.state.sourceCar} onClose={this.closeModal}/></div>
+            <div className="modal-body"> 
+              <Car onSave={this.createCar} carIndex={this.state.count} 
+              sourceCar={this.state.sourceCar} onClose={this.closeModal}
+              car={this.state.isEditing && this.state.selectedCar}/>
+            </div>
         </Modal> }
         {this.state.cars && this.displayContent()}
       </div>
