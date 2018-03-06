@@ -20,11 +20,12 @@ z-index: 1400;
 	position: relative;
 	width: 75%;
 	max-width: 768px;
-	max-height: 300px;
+	max-height: 345px;
 	left: 38px !important;
 	margin: 0px auto;
 	z-index: 1500;
 	opacity: 1;
+	overflow: unset !important;
 	transform: translate(0px, 64px);
 }
 
@@ -56,6 +57,7 @@ font-size: 14px !important;
 }
 .modal-footer{
 	border: none !important;
+	padding: 15px 0px;
 }
 .btn-sm{
 	background: transparent;

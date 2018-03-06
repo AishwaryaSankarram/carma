@@ -39,3 +39,8 @@
   	color: #aea5f3;
     border-color: #aea5f3 !important;
   }
+.Car .checkbox input[type=checkbox]{
+  width: 16px;
+  height: 16px !important;
+  margin-top: 1px;
+}

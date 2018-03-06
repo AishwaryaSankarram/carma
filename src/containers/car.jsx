@@ -12,7 +12,7 @@ export class Car extends Component {
     carId = carId.length === 0 ? this.props.carId || "" : carId ;
     let speed = this.props.sourceCar.speed || "";
     speed = speed.length === 0 ? this.props.speed || ""  : speed ;
-    this.state = { 
+    this.state = {
       carId: carId,
 	    speed: speed,
       useAsEv: false
@@ -33,9 +33,9 @@ export class Car extends Component {
     }else{
       this.setState({
         [event.target.id]: event.target.value
-      });  
+      });
     }
-    
+
   }
 
   handleSubmit = (event) => {
@@ -92,8 +92,8 @@ export class Car extends Component {
               placeholder="Miles per hour"
               onChange={this.handleChange}
             />
-          </FormGroup>        
-          <Checkbox checked={this.state.useAsEv} onChange={(event) => this.handleChange(event, "useAsEv")}>Use as EV </Checkbox> 
+          </FormGroup>
+          <Checkbox checked={this.state.useAsEv} onChange={(event) => this.handleChange(event, "useAsEv")}>Use as EV </Checkbox>
           <div className="modal-footer">
           <Button
             bsSize="sm"
