@@ -78,6 +78,7 @@ export class MapContainer extends React.Component {
   	}
 
   	getGranularPts(payload){
+  		var self = this;
 		var loginResp = JSON.parse(this.props.loginData);
         var pwd = this.props.pwd;
   		var apiBaseUrl =  apiUrl + "granular/";
@@ -89,6 +90,15 @@ export class MapContainer extends React.Component {
 			 console.log(response);
 			 if(response.status === 200){
 			 	console.log("Rest Hit successful");
+			 	//set car id fromcresp
+			 		let selCar = self.props.car;
+			 		// self.props.car.carId = response.data.carId;
+			 		selCar['isSaved'] = true;
+			 		selCar['drawPolyline']=self.state.drawPolyline;
+			 		selCar['markerCount'] = self.state.markerCount;
+					selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
+			 		selCar['showMarker'] = self.state.showMarker;
+			 		self.props.updateCar(selCar, true);
 			 }
 			 else{
 			 	console.log("Oops...! Rest HIT failed with--------" + response.status);
@@ -106,18 +116,13 @@ export class MapContainer extends React.Component {
 	    	if(selCar != null){
 				selCar.poly =  h; 
 			}
-			if(typeof selCar.poly[0].speed === 'undefined'){
+			if(typeof selCar.poly[0].speed === 'undefined' || !selCar.poly[0].speed){
 				selCar.poly[0].speed = selCar.speed;
 			}
-			let payload = selCar;
+			let payload = Object.assign({}, selCar);
+			selCar.isSaved ? "" : payload.delete('carId');
 			this.getGranularPts(payload);
 			console.log(payload);
-			selCar['isSaved'] = true;
-		 	selCar['drawPolyline']=this.state.drawPolyline;
-		 	selCar['markerCount'] = this.state.markerCount;
-			selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
-		 	selCar['showMarker'] = this.state.showMarker;
-		 	this.props.updateCar(selCar, true);
 	 	}
 	}
 
