@@ -12,10 +12,11 @@ export class Car extends Component {
     carLabel = carLabel.length === 0 ? this.props.car.carLabel || "" : carLabel ;
     let speed = this.props.sourceCar.speed || "";
     speed = speed.length === 0 ? this.props.car.speed || ""  : speed ;
+    let useAsEv = this.props.car.useAsEv || false ;
     this.state = {
       carLabel: carLabel,
 	    speed: speed,
-      useAsEv: false
+      useAsEv: useAsEv
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
