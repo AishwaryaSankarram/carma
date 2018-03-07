@@ -37,6 +37,7 @@ export class MapContainer extends React.Component {
 		this.displayMaps = this.displayMaps.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleSave = this.handleSave.bind(this);
+		this.handlePolyEvents = this.handlePolyEvents.bind(this);
 		this.getPolySourceDestination = this.getPolySourceDestination.bind(this);
 		this.getPolyFromDirections = this.getPolyFromDirections.bind(this);
 		this.constructPolyLine = this.constructPolyLine.bind(this);
@@ -81,6 +82,7 @@ export class MapContainer extends React.Component {
   		var self = this;
 		var loginResp = JSON.parse(this.props.loginData);
         var pwd = this.props.pwd;
+        console.log(payload);
   		var apiBaseUrl =  apiUrl + "granular/";
 	     axios.post(apiBaseUrl +'createGranularPoints', payload, {
 	     auth: {
@@ -90,15 +92,14 @@ export class MapContainer extends React.Component {
 			 console.log(response);
 			 if(response.status === 200){
 			 	console.log("Rest Hit successful");
-			 	//set car id fromcresp
-			 		let selCar = self.props.car;
-			 		// self.props.car.carId = response.data.carId;
-			 		selCar['isSaved'] = true;
-			 		selCar['drawPolyline']=self.state.drawPolyline;
-			 		selCar['markerCount'] = self.state.markerCount;
-					selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
-			 		selCar['showMarker'] = self.state.showMarker;
-			 		self.props.updateCar(selCar, true);
+		 		let selCar = self.props.car;
+		 		selCar.carId = response.data.carId; 
+		 		selCar['isSaved'] = true;
+		 		selCar['drawPolyline']=self.state.drawPolyline;
+		 		selCar['markerCount'] = self.state.markerCount;
+				selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
+		 		selCar['showMarker'] = self.state.showMarker;
+		 		self.props.updateCar(selCar, true);
 			 }
 			 else{
 			 	console.log("Oops...! Rest HIT failed with--------" + response.status);
@@ -120,9 +121,8 @@ export class MapContainer extends React.Component {
 				selCar.poly[0].speed = selCar.speed;
 			}
 			let payload = Object.assign({}, selCar);
-			selCar.isSaved ? "" : payload.delete('carId');
+			selCar.isSaved ? "" : delete(payload.carId);
 			this.getGranularPts(payload);
-			console.log(payload);
 	 	}
 	}
 
@@ -143,6 +143,13 @@ export class MapContainer extends React.Component {
 	 	selCar['showMarker'] = this.state.showMarker;
 	 	console.log("Saving car as------", selCar);
 	 	this.props.updateCar(selCar, false);
+	}
+
+
+	handlePolyEvents(h){
+		let selCar = this.props.car;
+		selCar.poly = h;
+		console.log("Handling poly events------", selCar);
 	}
 
 	getPolySourceDestination() {
@@ -258,10 +265,14 @@ export class MapContainer extends React.Component {
 	}
 
 	handlePolyDrag(poly){
+		let self = this;
 		this.setState({
 			markers: [poly[0], poly[poly.length - 1]]
 		});
-		this.handleSave();
+		setTimeout(function(){
+			self.handleSave();	
+		}, 200);
+		
 	}
 
 	getPolyFromDirections(){
@@ -389,8 +400,8 @@ export class MapContainer extends React.Component {
 							routes={this.state.routes} allowEdit={true}
 							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carId}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
-							onChangeAttr={this.handleSave}
-							 bounds={bounds}
+							onChangeAttr={this.handlePolyEvents}
+							bounds={bounds}
 			/>
 			{this.state.modalIsVisible && 
 		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="How do you want to draw the route?" 

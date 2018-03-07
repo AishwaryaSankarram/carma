@@ -32,6 +32,7 @@ export const MyMapComponent = compose(
   withGoogleMap
 )((props) => (
      props.disabled ?  <GoogleMap ref={props.setZoom}
+        defaultZoom={16} 
         defaultOptions={{
           streetViewControl: false,
           scaleControl: false,

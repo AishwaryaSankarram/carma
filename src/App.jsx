@@ -28,7 +28,7 @@ export default class App extends Component {
     var isLoggedIn = this.state.localData;
 
     return (
-      <div className="App_login">
+      <div key="app-login" className="App_login">
       {!isLoggedIn ? (this.state.loginPage):(this.state.homePage)}
       </div>
     );
