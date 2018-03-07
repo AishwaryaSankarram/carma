@@ -24,6 +24,7 @@ export default class Register extends Component {
       name:'',
       email:'',
       password:'',
+      loginmessage:'',
       registerRole:["ROLE_USER"],
     //   menuValue:2
     }
@@ -66,6 +67,14 @@ export default class Register extends Component {
        }
        else{
          console.log("some error ocurred",response.status);
+                         self.setState({
+                           loginmessage: (
+                             <div className="alert-danger">
+                               some error ocurred! Try to register again.
+                             </div>
+                           )
+                         });
+
        }
      })
      .catch(function (error) {
@@ -73,44 +82,47 @@ export default class Register extends Component {
      });
     }
     else{
-      alert("Input field value is missing");
+      // alert("Input field value is missing");
+      self.setState({
+        loginmessage: (
+          <div className="alert-danger">
+            kindly fill the forms.
+          </div>
+        )
+      });
     }
 
   }
   render() {
     // console.log("props",this.props);
-    return (
-      <div>
+    return <div>
         <MuiThemeProvider>
-         <form action="/" method="POST" onSubmit={(event) => this.handleClick(event)}>
-          <div>
+          <form action="/" method="POST" onSubmit={event => this.handleClick(event)}>
+            <div>
               <div className="header_part">
-                  <div className="page_logo">
-                      <figure className="logo"><img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" /></figure>
-                  </div>
-                  <div className="header_title">Carma Route Planner</div>
+                <div className="page_logo">
+                  <figure className="logo">
+                    <img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" />
+                  </figure>
+                </div>
+                <div className="header_title">Carma Route Planner</div>
               </div>
-           <div className="sing_in_wrapper clearfix">   
-           <TextField
-             hintText="Enter your name"
-             floatingLabelText="Name"
-             onChange={(event,newValue) => this.setState({name:newValue})}
-             />
-           <br/>
-          <TextField
-             hintText="Enter your email address"
-             floatingLabelText="Email Address"
-             onChange={(event,newValue) => this.setState({email:newValue})}
-             />
-           <br/>
-           <TextField
-             type="password"
-             hintText="Enter your password"
-             floatingLabelText="Password"
-             onChange={(event,newValue) => this.setState({password:newValue})}
-             />
-           <br/>
-           {/* <div>
+              {this.state.loginmessage}
+
+              <div className="sing_in_wrapper clearfix">
+                <TextField hintText="Enter your name" floatingLabelText="Name" onChange={(event, newValue) => this.setState(
+                      { name: newValue }
+                    )} />
+                <br />
+                <TextField hintText="Enter your email address" floatingLabelText="Email Address" onChange={(event, newValue) => this.setState(
+                      { email: newValue }
+                    )} />
+                <br />
+                <TextField type="password" hintText="Enter your password" floatingLabelText="Password" onChange={(event, newValue) => this.setState(
+                      { password: newValue }
+                    )} />
+                <br />
+                {/* <div>
            <MuiThemeProvider>
                       <DropDownMenu value={this.state.menuValue}  onChange={(event,index,value)=>this.handleMenuChange(value)} style={style.customWidth} autoWidth={false}>
                            <MenuItem value={1} primaryText="Admin"/>
@@ -118,14 +130,13 @@ export default class Register extends Component {
                        </DropDownMenu>
            </MuiThemeProvider>
            </div> */}
-           <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
-           <RaisedButton label="Login" primary={true} style={style} onClick={(event) => this.login(event)}/>
-          </div>
-          </div>
+                <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={event => this.handleClick(event)} />
+                <RaisedButton label="Login" primary={true} style={style} onClick={event => this.login(event)} />
+              </div>
+            </div>
           </form>
-         </MuiThemeProvider>
-      </div>
-    );
+        </MuiThemeProvider>
+      </div>;
   }
   login(event){
     let self=this;
