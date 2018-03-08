@@ -47,6 +47,7 @@ export default class Login extends Component{
         this.state={
             emailId:'',
             password:'',
+            loginmessage:'',
             loginComponent:loginComponent,
         }
         this.populateHomePage = this.populateHomePage.bind(this);
@@ -54,6 +55,21 @@ export default class Login extends Component{
     componentWillReceiveProps(nextProps){
         console.log("login component page received props: ",nextProps);
       }
+
+    
+    componentWillMount() {
+                console.log("component will mount called: ", this.props);
+                this.setState({loginmessage:this.props.loginmessage})
+
+    }
+
+    // componentWillUpdate = (nextProps, nextState) => {
+    //     console.log("component will update called: ", nextProps);
+    //     // nextProps.loginmessage=null;
+    //     this.setState({ loginmessage: '' });
+    // }
+    
+    
     register(event){
         let self = this;
         let registerPage = <Register key="register-page" appContext={self.props.appContext} /> ;
@@ -87,8 +103,8 @@ export default class Login extends Component{
                 self.populateHomePage();
             }
             else {
-                console.log("Username password do not match");
-                self.setState({loginmessage: 'Incorect Email Address or Password. Please try again.'});
+                console.log("Username password does not match");
+                self.setState({loginmessage: <div className="alert-danger" >Incorect Email Address or Password. Please try again.</div>});
                 console.log(response.status);
             }
         })
@@ -105,6 +121,9 @@ export default class Login extends Component{
 
 
     render() {
+            var registered = this.props.loginmessage;
+console.log("Is props avl-----------",registered);
+
         return (
           <div>
             <MuiThemeProvider>
@@ -115,7 +134,7 @@ export default class Login extends Component{
                   <div className="header_title">Carma Route Planner</div>
               </div>
             </MuiThemeProvider>
-           {this.props.loginmessage}
+            {this.state.loginmessage} 
            {this.state.loginComponent}
           </div>
         );
