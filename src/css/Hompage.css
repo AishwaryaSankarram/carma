@@ -166,6 +166,12 @@ html, body {
     clear: both;
 }
 
+.menu-header node {
+    float: right;
+    right:0px;
+    top: 60px;
+}
+
 .header_title {
     width: calc(100% - 500px);
     font-size: 25px;

@@ -7,10 +7,28 @@ import {Header} from '../layouts/header.jsx';
 // import {Footer} from '../layouts/footer.jsx';
 import '../css/Hompage.css';
 import {MyModal} from '../popup/Modal.jsx';
+import MuiTheme from 'material-ui/styles/getMuiTheme';
 import axios from 'axios';
+import Popover from "material-ui/Popover";
+import Menu from "material-ui/Menu";
+import MenuItem from "material-ui/MenuItem";
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import Mapicon from 'material-ui/svg-icons/maps/place';
+import Logouticon from 'material-ui/svg-icons/action/power-settings-new';
+
 const apiData = require('../utils/api.jsx');
 const constants = require('../utils/constants.jsx');
 const apiUrl = apiData.baseUrl;
+const style = {
+  popup: {
+    // display: "inline-block",
+    // float: "right",
+    // margin:"right",
+    // right:"10px",
+    // margin: "16px 0px 16px 0px"
+  }
+};
+
 
 export default class HomePage extends Component {
 
@@ -28,7 +46,8 @@ export default class HomePage extends Component {
           dialogVisible: false,
           action: {},
           modalHeading: "",
-          isEditing: false
+          isEditing: false,
+          isMenuOpen:false
     };
 
     this.openModal = this.openModal.bind(this);
@@ -42,6 +61,8 @@ export default class HomePage extends Component {
     this.cloneCar = this.cloneCar.bind(this);
     this.editCar = this.editCar.bind(this);
     this.logout = this.logout.bind(this);
+    this.menuClick = this.menuClick.bind(this);
+
     this.displayContent = this.displayContent.bind(this);
     this.updateCarPanel = this.updateCarPanel.bind(this);
     this.displayRoutes = this.displayRoutes.bind(this);
@@ -116,6 +137,7 @@ export default class HomePage extends Component {
   }
 
   openModal() {
+    console.log("open model called")
      this.setState({modalIsOpen: true, sourceCar: {}});
   }
 
@@ -319,6 +341,7 @@ export default class HomePage extends Component {
   }
 
   displayRoutes(){
+    console.log("display routes called")
     this.setState({mapOpen: false, selectedCar: {}});
   }
 
@@ -396,12 +419,36 @@ export default class HomePage extends Component {
       return content;
   }
 
+  menuClick (){
+    // This prevents ghost click.
+    // this.props.preventDefault();
+console.log("menuclick called==>");
+    this.setState({
+      isMenuOpen: true,
+      // anchorEl: event.currentTarget,
+    });
+  };
+ handleRequestClose = () => {
+  //  console.log("===>"+value);
+    this.setState({
+
+      isMenuOpen: false,
+    });
+  };
+
+  signOutPopupClicked=()=>{
+    console.log("entered");
+    this.handleRequestClose();
+    this.logout();
+  }
+
  render() {
     console.info("Rendering HomePage--------------");
     return (
       <div className="App">
-        {<Header onBtnClick={this.openModal} logout={this.logout} viewRoutes={this.displayRoutes}/>}
-        {this.state.dialogVisible &&
+      {/* {this.state.islogout?this.logout:''} */}
+        {<Header onBtnClick={this.openModal} menuClickIns={this.menuClick} viewRoutes={this.displayRoutes}/>}
+             {this.state.dialogVisible &&
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}/>}
         {this.state.cars && this.displayCars()}
@@ -417,6 +464,22 @@ export default class HomePage extends Component {
               car={this.state.isEditing && this.state.selectedCar}/>
             </div>
         </Modal> }
+        <div className="menu-header">
+         <MuiThemeProvider >
+      <Popover style={style.popup}
+          open={this.state.isMenuOpen}
+          autoCloseWhenOffScreen={true}
+          canAutoPosition={true}
+          // anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+          // targetOrigin={{horizontal: 'middle', vertical: 'top'}}
+          onRequestClose={this.handleRequestClose}>
+          <Menu >
+            <MenuItem icon primaryText="Edit address" leftIcon={<Mapicon/>}/>
+            <MenuItem primaryText="Sign out" leftIcon={<Logouticon/>} onClick={this.signOutPopupClicked} />
+          </Menu>
+        </Popover>
+        </MuiThemeProvider>
+        </div>
         {this.state.cars && this.displayContent()}
       </div>
     );
