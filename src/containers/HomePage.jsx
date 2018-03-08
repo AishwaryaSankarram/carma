@@ -340,7 +340,7 @@ export default class HomePage extends Component {
     let routes = [];
     cars.forEach(function(car){
       let route = car.poly;
-      route[0].carId = car.carId;
+      route[0].carLabel = car.carLabel;
       route[0].color = car.color;
       route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
       routes.push(route);

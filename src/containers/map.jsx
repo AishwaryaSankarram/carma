@@ -149,6 +149,7 @@ export class MapContainer extends React.Component {
 	handlePolyEvents(h){
 		let selCar = this.props.car;
 		selCar.poly = h;
+		this.setState({poly: h});
 		console.log("Handling poly events------", selCar);
 	}
 
@@ -198,7 +199,8 @@ export class MapContainer extends React.Component {
 
 	constructPolyLine(){
 		let self = this;
-		let poly =  self.state.markers;           
+		let poly =  self.state.markers; 
+		poly[0].speed = self.props.car.speed;          
         console.log("Draw normal poly line------" , poly);
         self.setState({
         	modalIsVisible: false,
@@ -267,7 +269,8 @@ export class MapContainer extends React.Component {
 	handlePolyDrag(poly){
 		let self = this;
 		this.setState({
-			markers: [poly[0], poly[poly.length - 1]]
+			markers: [poly[0], poly[poly.length - 1]], 
+			poly: poly
 		});
 		setTimeout(function(){
 			self.handleSave();	
@@ -305,6 +308,7 @@ export class MapContainer extends React.Component {
 	      for(let k=0; k < z.length; k++) {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
+		  p[0].speed = self.props.car.speed;
 		  this.setState({modalIsVisible: false, poly: p, markers: [p[0], p[p.length -1]], drawPolyline: true });
 		  setTimeout(function(){
 	        self.handleSave();
@@ -398,7 +402,7 @@ export class MapContainer extends React.Component {
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)} 
 							routes={this.state.routes} allowEdit={true}
-							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carId}
+							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carLabel}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handlePolyEvents}
 							bounds={bounds}
