@@ -21,11 +21,20 @@ export class PolyLine extends React.Component {
         this.setSpeed = this.setSpeed.bind(this);
         this.closeDialog = this.closeDialog.bind(this);
         this.polyLineEle = this.polyLineEle.bind(this);
+        this.updatePolyLine = this.updatePolyLine.bind(this);
         this.handleDragStart = this.handleDragStart.bind(this);
     }
 
     componentDidMount() {
         this.props.onRef(this);
+    }
+
+    updatePolyLine(v, event_name){
+        // console.log("updatePolyLine-------------");
+        let p = this.refs.gPolyLine;
+        let pathArray = p.getPath().getArray();
+        let pathData = this.createPoly(pathArray); 
+        this.props.saveHandler(pathData);
     }
 
     componentDidUpdate() {
@@ -35,11 +44,11 @@ export class PolyLine extends React.Component {
         let self = this;
         google.maps.event.addListener(path, 'insert_at', function(e){
             // console.error("componentDidUpdate path insert_at event ", e);
-            self.props.saveHandler();
+            self.updatePolyLine(e, "insert_at");
         }); 
         google.maps.event.addListener(path, 'remove_at', function(e){
             // console.error("componentDidUpdate path remove_at event", e);
-            self.props.saveHandler();
+            self.updatePolyLine(e, 'remove_at');
         }); 
         google.maps.event.addListener(path, 'set_at', function(e){
             // console.log("isDragging----------" + isDragging);
@@ -48,9 +57,7 @@ export class PolyLine extends React.Component {
                 let poly = self.refs.gPolyLine.getPath().getArray();
                 let pathData = self.createPoly(poly);
                 self.props.dragHandler(pathData);
-                // self.props.saveHandler();
             }
-            
         }); 
     }
 
