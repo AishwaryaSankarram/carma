@@ -72,7 +72,7 @@ export class PolyLine extends React.Component {
                 isDragging = false;
                 self.props.dragHandler(pathData);    
             }
-            console.log("updatePolyLine After-------------", pathData, pathProps);
+            // console.log("updatePolyLine After-------------", pathData, pathProps);
         }else if(event_name === 'insert_at'){
             // console.log("updatePolyLine-------------", self.createPoly(path.getArray()), pathProps, event_name, v);
             isDragging = true;
