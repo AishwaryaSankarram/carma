@@ -409,7 +409,7 @@ export default class HomePage extends Component {
         {this.state.modalIsOpen && <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
           shouldCloseOnOverlayClick={false}
-          contentLabel="Car Details">
+          contentLabel="Car Details" className="car-details">
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details</div>
             <div className="modal-body"> 
               <Car onSave={this.createCar} carIndex={this.state.count} 
