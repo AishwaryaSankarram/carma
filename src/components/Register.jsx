@@ -78,7 +78,7 @@ export default class Register extends Component {
       registerRole:["ROLE_USER"],
     }
     this.onChange = address => this.setState({ address });
-    
+
   }
   componentWillReceiveProps(nextProps){
     console.log("register page received props: ",nextProps);
@@ -88,10 +88,10 @@ export default class Register extends Component {
     geocodeByAddress(value)
       .then(results => this.showSuggestion(results,value))
       .catch(error => console.error(error));
-   
+
       console.log("test")
   };
-  
+
 showSuggestion(results,value){
   // testArray=[];
   var resp = (results);
@@ -110,7 +110,7 @@ showSuggestion(results,value){
     var self = this;
     if(this.state.name.length>0  && this.state.email.length>0 && this.state.password.length>0){
       var payload={
-        "name": this.state.name, 
+        "name": this.state.name,
         "emailId":this.state.email,
         "password":this.state.password,
         "roles":this.state.registerRole
@@ -194,12 +194,13 @@ showSuggestion(results,value){
                       { password: newValue }
                     )} />
                 <br />
-                <AutoComplete hintText="address" floatingLabelText="Address" dataSource={this.state.dataSource} onUpdateInput={this.handleUpdateInput} />
 
-                <br />
-                <Autocomplete className="AutoComplete" onPlaceSelected={place => {
+                <div className="auto_address">
+                <Autocomplete className="autoComplete" onPlaceSelected={place => {
                     console.log(place);
                   }} types={["address"]} />
+                  <div className="autoComplete_placeholder">Enter a Location</div>
+                </div>
                 <label>address</label>
                 <PlacesAutocomplete classNames={cssClasses} inputProps={inputProps} />
 
@@ -212,7 +213,7 @@ showSuggestion(results,value){
       </div>;
   }
 
-  
+
   login(event){
     let self=this;
     let registerPage = <Login  appContext={self.props.appContext}/> ;
@@ -232,7 +233,3 @@ showSuggestion(results,value){
 
 
 }
-
-
-
-
