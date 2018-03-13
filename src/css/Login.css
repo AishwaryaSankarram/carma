@@ -15,52 +15,6 @@
 .sing_in_wrapper button {
  	background-color: #93c849 !important;
 }
-/* #PlacesAutocomplete__root {
-width: 256px !important;
-	margin: 50px auto;
-align-self: center;
-        outline:unset;
-
-border: unset !important;
-}
-*/
-
-.root-auto-complete {
-        width: 256px;
-}
-/*
-.autoc-complete-input{
-    z-index: 10;
-    width: 256px;
-} */
-
-.root{
-    /* position: "relative"; paddingBottom: "0px"; */
-}
-
-
-.input{
-    /* display: "inline-block";
-     width: "100%";
-     padding: "10px"; */
-}
-
- .autocomplete-item{
-     /* backgroundColor: "#ffffff"; padding: "10px"; color: "#555555"; cursor: "pointer"; */
- }
-
-
-.autocomplete-container{
-            position: absolute;
-            z-index: 1;
-            width: 256px;
-            border: '1px solid #555555';
-            /* backgroundColor: "white", */
-}
-
-.autocomplete-item-active {
-        /* backgroundColor: "#fafafa" */
-}
 .auto_address{
   position: relative;
   width: 100%;
@@ -72,6 +26,8 @@ border: unset !important;
       width: 258px;
       height: 26px;
       margin-top: 40px;
+      /* border-bottom: 2px solid rgb(0, 188, 212); */
+
 }
 .auto_address .autoComplete_placeholder{
   color: rgba(0, 0, 0, 0.3);
@@ -96,4 +52,5 @@ border: unset !important;
 .focus_auto_address .autoComplete_placeholder{
   transform: scale(0.75) translate(0px, -28px);
   color: rgb(0,188,212);
+
 }

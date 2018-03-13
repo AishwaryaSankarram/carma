@@ -3,63 +3,17 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import AutoComplete from "material-ui/AutoComplete";
 import axios from 'axios';
 import Login from './Login.jsx';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 import Autocomplete from "react-google-autocomplete";
 
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng
-} from "react-places-autocomplete";
-const mystyle1={
-  outline:"unset",
-  border:"unset"
-}
-
-
-const mystyle = {
-  root: {
-    position: "relative",
-    paddingBottom: "0px"
-  },
-  input: {
-    display: "inline-block",
-    width: "100%",
-    padding: "10px"
-  },
-  autocompleteContainer: {
-    position: "absolute",
-    top: "100%",
-    backgroundColor: "white",
-    border: "1px solid #555555",
-    width: "100%"
-  },
-  autocompleteItem: {
-    backgroundColor: "#ffffff",
-    padding: "10px",
-    color: "#555555",
-    cursor: "pointer"
-  },
-  autocompleteItemActive: {
-    backgroundColor: "#fafafa"
-  }
-};
 const style = {
   margin: 15,
   customWidth:{
     width:200,
   },
-};
-const cssClasses = {
-  // root: "root-auto-complete",
-  // input: "input",
-  // root: "root",
-  // autocompleteItem: "autocomplete-item",
-  autocompleteContainer: "autocomplete-container",
-  // autocompleteItemActive: "autocomplete-item-active"
 };
 
 const apiData = require('../utils/api.jsx');
@@ -69,14 +23,19 @@ export default class Register extends Component {
   constructor(props){
     super(props);
     this.state={
-      address: "San Francisco, CA",
       dataSource: [],
       name:'',
       email:'',
       password:'',
       loginmessage:'',
       registerRole:["ROLE_USER"],
+      focus:false,
+      autoComplete:""
     }
+    this.addClass=this.addClass.bind(this);
+    this.getClass = this.getClass.bind(this);
+    this.removeClass = this.removeClass.bind(this);
+    this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
     this.onChange = address => this.setState({ address });
 
   }
@@ -84,25 +43,6 @@ export default class Register extends Component {
     console.log("register page received props: ",nextProps);
   }
 
-  handleUpdateInput = (value) => {
-    geocodeByAddress(value)
-      .then(results => this.showSuggestion(results,value))
-      .catch(error => console.error(error));
-
-      console.log("test")
-  };
-
-showSuggestion(results,value){
-  // testArray=[];
-  var resp = (results);
-   console.log("resp-- original",resp)
-   for (let i = 0; i < resp.length; i++) {
-     testArray.push(resp[i].formatted_address);
-     console.log("resp obj===>" + testArray);
-   }
-
-   this.setState({ dataSource: testArray });
-}
   handleClick(event){
     event.preventDefault();
     var apiBaseUrl = apiUrl;
@@ -165,6 +105,8 @@ showSuggestion(results,value){
 
   }
   render() {
+        var inputClass = this.getClass();
+
      const inputProps = { value: this.state.address, onChange: this.onChange ,label:'search address',placeholder:'search address...'}; // required for autocomplete api
     // console.log("props",this.props);
     return <div>
@@ -195,15 +137,14 @@ showSuggestion(results,value){
                     )} />
                 <br />
 
-                <div className="auto_address">
-                <Autocomplete className="autoComplete" onPlaceSelected={place => {
-                    console.log(place);
-                  }} types={["address"]} />
-                  <div className="autoComplete_placeholder">Enter a Location</div>
+                <div className={inputClass}>
+                  <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass}  onPlaceSelected={place => {
+                      console.log(place);
+                    }} types={["address"]} onChange={this.onChangeAutoComplete} />
+                  <div className="autoComplete_placeholder">
+                    Enter a Location
+                  </div>
                 </div>
-                <label>address</label>
-                <PlacesAutocomplete classNames={cssClasses} inputProps={inputProps} />
-
                 <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={event => this.handleClick(event)} />
                 <RaisedButton label="Login" primary={true} style={style} onClick={event => this.login(event)} />
               </div>
@@ -213,7 +154,34 @@ showSuggestion(results,value){
       </div>;
   }
 
+onChangeAutoComplete(event){
+  this.setState({autoComplete:event.target.value});
+}
 
+getClass(){
+      let self = this;
+
+      if (self.state.focus === false) return "auto_address";
+      else return "auto_address focus_auto_address";
+  }
+addClass(){
+      let self = this;
+
+  self.setState({ focus: true });
+  console.log("addclass clicked focus " + this.state.focus);
+  console.log("address ",this.state.autoComplete)
+
+  // focus_auto_address;
+}
+removeClass(){
+  let self = this;
+
+  console.log("addclass clicked" + this.state.focus);
+ 
+  if(!this.state.autoComplete.length>0)self.setState({ focus: false });
+
+  // focus_auto_address;
+}
   login(event){
     let self=this;
     let registerPage = <Login  appContext={self.props.appContext}/> ;
