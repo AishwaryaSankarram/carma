@@ -5,7 +5,6 @@ import {MyMarker} from './marker.jsx';
 import {PolyLine} from './PolyLine.jsx';
 import {MultiPolyLine} from './multiPolyLine.jsx';
 
-// const constants = require('../utils/constants.jsx');
 
 export const MyMapComponent = compose(
   withProps({
@@ -31,7 +30,7 @@ export const MyMapComponent = compose(
 
   withGoogleMap
 )((props) => (
-     props.disabled ?  <GoogleMap ref={props.setZoom}
+     props.disabled ?  <GoogleMap ref={props.setZoom} mapTypeId="roadmap"
         defaultZoom={16} 
         defaultOptions={{
           streetViewControl: false,

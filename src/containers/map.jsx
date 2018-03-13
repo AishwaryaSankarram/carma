@@ -121,7 +121,8 @@ export class MapContainer extends React.Component {
 				selCar.poly[0].speed = selCar.speed;
 			}
 			let payload = Object.assign({}, selCar);
-			selCar.isSaved ? "" : delete(payload.carId);
+			if(!selCar.isSaved)
+			  delete(payload.carId);
 			this.getGranularPts(payload);
 	 	}
 	}
@@ -358,7 +359,7 @@ export class MapContainer extends React.Component {
 		var latLngBounds = new window.google.maps.LatLngBounds();
 		if(routeArray.length > 0){
 			for(let i=0; i<routeArray.length;i++){
-				let routes = routeArray[i][0].markerPos;
+				let routes = routeArray[i];//[0].markerPos;
 				routes.forEach(function(e){
 					latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));			
 				});

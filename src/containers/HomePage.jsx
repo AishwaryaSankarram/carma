@@ -160,7 +160,7 @@ export default class HomePage extends Component {
     if(typeof carId !== 'undefined' && carId != null){
       let cars = this.state.cars;
       let selectedCar = cars.filter(function(car) {
-         return car.carId  == carId;
+         return car.carId === carId;
        })[0];
       console.log(selectedCar);
       this.setState({mapOpen: true, selectedCar: selectedCar});
@@ -346,12 +346,12 @@ export default class HomePage extends Component {
       routes.push(route);
     });
     return routes;
-  }
+  } 
 
   getBounds(routeArray){
     var latLngBounds = new window.google.maps.LatLngBounds();
     for(let i=0; i<routeArray.length;i++){
-      let routes = routeArray[i][0].markerPos;
+      let routes = routeArray[i];//[0].markerPos;
       routes.forEach(function(e){
         latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));     
       });
