@@ -15,17 +15,21 @@ import MenuItem from "material-ui/MenuItem";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Mapicon from 'material-ui/svg-icons/maps/place';
 import Logouticon from 'material-ui/svg-icons/action/power-settings-new';
+import { withStyles } from "material-ui/styles";
 
 const apiData = require('../utils/api.jsx');
 const constants = require('../utils/constants.jsx');
 const apiUrl = apiData.baseUrl;
 const style = {
   popup: {
-    // display: "inline-block",
-    // float: "right",
-    // margin:"right",
-    // right:"10px",
-    // margin: "16px 0px 16px 0px"
+    display: "inline-block",
+    float: "right",
+    margin:"60px 0px 0px 10px",
+    right:"0px",
+    position:"absolute",
+    align:"right"
+
+    // margin: "16px 0px 16px 1200px"
   }
 };
 
@@ -464,14 +468,18 @@ console.log("menuclick called==>");
               car={this.state.isEditing && this.state.selectedCar}/>
             </div>
         </Modal> }
-        <div className="menu-header">
+        {/* <div className="menu-header"> */}
          <MuiThemeProvider >
-      <Popover style={style.popup}
+          <Popover className="menu_header" style={style.popup}
           open={this.state.isMenuOpen}
           autoCloseWhenOffScreen={true}
           canAutoPosition={true}
-          // anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-          // targetOrigin={{horizontal: 'middle', vertical: 'top'}}
+          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+          // targetOrigin={{horizontal: 'right', vertical: 'left'}}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
           onRequestClose={this.handleRequestClose}>
           <Menu >
             <MenuItem icon primaryText="Edit address" leftIcon={<Mapicon/>}/>
@@ -479,7 +487,7 @@ console.log("menuclick called==>");
           </Menu>
         </Popover>
         </MuiThemeProvider>
-        </div>
+        {/* </div> */}
         {this.state.cars && this.displayContent()}
       </div>
     );
