@@ -171,9 +171,9 @@ export class PolyLine extends React.Component {
         this.props.onRef(undefined);
     }
 
-    handleClick(e){
-        console.log("click on polyline vertex----------->", e);
-        let vertex = e.vertex;
+    handleClick(e, v){
+        let vertex = typeof(v) === 'undefined' ?  e.vertex : v;
+        console.log("click on polyline vertex----------->", e, vertex, v);
         if(vertex > -1){
             console.log(this.props.pathCoordinates[vertex]);
             let speed = this.props.pathCoordinates[vertex].speed ;
@@ -259,6 +259,8 @@ export class PolyLine extends React.Component {
                 draggable={this.props.allowEdit}
                 onDragStart={this.handleDragStart}
                 />
+                <Icon markerPos={this.props.pathCoordinates}  clickHandler={this.handleClick}
+                dragHandler={this.handleIconDrag} allowEdit={true} color="#0000FF"/>
                 {this.state.modalIsVisible && 
                       <SpeedModal title="Enter Speed" modalIsOpen={this.state.modalIsVisible}
                       okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex} speed={this.state.currentSpeed} /> } 
