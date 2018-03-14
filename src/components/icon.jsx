@@ -34,7 +34,7 @@ export class Icon extends React.Component {
         self.props.markerPos.forEach(function(point, index) {
             if(typeof point.speed !== 'undefined' && point.speed){     
         		 markers.push(<Marker key={"icon_" + index} position={point} zIndex={zIndex} 
-                        draggable={self.props.allowEdit} icon={icon} title={"nSpeed: " + point.speed} 
+                        draggable={self.props.allowEdit} icon={icon} title={"Speed: " + point.speed} 
                         onDragEnd={(event) => self.handleDrag(event, index)} onClick={(event) => self.handleClick(event, index)}
                 />);
             }
