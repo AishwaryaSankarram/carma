@@ -4,12 +4,15 @@ body {
   font-family: sans-serif;
 }
 
-.clearfix {
-    overflow: auto;
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
 }
-
-.clearfix::after {
-    display: block;
-    content: "";
-    clear: both;
-  }
+.clearfix { display: inline-block; }
+/* start commented backslash hack \*/
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }

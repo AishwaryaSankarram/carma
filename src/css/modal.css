@@ -43,18 +43,26 @@ z-index: 1400;
 
 .car-details {
 	width: 400px;
+	height: 310px;
 }
 
 .draw-routes{
 	width: 565px;
-	height: 226px;	
+	height: 205px;
 }
 
 .speed-collector {
 	width: 400px;
-	height: 226px;
+	height: 206px;
 }
-
+.speed-collector .modal-body{
+	top: unset;
+    left: unset;
+    margin-top: 20px;
+}
+.speed-collector .icon-close{
+	display: none;
+}
 .log-out, .delete-car{
 	width: 400px;
 	height: 200px;
@@ -102,6 +110,14 @@ z-index: 1400;
 }
 
 .btn-sm:hover{
+	background: #ebebeb !important;
+	color: #333;
+}
+.btn-sm:focus{
+	background: #ebebeb !important;
+	color: #333;
+}
+.btn-sm:active{
 	background: #ebebeb !important;
 	color: #333;
 }
