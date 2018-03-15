@@ -141,8 +141,7 @@ export default class HomePage extends Component {
   }
 
   openModal() {
-    console.log("open model called")
-     this.setState({modalIsOpen: true, sourceCar: {}});
+    this.setState({modalIsOpen: true, sourceCar: {}});
   }
 
   closeModal() {

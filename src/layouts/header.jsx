@@ -9,7 +9,7 @@ export class Header extends Component {
   }
 
   handleBtnClick() {
-    // this.props.onBtnClick(true);
+    this.props.onBtnClick(true);
   }
 
   menuClick(){
@@ -22,14 +22,14 @@ export class Header extends Component {
 
   render(){
     var loginData=JSON.parse(localStorage.getItem("loginData"));
-    let userName=loginData.name;
-    console.log("username: "+userName);
+    let userName=loginData ? loginData.name : "";
+    console.log("username: ", loginData);
     return <div className="header_part">
         <div className="page_logo">
           <figure className="logo">
             <img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" />
           </figure>
-        </div>
+        </div> 
         <div className="header_title">Carma Route Planner</div>
         <div className="add_car">
           <button className="logout_icon new_car" title={"logged in as "+userName} onClick={this.menuClick}>
