@@ -18,7 +18,6 @@ const style = {
 
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
-var testArray=[];
 export default class Register extends Component {
   constructor(props){
     super(props);
@@ -38,9 +37,6 @@ export default class Register extends Component {
     this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
     this.onChange = address => this.setState({ address });
 
-  }
-  componentWillReceiveProps(nextProps){
-    console.log("register page received props: ",nextProps);
   }
 
   handleClick(event){
@@ -97,7 +93,7 @@ export default class Register extends Component {
       self.setState({
         loginmessage: (
           <div className="alert-danger">
-            kindly fill the forms.
+            Please fill all the detail(s).
           </div>
         )
       });
@@ -135,15 +131,12 @@ export default class Register extends Component {
                 <TextField type="password" hintText="Enter your password" floatingLabelText="Password" onChange={(event, newValue) => this.setState(
                       { password: newValue }
                     )} />
-                <br />
 
                 <div className={inputClass}>
                   <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass}  onPlaceSelected={place => {
                       console.log(place);
                     }} types={["address"]} onChange={this.onChangeAutoComplete} />
-                  <div className="autoComplete_placeholder">
-                    Enter a Location
-                  </div>
+                  {this.state.focus && <div className="autoComplete_placeholder">Location</div>}
                 </div>
                 <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={event => this.handleClick(event)} />
                 <RaisedButton label="Login" primary={true} style={style} onClick={event => this.login(event)} />
