@@ -111,13 +111,13 @@ z-index: 1400;
 
 .btn-sm:hover{
 	background: #ebebeb !important;
-	color: #333;
+	color: #333 !important;
 }
 .btn-sm:focus{
 	background: #ebebeb !important;
-	color: #333;
+	color: #333 !important;
 }
 .btn-sm:active{
 	background: #ebebeb !important;
-	color: #333;
+	color: #333 !important;
 }
