@@ -21,7 +21,7 @@ export default class HomePage extends Component {
           islogout:false,
           modalIsOpen: false,
           cars: null, //For drawing car icons based on no.of cars set
-          count: this.props.count,
+          count: undefined,
           selectedCar: {},
           sourceCar: {},
           mapOpen: false,
@@ -61,19 +61,20 @@ export default class HomePage extends Component {
     let params = { page: 0, size: 10};
     let auth = { username: header.uuid, password: password  }
      axios.get(apiBaseUrl + header.id, {params: params, auth: auth}).then(function (response) {
-          console.log(response);
+         console.log(response);
+         if(response.status === 200){
+          console.log("Get Cars Hit successful");
           let cars = self.formCarArray(response.data);
-           if(response.status === 200){
-            console.log("Get Cars Hit successful");
-           }
-           else{
-            console.log("Oops...! Get Cars failed with--------" + response.status);
-            self.setState({cars: [], count: 0});
-           }
-           self.setState({cars: cars, count: cars.length});
+          self.setState({cars: cars, count: cars.length});
+         }
+         else{
+          console.log("Oops...! Get Cars failed with--------" + response.status);
+          self.setState({cars: [], count: 0});
+         }
+           
       }).catch(function (error) {
-              self.setState({cars: [], count: 0});
-              console.log("The error is------------", error);
+          self.setState({cars: [], count: 0});
+          console.log("The error is------------", error);
       });
   }
 
@@ -87,9 +88,7 @@ export default class HomePage extends Component {
             let poly = [];
             c.speed = c.poly[0].speed;
             c.poly.forEach(function(p) {
-                if(p.parent){
-                  poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng), speed: p.speed});
-                }
+               poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng), speed: p.speed});
             });
             c.poly = poly;
             c.drawPolyline = true;
