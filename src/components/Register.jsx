@@ -30,13 +30,15 @@ export default class Register extends Component {
       loginmessage:'',
       registerRole:["ROLE_USER"],
       focus:false,
-      autoComplete:""
+      autoComplete:"",
+      placeId:"",
+      lattitude:"",
+      logitude:""
     }
     this.addClass=this.addClass.bind(this);
     this.getClass = this.getClass.bind(this);
     this.removeClass = this.removeClass.bind(this);
-    this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
-    this.onChange = address => this.setState({ address });
+    // this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
 
   }
   componentWillReceiveProps(nextProps){
@@ -49,11 +51,18 @@ export default class Register extends Component {
     // console.log("values in register handler",role);
     var self = this;
     if(this.state.name.length>0  && this.state.email.length>0 && this.state.password.length>0){
+      let userAddress={
+       	"placeId":this.state.placeId,
+	    	"address" :this.state.autoComplete,
+	    	"location":{"type":"point","coordinates":[this.state.lattitude,this.state.longitude]}
+	    }
+
       var payload={
         "name": this.state.name,
         "emailId":this.state.email,
         "password":this.state.password,
-        "roles":this.state.registerRole
+        "roles":this.state.registerRole,
+        "userAddress":userAddress,
       }
       console.log("payload : " +payload);
 
@@ -138,9 +147,7 @@ export default class Register extends Component {
                 <br />
 
                 <div className={inputClass}>
-                  <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass}  onPlaceSelected={place => {
-                      console.log(place);
-                    }} types={["address"]} onChange={this.onChangeAutoComplete} />
+                  <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass}  onPlaceSelected={place => this.setPlace(place) } types={["address"]}/>
                   <div className="autoComplete_placeholder">
                     Enter a Location
                   </div>
@@ -153,9 +160,14 @@ export default class Register extends Component {
         </MuiThemeProvider>
       </div>;
   }
-
-onChangeAutoComplete(event){
-  this.setState({autoComplete:event.target.value});
+  
+setPlace(place){
+this.setState({
+  autoComplete: place.formatted_address,
+  placeId: place.place_id,
+  lattitude: place.geometry.location.lat(),
+  longitude: place.geometry.location.lng()
+});
 }
 
 getClass(){
@@ -168,8 +180,8 @@ addClass(){
       let self = this;
 
   self.setState({ focus: true });
-  console.log("addclass clicked focus " + this.state.focus);
-  console.log("address ",this.state.autoComplete)
+  // console.log("addclass clicked focus " + this.state.focus);
+  // console.log("address ",this.state.autoComplete)
 
   // focus_auto_address;
 }
