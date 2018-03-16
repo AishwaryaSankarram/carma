@@ -24,8 +24,8 @@ export class Icon extends React.Component {
         let google = window.google;
 		let svg = [
                 '<?xml version="1.0"?>',
-                '<svg height="1024" width="767.5" xmlns="http://www.w3.org/2000/svg">',
-                  '<path d="M0 384l383.75 383.75L767.5 384H0z" style="fill:#0000FF"/>',
+                '<svg height="20px" version="1.1" viewBox="0 0 200 200" width="20px" xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink">',
+                  '<path fill="' + self.props.color + '" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"  />',
                 '</svg>'
                 ].join('\n');
 	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(20, 20)};

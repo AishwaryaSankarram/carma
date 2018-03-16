@@ -236,7 +236,7 @@ export class PolyLine extends React.Component {
         console.log("Polyline Icon is dragged---------", pos, vertex);
         let existingLine =  this.refs.gPolyLine;
         let newPoint = pos;
-        newPoint.speed = this.props.pathCoordinates[vertex].speed;
+        // newPoint.speed = this.props.pathCoordinates[vertex].speed;
         existingLine.getPath().setAt(vertex, newPoint); //This will trigger a set at event and the rest follows
     }
 
@@ -260,7 +260,7 @@ export class PolyLine extends React.Component {
                 onDragStart={this.handleDragStart}
                 />
                 <Icon markerPos={this.props.pathCoordinates}  clickHandler={this.handleClick}
-                dragHandler={this.handleIconDrag} allowEdit={true} color="#0000FF"/>
+                dragHandler={this.handleIconDrag} allowEdit={true} color={this.props.color}/>
                 {this.state.modalIsVisible && 
                       <SpeedModal title="Enter Speed" modalIsOpen={this.state.modalIsVisible}
                       okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex} speed={this.state.currentSpeed} /> } 
