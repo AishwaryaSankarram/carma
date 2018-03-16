@@ -98,8 +98,10 @@ export default class HomePage extends Component {
             c.color = c.color || constants.color_codes[i % 10];
             let last_index = poly.length -1;
             c.markers = [];
-            c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
-            c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
+            if(poly.length > 0){
+              c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
+              c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
+            }
             carArray.push(c);
             ids.push(c.carId);
           }
@@ -340,10 +342,12 @@ export default class HomePage extends Component {
     let routes = [];
     cars.forEach(function(car){
       let route = car.poly;
-      route[0].carLabel = car.carLabel;
-      route[0].color = car.color;
-      route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
-      routes.push(route);
+      if(route.length > 0){
+        route[0].carLabel = car.carLabel;
+        route[0].color = car.color;
+        route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
+        routes.push(route);
+      }
     });
     return routes;
   } 
