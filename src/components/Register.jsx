@@ -18,7 +18,6 @@ const style = {
 
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
-var testArray=[];
 export default class Register extends Component {
   constructor(props){
     super(props);
@@ -38,11 +37,8 @@ export default class Register extends Component {
     this.addClass=this.addClass.bind(this);
     this.getClass = this.getClass.bind(this);
     this.removeClass = this.removeClass.bind(this);
-    // this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
+    this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
 
-  }
-  componentWillReceiveProps(nextProps){
-    console.log("register page received props: ",nextProps);
   }
 
   handleClick(event){
@@ -106,7 +102,7 @@ export default class Register extends Component {
       self.setState({
         loginmessage: (
           <div className="alert-danger">
-            kindly fill the forms.
+            Please fill all the detail(s).
           </div>
         )
       });
@@ -115,6 +111,7 @@ export default class Register extends Component {
   }
   render() {
         var inputClass = this.getClass();
+        console.log("on rendering ===>"+inputClass);
 
      const inputProps = { value: this.state.address, onChange: this.onChange ,label:'search address',placeholder:'search address...'}; // required for autocomplete api
     // console.log("props",this.props);
@@ -144,13 +141,10 @@ export default class Register extends Component {
                 <TextField type="password" hintText="Enter your password" floatingLabelText="Password" onChange={(event, newValue) => this.setState(
                       { password: newValue }
                     )} />
-                <br />
 
                 <div className={inputClass}>
-                  <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass}  onPlaceSelected={place => this.setPlace(place) } types={["address"]}/>
-                  <div className="autoComplete_placeholder">
-                    Enter a Location
-                  </div>
+                  <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass} onChange={this.onChangeAutoComplete} onPlaceSelected={place => this.setPlace(place)} types={["address"]} />
+                  <div className="autoComplete_placeholder">Address</div>
                 </div>
                 <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={event => this.handleClick(event)} />
                 <RaisedButton label="Login" primary={true} style={style} onClick={event => this.login(event)} />
@@ -160,7 +154,11 @@ export default class Register extends Component {
         </MuiThemeProvider>
       </div>;
   }
-  
+
+onChangeAutoComplete(event){
+    this.setState({ autoComplete: event.target.value });
+ }
+
 setPlace(place){
 this.setState({
   autoComplete: place.formatted_address,
@@ -173,14 +171,17 @@ this.setState({
 getClass(){
       let self = this;
 
-      if (self.state.focus === false) return "auto_address";
-      else return "auto_address focus_auto_address";
+      if (self.state.focus === false && this.state.autoComplete && this.state.autoComplete.length > 0) {
+        console.log("entered first log");
+        return "auto_address focus_false_at_data_avail";
+      } else if (self.state.focus === false && ! this.state.autoComplete && !this.state.autoComplete.length > 0) {
+        return "auto_address";
+      } else return "auto_address focus_auto_address";
   }
 addClass(){
-      let self = this;
-
-  self.setState({ focus: true });
-  // console.log("addclass clicked focus " + this.state.focus);
+  
+  this.setState({ focus: true });
+  console.log("addclass clicked focus " + this.state.focus);
   // console.log("address ",this.state.autoComplete)
 
   // focus_auto_address;
@@ -188,9 +189,9 @@ addClass(){
 removeClass(){
   let self = this;
 
-  console.log("addclass clicked" + this.state.focus);
+  console.log(this.state.autoComplete+"remove class clicked" + this.state.focus);
  
-  if(!this.state.autoComplete.length>0)self.setState({ focus: false });
+ /*  if(!this.state.autoComplete.length>0 & this.state.autoComplete) */self.setState({ focus: false });
 
   // focus_auto_address;
 }
