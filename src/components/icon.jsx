@@ -28,7 +28,7 @@ export class Icon extends React.Component {
                   '<path fill="' + self.props.color + '" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"  />',
                 '</svg>'
                 ].join('\n');
-	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(20, 20)};
+	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(9, 9)};
 		let zIndex = self.props.allowEdit ? 160 : 137 ;
         let markers = [];
         self.props.markerPos.forEach(function(point, index) {
@@ -40,6 +40,6 @@ export class Icon extends React.Component {
             }
         });
         console.log("Icons------------>", markers)
-        return <div>{markers}</div>;
+        return <div style={{opacity: 1}}>{markers}</div>;
 	}
 }
