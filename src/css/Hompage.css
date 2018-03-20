@@ -202,10 +202,14 @@ html, body {
     clear: both;
 }
 
-.menu-header node {
-    float: right;
-    right:0px;
-    top: 60px;
+.menu_header {
+    display: "inline-block";
+    float: "right";
+    margin:"60px 0px 0px 10px";
+    right:"0px";
+    left: unset !important;
+    position:"absolute";
+    align:"right";
 }
 
 .header_title {

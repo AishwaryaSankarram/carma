@@ -6,12 +6,77 @@
     background: #93c849 !important;
 }
 .sing_in_wrapper{
-	width: 400px;
+	width: 400px !important;
 	    min-height: 270px;
 	margin: 60px auto;
     border: 1px solid #ccc;
         padding-bottom: 36px;
 }
-.sing_in_wrapper button{
+.sing_in_wrapper button {
  	background-color: #93c849 !important;
+}
+.auto_address{
+  position: relative;
+  width: 100%;
+}
+
+.auto_address .autoComplete{
+      border: none;
+      border-bottom: 1.5px solid #e0e0e0;
+      width: 258px;
+      height: 26px;
+      margin-top: 40px;
+}
+.auto_address .autoComplete_placeholder{
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  transform: scale(1) translate(0px, 0px);
+  transform-origin: left top 0px;
+  pointer-events: none;
+  user-select: none;
+  color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+    bottom: 3px;
+    left: 70px;
+}
+
+.auto_address .autoComplete::-webkit-input-placeholder {
+  color: #fff;
+}
+.auto_address .autoComplete:focus {
+  outline: none;
+}
+.focus_auto_address .autoComplete_placeholder{
+  transform: scale(0.75) translate(0px, -28px);
+  color: rgb(0,188,212);
+
+}
+.focus_auto_address .autoComplete{
+
+    border-bottom: 2px solid rgb(0, 188, 212);
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+
+}
+.focus_false_at_data_avail .autoComplete_placeholder {
+  transform: scale(0.75) translate(0px, -28px);
+}
+
+.focus_false_at_data_avail .autoComplete {
+    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+}
+
+.filled_status .autoComplete_placeholder{
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+.filled_status .autoComplete{
+  border-bottom: 1.5px solid #e0e0e0 !important;
+}
+.autoComplete::placeholder {
+  color: rgba(0, 0, 0, 0.3);  
+  font-family: Roboto, sans-serif;
+  opacity: 1;
+  font-weight: bold;
+  font-size: 16px;
 }

@@ -4,6 +4,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
 import Login from './Login.jsx';
+import Autocomplete from "react-google-autocomplete";
+
 const style = {
   margin: 15,
   customWidth:{
@@ -13,33 +15,47 @@ const style = {
 
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
-
 export default class Register extends Component {
   constructor(props){
     super(props);
     this.state={
+      dataSource: [],
       name:'',
       email:'',
       password:'',
       loginmessage:'',
       registerRole:["ROLE_USER"],
-    //   menuValue:2
+      focus:false,
+      autoComplete:"",
+      placeId:"",
+      lattitude:"",
+      logitude:""
     }
+    this.addClass=this.addClass.bind(this);
+    this.getClass = this.getClass.bind(this);
+    this.removeClass = this.removeClass.bind(this);
+    this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
+
   }
-  componentWillReceiveProps(nextProps){
-    console.log("register page received props: ",nextProps);
-  }
+
   handleClick(event){
     event.preventDefault();
     var apiBaseUrl = apiUrl;
     // console.log("values in register handler",role);
     var self = this;
     if(this.state.name.length>0  && this.state.email.length>0 && this.state.password.length>0){
+      let userAddress={
+       	"placeId":this.state.placeId,
+	    	"address" :this.state.autoComplete,
+	    	"location":{"type":"point","coordinates":[this.state.lattitude,this.state.longitude]}
+	    }
+
       var payload={
-        "name": this.state.name, 
+        "name": this.state.name,
         "emailId":this.state.email,
         "password":this.state.password,
-        "roles":this.state.registerRole
+        "roles":this.state.registerRole,
+        "userAddress":userAddress,
       }
       console.log("payload : " +payload);
 
@@ -83,7 +99,7 @@ export default class Register extends Component {
       self.setState({
         loginmessage: (
           <div className="alert-danger">
-            kindly fill the forms.
+            Please fill all the detail(s).
           </div>
         )
       });
@@ -91,6 +107,10 @@ export default class Register extends Component {
 
   }
   render() {
+        var inputClass = this.getClass();
+        console.log("on rendering ===>"+inputClass);
+
+     const inputProps = { value: this.state.address, onChange: this.onChange ,label:'search address',placeholder:'search address...'}; // required for autocomplete api
     // console.log("props",this.props);
     return <div>
         <MuiThemeProvider>
@@ -106,7 +126,7 @@ export default class Register extends Component {
               </div>
               {this.state.loginmessage}
 
-              <div className="sing_in_wrapper clearfix">
+              <div className="sing_in_wrapper">
                 <TextField hintText="Enter your name" floatingLabelText="Name" onChange={(event, newValue) => this.setState(
                       { name: newValue }
                     )} />
@@ -118,15 +138,11 @@ export default class Register extends Component {
                 <TextField type="password" hintText="Enter your password" floatingLabelText="Password" onChange={(event, newValue) => this.setState(
                       { password: newValue }
                     )} />
-                <br />
-                {/* <div>
-           <MuiThemeProvider>
-                      <DropDownMenu value={this.state.menuValue}  onChange={(event,index,value)=>this.handleMenuChange(value)} style={style.customWidth} autoWidth={false}>
-                           <MenuItem value={1} primaryText="Admin"/>
-                           <MenuItem value={2} primaryText="User" />
-                       </DropDownMenu>
-           </MuiThemeProvider>
-           </div> */}
+
+                <div className={inputClass}>
+                  <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass} onChange={this.onChangeAutoComplete} onPlaceSelected={place => this.setPlace(place)} types={["address"]} />
+                  <div className="autoComplete_placeholder">Address</div>
+                </div>
                 <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={event => this.handleClick(event)} />
                 <RaisedButton label="Login" primary={true} style={style} onClick={event => this.login(event)} />
               </div>
@@ -135,6 +151,47 @@ export default class Register extends Component {
         </MuiThemeProvider>
       </div>;
   }
+
+onChangeAutoComplete(event){
+    this.setState({ autoComplete: event.target.value });
+ }
+
+setPlace(place){
+this.setState({
+  autoComplete: place.formatted_address,
+  placeId: place.place_id,
+  lattitude: place.geometry.location.lat(),
+  longitude: place.geometry.location.lng()
+});
+}
+
+getClass(){
+      let self = this;
+
+      if (self.state.focus === false && this.state.autoComplete && this.state.autoComplete.length > 0) {
+        console.log("entered first log");
+        return "auto_address focus_false_at_data_avail";
+      } else if (self.state.focus === false && ! this.state.autoComplete && !this.state.autoComplete.length > 0) {
+        return "auto_address";
+      } else return "auto_address focus_auto_address";
+  }
+addClass(){
+  
+  this.setState({ focus: true });
+  console.log("addclass clicked focus " + this.state.focus);
+  // console.log("address ",this.state.autoComplete)
+
+  // focus_auto_address;
+}
+removeClass(){
+  let self = this;
+
+  console.log(this.state.autoComplete+"remove class clicked" + this.state.focus);
+ 
+ /*  if(!this.state.autoComplete.length>0 & this.state.autoComplete) */self.setState({ focus: false });
+
+  // focus_auto_address;
+}
   login(event){
     let self=this;
     let registerPage = <Login  appContext={self.props.appContext}/> ;
@@ -151,8 +208,6 @@ export default class Register extends Component {
   //   this.setState({menuValue:value,
   //                  registerRole:registerRole1})
   // }
+
+
 }
-
-
-
-

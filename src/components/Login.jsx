@@ -62,18 +62,12 @@ export default class Login extends Component{
 
     }
 
-    // componentWillUpdate = (nextProps, nextState) => {
-    //     console.log("component will update called: ", nextProps);
-    //     // nextProps.loginmessage=null;
-    //     this.setState({ loginmessage: '' });
-    // }
-    
-    
     register(event){
         let self = this;
         let registerPage = <Register key="register-page" appContext={self.props.appContext} /> ;
         self.props.appContext.setState({loginPage:[registerPage]});
     }
+
     handleClick(event){
         event.preventDefault();
         var self = this;
@@ -120,9 +114,6 @@ export default class Login extends Component{
 
 
     render() {
-            var registered = this.props.loginmessage;
-console.log("Is props avl-----------",registered);
-
         return (
           <div>
             <MuiThemeProvider>
@@ -134,7 +125,7 @@ console.log("Is props avl-----------",registered);
               </div>
             </MuiThemeProvider>
             {this.state.loginmessage} 
-           {this.state.loginComponent}
+            {this.state.loginComponent}
           </div>
         );
       }
