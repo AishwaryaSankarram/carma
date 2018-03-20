@@ -40,15 +40,16 @@ export class SpeedModal extends Component {
    	return (
 	   	<Modal isOpen={this.state.modalIsOpen}
 	         onRequestClose={this.closeModal}
-	         contentLabel={this.props.title}>
-	         <div id="speed-collector">
+	         contentLabel={this.props.title} className="speed-collector">
 	         <div className="confirmation-modal">
-	         <h2 ref={subtitle => this.subtitle = subtitle}>{this.props.title}
+	         <div className="modal-title">
+	         <h4 ref={subtitle => this.subtitle = subtitle}>{this.props.title}
 	         <button className="btn btn-xs pull-right remove icon-close" onClick={this.closeModal}>Close</button>
-	         </h2>
-	         <div>
+	         </h4>
+	         </div>
 	         	<form onSubmit={this.onSave}>
-	           <FormGroup controlId="speed" bsSize="large">
+	         	<div className="modal-body">
+	           <FormGroup controlId="speed" bsSize="sm">
 	               <ControlLabel>Speed at the point</ControlLabel>
 	               <FormControl
 	                 autoFocus
@@ -58,13 +59,14 @@ export class SpeedModal extends Component {
 	                 onChange={this.handleChange}
 	               />
 	             </FormGroup>
+	             </div>
+	             <div className="modal-footer">
 		   	      <div className="btn-grp">
 		             	<Button bsSize="sm" bsStyle="success" type="submit"> OK </Button>
 		             	<Button bsSize="sm" onClick={this.closeModal} type="button"> Cancel </Button>
 		           </div>
+		           </div>
 	             </form>
-	         </div>
-	         </div>
 	         </div>
 	   	</Modal> 
    	);

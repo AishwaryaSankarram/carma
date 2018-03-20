@@ -7,7 +7,8 @@ export class MyModal extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			modalIsOpen: this.props.modalIsOpen
+			modalIsOpen: this.props.modalIsOpen,
+      className: this.props.title.toLowerCase().replace(/\s/g, "-")
 		};
     this.closeModal = this.closeModal.bind(this);
     this.onSave = this.onSave.bind(this);
@@ -36,13 +37,11 @@ export class MyModal extends Component {
 	render(){
 		return (
 		<Modal isOpen={this.state.modalIsOpen}
-          onRequestClose={this.closeModal}
-          contentLabel={this.props.title}>
-           <div id={this.props.title.toLowerCase().replace(/\s/g, "-")}>
+          onRequestClose={this.closeModal} shouldCloseOnOverlayClick={false}
+          contentLabel={this.props.title} className={" " + this.state.className} >
 					 <div className="confirmation-modal">
 					<div className="modal-header">
 					<h4 className="modal-title" ref={subtitle => this.subtitle = subtitle}>{this.props.title}</h4>
-					<button className="btn btn-xs pull-right remove icon-close fa fa-close" onClick={this.closeModal}></button>
 					</div>
           <div className="modal-body">
               {this.props.content}
@@ -53,7 +52,6 @@ export class MyModal extends Component {
               <Button bsSize="sm" onClick={this.closeModal} type="button"> {this.props.labelCancel || "No"}  </Button>
               </div>
 					</div>
-          </div>
     </Modal>
     );
 	}

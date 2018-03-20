@@ -39,7 +39,7 @@ export default class HomePage extends Component {
           islogout:false,
           modalIsOpen: false,
           cars: null, //For drawing car icons based on no.of cars set
-          count: this.props.count,
+          count: undefined,
           selectedCar: {},
           sourceCar: {},
           mapOpen: false,
@@ -82,19 +82,20 @@ export default class HomePage extends Component {
     let params = { page: 0, size: 10};
     let auth = { username: header.uuid, password: password  }
      axios.get(apiBaseUrl + header.id, {params: params, auth: auth}).then(function (response) {
-          console.log(response);
+         console.log(response);
+         if(response.status === 200){
+          console.log("Get Cars Hit successful");
           let cars = self.formCarArray(response.data);
-           if(response.status === 200){
-            console.log("Get Cars Hit successful");
-           }
-           else{
-            console.log("Oops...! Get Cars failed with--------" + response.status);
-            self.setState({cars: [], count: 0});
-           }
-           self.setState({cars: cars, count: cars.length});
+          self.setState({cars: cars, count: cars.length});
+         }
+         else{
+          console.log("Oops...! Get Cars failed with--------" + response.status);
+          self.setState({cars: [], count: 0});
+         }
+           
       }).catch(function (error) {
-              self.setState({cars: [], count: 0});
-              console.log("The error is------------", error);
+          self.setState({cars: [], count: 0});
+          console.log("The error is------------", error);
       });
   }
 
@@ -108,9 +109,7 @@ export default class HomePage extends Component {
             let poly = [];
             c.speed = c.poly[0].speed;
             c.poly.forEach(function(p) {
-                if(p.parent){
-                  poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng), speed: p.speed});
-                }
+               poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng), speed: p.speed});
             });
             c.poly = poly;
             c.drawPolyline = true;
@@ -119,8 +118,10 @@ export default class HomePage extends Component {
             c.color = c.color || constants.color_codes[i % 10];
             let last_index = poly.length -1;
             c.markers = [];
-            c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
-            c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
+            if(poly.length > 0){
+              c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
+              c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
+            }
             carArray.push(c);
             ids.push(c.carId);
           }
@@ -182,7 +183,7 @@ export default class HomePage extends Component {
     if(typeof carId !== 'undefined' && carId != null){
       let cars = this.state.cars;
       let selectedCar = cars.filter(function(car) {
-         return car.carId  == carId;
+         return car.carId === carId;
        })[0];
       console.log(selectedCar);
       this.setState({mapOpen: true, selectedCar: selectedCar});
@@ -363,18 +364,20 @@ export default class HomePage extends Component {
     let routes = [];
     cars.forEach(function(car){
       let route = car.poly;
-      route[0].carId = car.carId;
-      route[0].color = car.color;
-      route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
-      routes.push(route);
+      if(route.length > 0){
+        route[0].carLabel = car.carLabel;
+        route[0].color = car.color;
+        route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
+        routes.push(route);
+      }
     });
     return routes;
-  }
+  } 
 
   getBounds(routeArray){
     var latLngBounds = new window.google.maps.LatLngBounds();
     for(let i=0; i<routeArray.length;i++){
-      let routes = routeArray[i][0].markerPos;
+      let routes = routeArray[i];//[0].markerPos;
       routes.forEach(function(e){
         latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));     
       });
@@ -456,7 +459,7 @@ console.log("menuclick called==>");
         {this.state.modalIsOpen && <Modal isOpen={this.state.modalIsOpen}
           onRequestClose={this.closeModal}
           shouldCloseOnOverlayClick={false}
-          contentLabel="Car Details">
+          contentLabel="Car Details" className="car-details">
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details</div>
             <div className="modal-body"> 
               <Car onSave={this.createCar} carIndex={this.state.count} 

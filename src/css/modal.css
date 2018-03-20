@@ -29,6 +29,45 @@ z-index: 1400;
 	transform: translate(0px, 64px);
 }
 
+.log-out, .car-details, .draw-routes, .delete-car, .speed-collector {
+	position: absolute;
+	top: 40px;
+	right: 40px;
+	bottom: 40px;
+	border: 1px solid rgb(204, 204, 204);
+	background: rgb(255, 255, 255) none repeat scroll 0% 0%;
+	border-radius: 4px;
+	outline: medium none currentcolor;
+	padding: 20px;
+}
+
+.car-details {
+	width: 400px;
+	height: 310px;
+}
+
+.draw-routes{
+	width: 565px;
+	height: 205px;
+}
+
+.speed-collector {
+	width: 400px;
+	height: 206px;
+}
+.speed-collector .modal-body{
+	top: unset;
+    left: unset;
+    margin-top: 20px;
+}
+.speed-collector .icon-close{
+	display: none;
+}
+.log-out, .delete-car{
+	width: 400px;
+	height: 200px;
+}
+
 .modal-title {
 	margin: 0px;
 	color: rgba(0, 0, 0, 0.87);
@@ -52,22 +91,33 @@ z-index: 1400;
 }
 .modal-body form input{
 	border-radius: 2px !important;
-height: 36px !important;
-font-size: 14px !important;
+	height: 36px !important;
+	font-size: 14px !important;
 }
+
 .modal-footer{
 	border: none !important;
 	padding: 15px 0px;
 }
+
 .btn-sm{
 	background: transparent;
-border: none;
-  min-width: 88px;
-  color: rgb(0, 188, 212);
+	border: none;
+  	min-width: 88px;
+  	color: rgb(0, 188, 212);
 	font-size: 14px;
 	text-transform: uppercase;
 }
+
 .btn-sm:hover{
 	background: #ebebeb !important;
-	color: #333;
+	color: #333 !important;
+}
+.btn-sm:focus{
+	background: #ebebeb !important;
+	color: #333 !important;
+}
+.btn-sm:active{
+	background: #ebebeb !important;
+	color: #333 !important;
 }

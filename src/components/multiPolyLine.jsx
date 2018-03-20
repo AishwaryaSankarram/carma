@@ -23,7 +23,7 @@ export class MultiPolyLine extends React.Component {
 												};
             return (
               <div key={"multi_" + index}>
-              <MyMarker markerPos={line[0].markerPos} allowEdit={false} title={"Route of " + line[0].carId} color={line[0].color} />
+              <MyMarker markerPos={line[0].markerPos} allowEdit={false} title={"Route of " + line[0].carLabel} color={line[0].color} />
               <Polyline key={index + "_polyline"}  path={line} options={lineOptions} editable={false} draggable={false}/>
               </div>
               );

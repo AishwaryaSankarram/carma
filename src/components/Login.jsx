@@ -3,7 +3,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from 'axios';
-import AppBar from 'material-ui/AppBar'
 import Home from '../containers/HomePage.jsx';
 import '../css/Login.css';
 import Register from './Register'

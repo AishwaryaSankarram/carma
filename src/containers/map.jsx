@@ -78,51 +78,63 @@ export class MapContainer extends React.Component {
 		}
   	}
 
-  	getGranularPts(payload){
+  	saveRoute(payload){
   		var self = this;
 		var loginResp = JSON.parse(this.props.loginData);
         var pwd = this.props.pwd;
         console.log(payload);
-  		var apiBaseUrl =  apiUrl + "granular/";
-	     axios.post(apiBaseUrl +'createGranularPoints', payload, {
-	     auth: {
-			username: loginResp.uuid,
-			password: pwd }
-		  }).then(function (response) {
-			 console.log(response);
-			 if(response.status === 200){
-			 	console.log("Rest Hit successful");
-		 		let selCar = self.props.car;
-		 		selCar.carId = response.data.carId; 
-		 		selCar['isSaved'] = true;
-		 		selCar['drawPolyline']=self.state.drawPolyline;
-		 		selCar['markerCount'] = self.state.markerCount;
-				selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
-		 		selCar['showMarker'] = self.state.showMarker;
-		 		self.props.updateCar(selCar, true);
-			 }
-			 else{
-			 	console.log("Oops...! Rest HIT failed with--------" + response.status);
-			 }
-			}).catch(function (error) {
-			 console.log("The error is------------", error);
+  		const apiBaseUrl =  apiUrl + "granular/";
+  		let method = payload.carId ? 'PUT' : 'POST';
+  		let context = payload.carId ? 'updateTripDetails' : 'createGranularPoints';
+  		axios({
+            method: method,
+            url: apiBaseUrl + context,
+            data: payload,
+            auth: {
+			  username: loginResp.uuid,
+			  password: pwd 
+		  	}
+        }).then(function (response) {
+			console.log(response);
+			if(response.status === 200){
+			  self.updateProps(response.data.carId);
+			}
+			else{
+			  console.log("Oops...! Rest HIT failed with--------" + response.status);
+			}
+		}).catch(function (error) {
+			console.log("The error is------------", error);
 	 	});
+  	}
+
+  	updateProps(carId){
+  		var self = this;
+  		let selCar = self.props.car;
+ 		selCar.carId = carId; 
+ 		selCar['isSaved'] = true;
+ 		selCar['drawPolyline']=self.state.drawPolyline;
+ 		selCar['markerCount'] = self.state.markerCount;
+		selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
+ 		selCar['showMarker'] = self.state.showMarker;
+ 		self.props.updateCar(selCar, true);
   	}
 
 	handleSubmit(){
 		console.log("Submit Clicked");
 		let selCar = this.props.car;
 		if(this.state.drawPolyline) {
-	    	let h = this.child.method(); // Get path from PolyLine drawn
-	    	if(selCar != null){
-				selCar.poly =  h; 
-			}
-			if(typeof selCar.poly[0].speed === 'undefined' || !selCar.poly[0].speed){
-				selCar.poly[0].speed = selCar.speed;
-			}
-			let payload = Object.assign({}, selCar);
-			selCar.isSaved ? "" : delete(payload.carId);
-			this.getGranularPts(payload);
+    	let h = this.child.method(); // Get path from PolyLine drawn
+    	if(selCar != null){
+			selCar.poly =  h; 
+		}
+		if(typeof selCar.poly[0].speed === 'undefined' || !selCar.poly[0].speed){
+			selCar.poly[0].speed = selCar.speed;
+		}
+		let payload = Object.assign({}, selCar);
+		if(!selCar.isSaved){
+		  delete(payload.carId);
+		}
+   		this.saveRoute(payload);	
 	 	}
 	}
 
@@ -149,6 +161,7 @@ export class MapContainer extends React.Component {
 	handlePolyEvents(h){
 		let selCar = this.props.car;
 		selCar.poly = h;
+		this.setState({poly: h});
 		console.log("Handling poly events------", selCar);
 	}
 
@@ -198,7 +211,8 @@ export class MapContainer extends React.Component {
 
 	constructPolyLine(){
 		let self = this;
-		let poly =  self.state.markers;           
+		let poly =  self.state.markers; 
+		poly[0].speed = self.props.car.speed;          
         console.log("Draw normal poly line------" , poly);
         self.setState({
         	modalIsVisible: false,
@@ -267,7 +281,8 @@ export class MapContainer extends React.Component {
 	handlePolyDrag(poly){
 		let self = this;
 		this.setState({
-			markers: [poly[0], poly[poly.length - 1]]
+			markers: [poly[0], poly[poly.length - 1]], 
+			poly: poly
 		});
 		setTimeout(function(){
 			self.handleSave();	
@@ -305,6 +320,7 @@ export class MapContainer extends React.Component {
 	      for(let k=0; k < z.length; k++) {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
+		  p[0].speed = self.props.car.speed;
 		  this.setState({modalIsVisible: false, poly: p, markers: [p[0], p[p.length -1]], drawPolyline: true });
 		  setTimeout(function(){
 	        self.handleSave();
@@ -354,7 +370,7 @@ export class MapContainer extends React.Component {
 		var latLngBounds = new window.google.maps.LatLngBounds();
 		if(routeArray.length > 0){
 			for(let i=0; i<routeArray.length;i++){
-				let routes = routeArray[i][0].markerPos;
+				let routes = routeArray[i];//[0].markerPos;
 				routes.forEach(function(e){
 					latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));			
 				});
@@ -398,7 +414,7 @@ export class MapContainer extends React.Component {
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)} 
 							routes={this.state.routes} allowEdit={true}
-							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carId}
+							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carLabel}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handlePolyEvents}
 							bounds={bounds}
