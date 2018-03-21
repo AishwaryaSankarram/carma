@@ -22,13 +22,15 @@ export class Icon extends React.Component {
 	render() {
 		let self = this;
         let google = window.google;
-		let svg = [
-                '<?xml version="1.0"?>',
-                '<svg height="20px" version="1.1" viewBox="0 0 200 200" width="20px" xmlns="http://www.w3.org/2000/svg"  xmlns:xlink="http://www.w3.org/1999/xlink">',
-                  '<path fill="' + self.props.color + '" d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"  />',
-                '</svg>'
+        let svg = [
+                    '<?xml version="1.0"?>', 
+                    '<svg height="1024" width="767.5" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(180deg);" >',
+                      '<path stroke="#fffff" stroke-width="100"  d="M0 384l383.75 383.75L767.5 384H0z" style="fill:#000000;"/>',
+                    '</svg>'
                 ].join('\n');
-	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), scaledSize: new google.maps.Size(9, 9)};
+	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), 
+                     anchor: new google.maps.Point(15, 5),
+                     scaledSize: new google.maps.Size(30, 30)};
 		let zIndex = self.props.allowEdit ? 160 : 137 ;
         let markers = [];
         self.props.markerPos.forEach(function(point, index) {
@@ -40,6 +42,6 @@ export class Icon extends React.Component {
             }
         });
         console.log("Icons------------>", markers)
-        return <div style={{opacity: 1}}>{markers}</div>;
+        return <div>{markers}</div>;
 	}
 }
