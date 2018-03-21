@@ -496,7 +496,7 @@ export default class HomePage extends Component {
           }}
           onRequestClose={this.handleRequestClose}>
           <Menu >
-            <MenuItem primaryText="Edit address" leftIcon={<Mapicon/>} onClick={this.showProfile.bind(this)}/>
+            <MenuItem primaryText="Edit" leftIcon={<Mapicon/>} onClick={this.showProfile.bind(this)}/>
             <MenuItem primaryText="Sign out" leftIcon={<Logouticon/>} onClick={this.signOutPopupClicked} />
           </Menu>
         </Popover>

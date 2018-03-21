@@ -62,7 +62,7 @@ export class Profile extends Component {
          if(response.status === 200){
            var headerMsg = <div className="alert-success">Successfully Registered</div>;
            // Update local storage here
-            let loginData = this.props.loginData;
+            let loginData = self.props.loginData;
             loginData.name = payload.name;
             loginData.userAddress = payload.userAddress;
             localStorage.setItem("loginData",JSON.stringify(loginData));

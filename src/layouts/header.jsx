@@ -32,7 +32,7 @@ export class Header extends Component {
         </div> 
         <div className="header_title">Carma Route Planner</div>
         <div className="add_car">
-          <button className="logout_icon new_car" title={"logged in as "+userName} onClick={this.menuClick}>
+          <button className="logout_icon new_car" title={"Logged in as "+userName} onClick={this.menuClick}>
             <i className="fa fa-user-circle">  {userName}</i>
           </button>
         </div>
