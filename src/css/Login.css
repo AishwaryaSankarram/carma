@@ -53,11 +53,17 @@
   color: rgb(0,188,212);
 
 }
-.focus_auto_address .autoComplete{
-
-    border-bottom: 2px solid rgb(0, 188, 212);
-    transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
-
+.autoBorder{
+  border-bottom: 2px solid rgb(0, 188, 212);
+  width: 0px;
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+  position: absolute;
+  left: 50%;
+}
+.focus_auto_address .autoBorder{
+  width: 258px;
+  left: 70px;
+  bottom: 0px;
 }
 .focus_false_at_data_avail .autoComplete_placeholder {
   transform: scale(0.75) translate(0px, -28px);
@@ -66,7 +72,6 @@
 .focus_false_at_data_avail .autoComplete {
     transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
 }
-
 .filled_status .autoComplete_placeholder{
   color: rgba(0, 0, 0, 0.3) !important;
 }
@@ -74,7 +79,7 @@
   border-bottom: 1.5px solid #e0e0e0 !important;
 }
 .autoComplete::placeholder {
-  color: rgba(0, 0, 0, 0.3);  
+  color: rgba(0, 0, 0, 0.3);
   font-family: Roboto, sans-serif;
   opacity: 1;
   font-weight: bold;

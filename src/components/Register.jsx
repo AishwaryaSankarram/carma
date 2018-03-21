@@ -145,6 +145,7 @@ export default class Register extends Component {
                 <div className={inputClass}>
                   <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass} onChange={this.onChangeAutoComplete} onPlaceSelected={place => this.setPlace(place)} types={["address"]} />
                   <div className="autoComplete_placeholder">Address</div>
+                  <div className="autoBorder"></div>
                 </div>
                 <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={event => this.handleClick(event)} />
                 <RaisedButton label="Login" primary={true} style={style} onClick={event => this.login(event)} />
@@ -179,7 +180,7 @@ getClass(){
       } else return "auto_address focus_auto_address";
   }
 addClass(){
-  
+
   this.setState({ focus: true });
   console.log("addclass clicked focus " + this.state.focus);
   // console.log("address ",this.state.autoComplete)
@@ -190,7 +191,7 @@ removeClass(){
   let self = this;
 
   console.log(this.state.autoComplete+"remove class clicked" + this.state.focus);
- 
+
  /*  if(!this.state.autoComplete.length>0 & this.state.autoComplete) */self.setState({ focus: false });
 
   // focus_auto_address;
