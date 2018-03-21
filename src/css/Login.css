@@ -10,14 +10,18 @@
 	    min-height: 270px;
 	margin: 60px auto;
     border: 1px solid #ccc;
-        padding-bottom: 36px;
+    padding: 35px 0px;
 }
 .sing_in_wrapper button {
  	background-color: #93c849 !important;
 }
+.login_footer{
+  margin-top: 30px;
+}
 .auto_address{
   position: relative;
   width: 100%;
+  font-family: Roboto, sans-serif;
 }
 
 .auto_address .autoComplete{
@@ -42,7 +46,19 @@
     left: 70px;
 }
 
-.auto_address .autoComplete::-webkit-input-placeholder {
+.auto_address .autoComplete::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #fff;
+}
+.auto_address .autoComplete::-moz-placeholder { /* Firefox 19+ */
+  color: #fff;
+}
+.auto_address .autoComplete:-ms-input-placeholder { /* IE 10+ */
+  color: #fff;
+}
+.auto_address .autoComplete:-moz-placeholder { /* Firefox 18- */
+  color: #fff;
+}
+.auto_address .autoComplete:-webkit-input-placeholder {
   color: #fff;
 }
 .auto_address .autoComplete:focus {
@@ -65,6 +81,26 @@
   left: 70px;
   bottom: 0px;
 }
+.focus_auto_address .autoComplete::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #b7b7b7;
+  font-weight: normal;
+}
+.focus_auto_address .autoComplete::-moz-placeholder { /* Firefox 19+ */
+  color: #b7b7b7;
+  font-weight: normal;
+}
+.focus_auto_address .autoComplete:-ms-input-placeholder { /* IE 10+ */
+  color: #b7b7b7;
+  font-weight: normal;
+}
+.focus_auto_address .autoComplete:-moz-placeholder { /* Firefox 18- */
+  color: #b7b7b7;
+  font-weight: normal;
+}
+.focus_auto_address .autoComplete:-webkit-input-placeholder {
+  color: #b7b7b7;
+  font-weight: normal;
+}
 .focus_false_at_data_avail .autoComplete_placeholder {
   transform: scale(0.75) translate(0px, -28px);
 }
@@ -84,4 +120,17 @@
   opacity: 1;
   font-weight: bold;
   font-size: 16px;
+}
+
+#edit-profile .auto_address .autoComplete_placeholder{
+  left: 0px;
+}
+#edit-profile .focus_auto_address .autoBorder{
+  left: 0px;
+}
+.edit-profile-settings  input{
+  font-size: 16px !important;
+}
+#edit-profile .auto_address .autoComplete{
+  margin-top:30px; 
 }

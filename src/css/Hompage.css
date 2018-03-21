@@ -213,7 +213,7 @@ html, body {
 }
 
 .header_title {
-    width: calc(100% - 500px);
+    width: calc(100% - 600px);
     font-size: 25px;
     color: #93c84a;
     text-transform: uppercase;

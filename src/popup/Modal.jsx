@@ -1,7 +1,15 @@
 import React, {Component} from 'react';
 import Modal from 'react-modal';
-import { Button } from "react-bootstrap";
+import {MuiThemeProvider,RaisedButton}  from 'material-ui';
+// import { Button } from "react-bootstrap";
 import '../css/modal.css';
+
+const style = {
+  margin: 15,
+  customWidth:{
+    width:200,
+  }
+};
 
 export class MyModal extends Component {
 	constructor(props){
@@ -37,8 +45,9 @@ export class MyModal extends Component {
 	render(){
 		return (
 		<Modal isOpen={this.state.modalIsOpen}
-          onRequestClose={this.closeModal} shouldCloseOnOverlayClick={false}
+          shouldCloseOnOverlayClick={false}
           contentLabel={this.props.title} className={" " + this.state.className} >
+          <MuiThemeProvider>
 					 <div className="confirmation-modal">
 					<div className="modal-header">
 					<h4 className="modal-title" ref={subtitle => this.subtitle = subtitle}>{this.props.title}</h4>
@@ -46,12 +55,16 @@ export class MyModal extends Component {
           <div className="modal-body">
               {this.props.content}
 							</div>
+
+            {this.props.okAction &&
             <div className="modal-footer">
-              <Button bsSize="sm" bsStyle="success" onClick={this.onSave} type="button"> {this.props.labelOk || "Yes"} </Button>
-              {this.props.addBtn && <Button bsSize="sm" bsStyle="primary" onClick={this.handleClick} type="button"> {this.props.addBtnLabel} </Button>}
-              <Button bsSize="sm" onClick={this.closeModal} type="button"> {this.props.labelCancel || "No"}  </Button>
+                <RaisedButton label={this.props.labelOk || "Yes"} primary={true} style={style} onClick={this.onSave}/>
+                {this.props.addBtn && <RaisedButton label={this.props.addBtnLabel}  primary={true} style={style} onClick={this.handleClick}/>}
+                <RaisedButton label={this.props.labelCancel || "No"}  style={style} onClick={this.closeModal} />
               </div>
+            }
 					</div>
+          </MuiThemeProvider>
     </Modal>
     );
 	}

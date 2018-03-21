@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import {MuiThemeProvider, RaisedButton, TextField} from 'material-ui/styles/MuiThemeProvider';
 import axios from 'axios';
 import Login from './Login.jsx';
 import Autocomplete from "react-google-autocomplete";
@@ -9,8 +7,8 @@ import Autocomplete from "react-google-autocomplete";
 const style = {
   margin: 15,
   customWidth:{
-    width:200,
-  },
+    width:200
+  }
 };
 
 const apiData = require('../utils/api.jsx');
@@ -109,9 +107,7 @@ export default class Register extends Component {
   render() {
         var inputClass = this.getClass();
         console.log("on rendering ===>"+inputClass);
-
-     const inputProps = { value: this.state.address, onChange: this.onChange ,label:'search address',placeholder:'search address...'}; // required for autocomplete api
-    // console.log("props",this.props);
+      //
     return <div>
         <MuiThemeProvider>
           <form action="/" method="POST" onSubmit={event => this.handleClick(event)}>
@@ -140,12 +136,15 @@ export default class Register extends Component {
                     )} />
 
                 <div className={inputClass}>
-                  <Autocomplete className="autoComplete" onFocus={this.addClass} onBlur={this.removeClass} onChange={this.onChangeAutoComplete} onPlaceSelected={place => this.setPlace(place)} types={["address"]} />
+                  <Autocomplete className="autoComplete" 
+                  placeholder="Enter your Address" onFocus={this.addClass} onBlur={this.removeClass} onChange={this.onChangeAutoComplete} onPlaceSelected={place => this.setPlace(place)} types={["address"]} />
                   <div className="autoComplete_placeholder">Address</div>
-                  <div className="autoBorder"></div>
+                   <div className="autoBorder"></div>
                 </div>
-                <RaisedButton label="Register" type="submit" primary={true} style={style} onClick={event => this.handleClick(event)} />
+                <div className="login_footer">
+                <RaisedButton label="Register" primary={true} style={style} onClick={event => this.handleClick(event)} />
                 <RaisedButton label="Login" primary={true} style={style} onClick={event => this.login(event)} />
+                </div>
               </div>
             </div>
           </form>

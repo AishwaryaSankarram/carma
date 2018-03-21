@@ -35,9 +35,10 @@ export default class Login extends Component{
                            floatingLabelText="Password"
                            onChange={(event,newValue) => this.setState({password:newValue})}
                           />
-                  <br/>
+                  <br/>    <div className="login_footer">
                            <RaisedButton className='login_button' label="Login" type="submit" primary={true} style={style} onClick={(event) => this.handleClick(event)}/>
                            <RaisedButton className='login_button' label="Sign Up" primary={true} style={style} onClick={(event) => this.register(event)}/>
+                           </div>
                </div>
                </form>
            </MuiThemeProvider>

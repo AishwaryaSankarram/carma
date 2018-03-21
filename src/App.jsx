@@ -10,15 +10,13 @@ export default class App extends Component {
     
     var localData=[];
     localData=localStorage.getItem("loginData");
-    loginPage.push(<LoginPage key="login-page" appContext={this}/>);
-    homePage.push(<Home key="home-page" appContext={this}/>);
-
+    loginPage.push(<LoginPage key="app-login-page" appContext={this}/>);
+    homePage.push(<Home key="app-home-page" appContext={this}/>);
+    //
     this.state={
       loginPage:loginPage,
       localData:localData,
       homePage:homePage
-
-      // homePage:[]
     }
     
   }
@@ -28,7 +26,7 @@ export default class App extends Component {
     var isLoggedIn = this.state.localData;
 
     return (
-      <div key="app-login" className="App_login">
+      <div key="app-login-page" className="App_login">
       {!isLoggedIn ? (this.state.loginPage):(this.state.homePage)}
       </div>
     );

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { Button, FormGroup, FormControl, ControlLabel,Checkbox } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel,Checkbox } from "react-bootstrap";
+import {MuiThemeProvider,RaisedButton}  from 'material-ui';
 //import axios from 'axios';
 import '../css/car.css';
 const apiData = require('../utils/api.jsx');
@@ -75,6 +76,7 @@ export class Car extends Component {
   render() {
     return (
       <div className="Car">
+        <MuiThemeProvider>
         <form onSubmit={this.handleSubmit}>
         <FormGroup controlId="carLabel" bsSize="sm">
             <ControlLabel>Car Label</ControlLabel>
@@ -97,21 +99,11 @@ export class Car extends Component {
           </FormGroup>
           <Checkbox checked={this.state.useAsEv} onChange={(event) => this.handleChange(event, "useAsEv")}>Use as EV </Checkbox>
           <div className="modal-footer">
-          <Button
-            bsSize="sm"
-            bsStyle="default" onClick={this.handleCancel}
-            type="button">
-            Cancel
-          </Button>
-					<Button
-						bsSize="sm"
-						bsStyle="primary"
-						disabled={!this.validateForm()}
-						type="submit">
-						Save
-					</Button>
-					</div>
+            <RaisedButton className="action-btns" disabled={!this.validateForm()} label="Save" primary={true} type="submit"/>
+            <RaisedButton className="action-btns" label="Cancel" onClick={this.handleCancel}/>
+          </div>
         </form>
+        </MuiThemeProvider>
       </div>
     );
   }

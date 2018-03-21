@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Modal from 'react-modal';
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import {MuiThemeProvider,RaisedButton}  from 'material-ui';
 import '../css/modal.css';
 
 export class SpeedModal extends Component {
@@ -39,12 +40,11 @@ export class SpeedModal extends Component {
   render(){
    	return (
 	   	<Modal isOpen={this.state.modalIsOpen}
-	         onRequestClose={this.closeModal}
 	         contentLabel={this.props.title} className="speed-collector">
+	         <MuiThemeProvider>
 	         <div className="confirmation-modal">
 	         <div className="modal-title">
 	         <h4 ref={subtitle => this.subtitle = subtitle}>{this.props.title}
-	         <button className="btn btn-xs pull-right remove icon-close" onClick={this.closeModal}>Close</button>
 	         </h4>
 	         </div>
 	         	<form onSubmit={this.onSave}>
@@ -61,13 +61,12 @@ export class SpeedModal extends Component {
 	             </FormGroup>
 	             </div>
 	             <div className="modal-footer">
-		   	      <div className="btn-grp">
-		             	<Button bsSize="sm" bsStyle="success" type="submit"> OK </Button>
-		             	<Button bsSize="sm" onClick={this.closeModal} type="button"> Cancel </Button>
-		           </div>
-		           </div>
+		   	      		<RaisedButton className="action-btns" label="OK" primary={true} type="submit"  onClick={this.onSave}/>
+		   	      		<RaisedButton className="action-btns" label="Cancel" onClick={this.closeModal}/>
+		         </div>
 	             </form>
 	         </div>
+	         </MuiThemeProvider>
 	   	</Modal> 
    	);
    }

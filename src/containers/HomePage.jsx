@@ -7,7 +7,7 @@ import {Header} from '../layouts/header.jsx';
 // import {Footer} from '../layouts/footer.jsx';
 import '../css/Hompage.css';
 import {MyModal} from '../popup/Modal.jsx';
-import MuiTheme from 'material-ui/styles/getMuiTheme';
+import {Profile} from '../popup/editProfile';
 import axios from 'axios';
 import Popover from "material-ui/Popover";
 import Menu from "material-ui/Menu";
@@ -15,7 +15,6 @@ import MenuItem from "material-ui/MenuItem";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Mapicon from 'material-ui/svg-icons/maps/place';
 import Logouticon from 'material-ui/svg-icons/action/power-settings-new';
-import { withStyles } from "material-ui/styles";
 
 const apiData = require('../utils/api.jsx');
 const constants = require('../utils/constants.jsx');
@@ -73,15 +72,15 @@ export default class HomePage extends Component {
     this.deleteCar = this.deleteCar.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleProfileSave = this.handleProfileSave.bind(this);
   }
 
   loadCars(){
     let self = this;
     const localData=localStorage.getItem("loginData");
     const password=localStorage.getItem("pwd");
-    console.log("Component bef render---->", localData);
+    console.log("localData---->", localData);
     const header = JSON.parse(localData);
-
     let apiBaseUrl = apiUrl + 'granular/getGranularPoints/';
     let params = { page: 0, size: 10};
     let auth = { username: header.uuid, password: password  }
@@ -203,6 +202,7 @@ export default class HomePage extends Component {
   }
 
   closeDialog(){
+    console.log("Comes to cancelAction------------");
     this.setState({dialogVisible: false, action: {}, modalHeading: ""});
   }
 
@@ -218,10 +218,10 @@ export default class HomePage extends Component {
      console.log("Comes to delete------------");
      let self = this;
      let carId = car.carId;
+    const localData=localStorage.getItem("loginData");
+    const password=localStorage.getItem("pwd");
+      const header = JSON.parse(localData);    
      if(car.isSaved){
-          const localData=localStorage.getItem("loginData");
-          const password=localStorage.getItem("pwd");
-          const header = JSON.parse(localData);
           let url = apiUrl + 'granular/deleteCarDetails/' + header.id + '?carId=' + carId;
           let auth = { username: header.uuid, password: password  };
           axios.delete(url, { auth: auth}).then(function (response) {
@@ -331,21 +331,21 @@ export default class HomePage extends Component {
   }
 
   drawMap(){
-    var loginData=localStorage.getItem("loginData");
-    var password=localStorage.getItem("pwd");
   	let routes = [];
     let self = this;
 		let cars = this.state.cars;
 		let savedCars = cars.filter(function(car) {
        	return car.isSaved && car.carId !== self.state.selectedCar.carId;
      });
+    const localData=localStorage.getItem("loginData");
+    const password=localStorage.getItem("pwd");
+    console.log("localData---->", localData);
     routes = this.getRoutes(savedCars);
-    return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute} routes={routes} loginData={loginData} pwd={password} />;
+    return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute} routes={routes} loginData={localData} pwd={password} />;
     //
   }
 
   displayRoutes(){
-    console.log("display routes called")
     this.setState({mapOpen: false, selectedCar: {}});
   }
 
@@ -428,19 +428,18 @@ export default class HomePage extends Component {
   menuClick (){
     // This prevents ghost click.
     // this.props.preventDefault();
-console.log("menuclick called==>");
+    console.log("menuclick called==>");
     this.setState({
       isMenuOpen: true,
       // anchorEl: event.currentTarget,
     });
-  };
- handleRequestClose = () => {
-  //  console.log("===>"+value);
-    this.setState({
+ }
 
+ handleRequestClose = () => {
+    this.setState({
       isMenuOpen: false,
     });
-  };
+ }
 
   signOutPopupClicked=()=>{
     console.log("entered");
@@ -448,15 +447,29 @@ console.log("menuclick called==>");
     this.logout();
   }
 
+  showProfile(){
+    const localData=localStorage.getItem("loginData");
+    const password=localStorage.getItem("pwd");
+    console.log("localData---->", localData);
+    const header = JSON.parse(localData);
+
+    var content = <Profile saveAction={this.handleProfileSave} cancelAction={this.closeDialog} loginData={header} pwd={password}/>;
+    //
+    this.setState({isMenuOpen: false, dialogVisible: true, action: null, modalHeading: "Edit Profile Settings", message: content});
+  }
+
+  handleProfileSave(){
+    this.setState({dialogVisible: false, action: "", modalHeading: "", message: ""});
+  }
+
  render() {
     console.info("Rendering HomePage--------------");
     return (
       <div className="App">
-      {/* {this.state.islogout?this.logout:''} */}
         {<Header onBtnClick={this.openModal} menuClickIns={this.menuClick} viewRoutes={this.displayRoutes}/>}
              {this.state.dialogVisible &&
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
-          okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}/>}
+          okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  />}
         {this.state.cars && this.displayCars()}
         {this.state.showHeader && <div className="alert-success" id="hideMe">Route for {this.state.selectedCar.carLabel} has been saved</div> }
         {this.state.modalIsOpen && <Modal isOpen={this.state.modalIsOpen}
@@ -470,7 +483,6 @@ console.log("menuclick called==>");
               car={this.state.isEditing && this.state.selectedCar}/>
             </div>
         </Modal> }
-        {/* <div className="menu-header"> */}
          <MuiThemeProvider >
           <Popover className="menu_header" style={style.popup}
           open={this.state.isMenuOpen}
@@ -484,12 +496,11 @@ console.log("menuclick called==>");
           }}
           onRequestClose={this.handleRequestClose}>
           <Menu >
-            <MenuItem icon primaryText="Edit address" leftIcon={<Mapicon/>}/>
+            <MenuItem primaryText="Edit address" leftIcon={<Mapicon/>} onClick={this.showProfile.bind(this)}/>
             <MenuItem primaryText="Sign out" leftIcon={<Logouticon/>} onClick={this.signOutPopupClicked} />
           </Menu>
         </Popover>
         </MuiThemeProvider>
-        {/* </div> */}
         {this.state.cars && this.displayContent()}
       </div>
     );

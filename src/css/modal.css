@@ -20,7 +20,7 @@ z-index: 1400;
 	position: relative;
 	width: 75%;
 	max-width: 768px;
-	max-height: 345px;
+	max-height: 620px;
 	left: 38px !important;
 	margin: 0px auto;
 	z-index: 1500;
@@ -29,7 +29,7 @@ z-index: 1400;
 	transform: translate(0px, 64px);
 }
 
-.log-out, .car-details, .draw-routes, .delete-car, .speed-collector {
+.log-out, .car-details, .draw-routes, .delete-car, .speed-collector, .edit-profile-settings {
 	position: absolute;
 	top: 40px;
 	right: 40px;
@@ -43,12 +43,12 @@ z-index: 1400;
 
 .car-details {
 	width: 400px;
-	height: 310px;
+	height: 345px;
 }
 
 .draw-routes{
-	width: 565px;
-	height: 205px;
+	width: 750px;
+	height: 230px;
 }
 
 .speed-collector {
@@ -65,7 +65,11 @@ z-index: 1400;
 }
 .log-out, .delete-car{
 	width: 400px;
-	height: 200px;
+	height: 230px;
+}
+.edit-profile-settings{
+	width: 400px;
+	height: 390px;
 }
 
 .modal-title {
@@ -84,11 +88,20 @@ z-index: 1400;
     font-size: 16px
 }
 .modal-body{
-	padding: 0px !important;
-	max-height: 280px;
+	/*padding: 0px !important;*/
+	/*max-height: 280px;*/
 	overflow: auto;
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 }
+
+.pac-container {
+	z-index: 1500;
+}
+
+#edit-profile .profile-input input{
+	margin-top: 30px !important;
+}
+
 .modal-body form input{
 	border-radius: 2px !important;
 	height: 36px !important;
@@ -120,4 +133,9 @@ z-index: 1400;
 .btn-sm:active{
 	background: #ebebeb !important;
 	color: #333 !important;
+}
+
+.action-btns {
+	margin: 15px;
+	width: 50px;
 }
