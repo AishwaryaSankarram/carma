@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {MuiThemeProvider, RaisedButton, TextField} from 'material-ui/styles/MuiThemeProvider';
+import {MuiThemeProvider, RaisedButton, TextField} from 'material-ui';
 import axios from 'axios';
 import Login from './Login.jsx';
 import Autocomplete from "react-google-autocomplete";
