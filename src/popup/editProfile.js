@@ -11,7 +11,8 @@ export class Profile extends Component {
         super(props);
         this.state={
           name: props.loginData.name || "",
-          password: props.pwd,
+          password: "",
+          oldPassword: "",
           dataSource: [],
           headerMsg:'',
           focus:false,
@@ -46,6 +47,7 @@ export class Profile extends Component {
         let payload = {
           name: this.state.name,
           password: this.state.password,
+          oldPassword: this.state.oldPassword,
           userAddress: this.state.autoComplete,
         }
         let config = {
@@ -60,7 +62,7 @@ export class Profile extends Component {
         axios.put(apiBaseUrl + 'granular/updateAddress', payload, config).then(function (response) {
          console.log(response);
          if(response.status === 200){
-           var headerMsg = <div className="alert-success">Successfully Registered</div>;
+           var headerMsg = <div className="alert-success">Successfully updated chnages to profile.</div>;
            // Update local storage here
             let loginData = self.props.loginData;
             loginData.name = payload.name;
@@ -74,7 +76,6 @@ export class Profile extends Component {
            self.setState({
              headerMsg: <div className="alert-danger">Error updating profile. Please Try again.</div>
            });
-            //
          }
          self.props.saveAction();
        }).catch(function (error) {
@@ -82,7 +83,6 @@ export class Profile extends Component {
             self.setState({
               headerMsg: <div className="alert-danger">Error updating profile. Please Try again.</div>
             });  
-            //
             self.props.saveAction();
        });
       }
@@ -90,7 +90,6 @@ export class Profile extends Component {
         self.setState({
               headerMsg: <div className="alert-danger">Please fill all the detail(s).</div>
         });
-            //
       }
     }
 
@@ -101,13 +100,11 @@ export class Profile extends Component {
     getClass(){
         let self = this;
         if(self.state.focus === false && this.state.autoComplete.address && this.state.autoComplete.address.length > 0) {
-            console.log("entered first log");
-        return "auto_address focus_false_at_data_avail";
+          return "auto_address focus_false_at_data_avail";
         } else if (self.state.focus === false && !this.state.autoComplete.address && !this.state.autoComplete.address.length > 0) {
           return "auto_address";
         } else 
           return "auto_address focus_auto_address";
-        // return self.state.focus ? "auto_address focus_auto_address" : "auto_address";
     }
 
     addClass(){
@@ -138,9 +135,14 @@ export class Profile extends Component {
                         onChange={(event, newValue) => this.setState({ name: newValue })} className="profile-input"
                         required/>
                 <br />
+                <TextField type="password" hintText="Enter old password" floatingLabelText="Old Password"  value={this.state.oldPassword}
+                        onChange={(event, newValue) => this.setState({ oldPassword: newValue })}  className="profile-input"
+                        required/>
+                <br/>       
+
                 <TextField type="password" hintText="Enter new password" floatingLabelText="Password"  value={this.state.password}
                         onChange={(event, newValue) => this.setState({ password: newValue })}  className="profile-input"
-                        required/>
+                        />
 
                 <div className={this.getClass()}>
                   <Autocomplete className="autoComplete" types={["address"]} placeholder="Enter your Address"
