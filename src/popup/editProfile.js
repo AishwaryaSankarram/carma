@@ -43,7 +43,7 @@ export class Profile extends Component {
       event.preventDefault();
       var apiBaseUrl = apiUrl;
       var self = this;
-      if(this.state.name.length>0  && this.state.password.length>0){
+      if(this.state.name.length>0  && this.state.password.length>0 && this.state.oldPassword.length > 0){
         let payload = {
           name: this.state.name,
           password: this.state.password,
@@ -137,7 +137,7 @@ export class Profile extends Component {
                 <br />
                 <TextField type="password" hintText="Enter old password" floatingLabelText="Old Password"  value={this.state.oldPassword}
                         onChange={(event, newValue) => this.setState({ oldPassword: newValue })}  className="profile-input"
-                        required/>
+                        />
                 <br/>       
 
                 <TextField type="password" hintText="Enter new password" floatingLabelText="Password"  value={this.state.password}
