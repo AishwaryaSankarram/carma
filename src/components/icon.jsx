@@ -24,12 +24,12 @@ export class Icon extends React.Component {
         let google = window.google;
         let svg = [
                     '<?xml version="1.0"?>', 
-                    '<svg height="1024" width="767.5" xmlns="http://www.w3.org/2000/svg" style="transform: rotate(180deg);" >',
-                      '<path stroke="#fffff" stroke-width="100"  d="M0 384l383.75 383.75L767.5 384H0z" style="fill:#000000;"/>',
+                    '<svg height="1024" width="767.5" xmlns="http://www.w3.org/2000/svg">',
+                      '<polygon stroke="#fffff" stroke-width="100" points="300,0 600,520 0,520" fill="#000000"/>',
                     '</svg>'
                 ].join('\n');
 	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), 
-                     anchor: new google.maps.Point(15, 5),
+                     anchor: new google.maps.Point(12, 0),
                      scaledSize: new google.maps.Size(30, 30)};
 		let zIndex = self.props.allowEdit ? 160 : 137 ;
         let markers = [];

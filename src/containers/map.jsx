@@ -350,20 +350,35 @@ export class MapContainer extends React.Component {
 
 	deriveMapCenter(){
 		let mapCenter;
-		if(this.props.car.isSaved){
-			 mapCenter = this.props.car.markers[0]; //Using saved car mapCenter
-		}else{
+		let routeArray= this.state.routes;
+		const loginData = JSON.parse(this.props.loginData);
+		if(this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length == 2){
+			 mapCenter = {lat: ((this.props.car.markers[0].lat + this.props.car.markers[1].lat)/2), 
+			  lng: ((this.props.car.markers[0].lng + this.props.car.markers[1].lng)/2)}  ; //Using saved car mapCenter
+		}else if(routeArray.length > 0){
 			/*if(this.state.markers[0]){
 				mapCenter = this.state.markers[0]; //Using current car mapCenter
-			}else */if(this.state.routes[0]){
-				mapCenter = this.state.routes[0][0]; //Using mapCenter from first route
-			}else{
-				const constants = require("../utils/constants.jsx"); 
-				mapCenter = constants.mapCenter; //Using mapCenter from constants
-			}
+
+			}else */
+		  let lat = 0, lng = 0, counter=0;
+		  for(let i=0; i<routeArray.length;i++){
+		  	let routes = routeArray[i];//[0].markerPos;
+		  	routes.forEach(function(e){
+		  		lat += e.lat;
+		  		lng += e.lng;
+		  		counter += 1;							
+		  	});
+	      }
+	      mapCenter = {lat: lat/counter, lng: lng/counter}; //this.state.routes[this.state.routes.length - 1][0]; //Using mapCenter from first route
+		}else if(loginData.userAddress && loginData.userAddress.location){	 //Using saved Address mapCenter
+			mapCenter = {lat: loginData.userAddress.location.coordinates[0], lng: loginData.userAddress.location.coordinates[1]}	      
+		}else{
+			const constants = require("../utils/constants.jsx"); 
+			mapCenter = constants.mapCenter; //Using mapCenter from constants
 		}
 		return mapCenter;
 	}
+
 	getBounds(){
 		let routeArray= this.state.routes;
 		let flag = true;
@@ -384,6 +399,14 @@ export class MapContainer extends React.Component {
 			});	
 			flag = false;
 		}
+		const loginData = JSON.parse(this.props.loginData);
+    	if(loginData && loginData.userAddress && loginData.userAddress.location){
+      		latLngBounds.extend(new window.google.maps.LatLng(
+                            { lat: loginData.userAddress.location.coordinates[0], 
+                            lng:  loginData.userAddress.location.coordinates[1]}
+                          ));  
+      	    flag = false;
+    	}
 		if(flag){
 			const constants = require("../utils/constants.jsx"); 
 			let defLatLng = constants.bounds; //Using bounds from constants

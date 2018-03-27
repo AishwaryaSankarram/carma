@@ -110,14 +110,16 @@ export default class HomePage extends Component {
           if(ids.indexOf(c.carId) === -1){
             c.isSaved=true;
             let poly = [];
-            c.speed = c.poly[0].speed;
-            c.poly.forEach(function(p) {
-               poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng), speed: p.speed});
-            });
-            c.poly = poly;
-            c.drawPolyline = true;
-            c.markerCount = 2;
-            c.showMarker = true;
+            if(c.poly && c.poly.length > 0){
+              c.speed = c.poly[0].speed;
+              c.poly.forEach(function(p) {
+                 poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng), speed: p.speed});
+              });
+              c.poly = poly;
+              c.drawPolyline = true;
+              c.markerCount = 2;
+              c.showMarker = true;
+            }
             c.color = c.color || constants.color_codes[i % 10];
             let last_index = poly.length -1;
             c.markers = [];
@@ -341,7 +343,9 @@ export default class HomePage extends Component {
     const password=localStorage.getItem("pwd");
     console.log("localData---->", localData);
     routes = this.getRoutes(savedCars);
-    return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute} routes={routes} loginData={localData} pwd={password} />;
+
+    return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute} 
+        routes={routes} loginData={localData} pwd={password} />;
     //
   }
 
@@ -374,6 +378,7 @@ export default class HomePage extends Component {
         routes.push(route);
       }
     });
+    
     return routes;
   } 
 
@@ -397,19 +402,33 @@ export default class HomePage extends Component {
     }else{
       let cars = this.state.cars;
       let routes = [];
-      let bounds;
       let mapHeader = "";
       let savedCars = cars.filter(function(car) {
           return car.isSaved;
        });
-       if(savedCars.length > 0){ /* Whether to view routes or display disabled map*/
+      let bounds = new window.google.maps.LatLngBounds();
+      const localData=localStorage.getItem("loginData");
+      const loginData = JSON.parse(localData);
+      var flag = true;
+      if(savedCars.length > 0){ /* Whether to view routes or display disabled map*/
           routes = this.getRoutes(savedCars);
           // console.log("Routes-------------------->" , routes);
           bounds = this.getBounds(routes);
           mapCenter = routes[0][0];
           mapHeader = "Displaying routes for saved cars"
           console.log("Displaying routes for saved cars-------");
-       }else{
+          flag = false;
+       }
+       if(loginData && loginData.userAddress && loginData.userAddress.location){
+          console.log("Including saved address bounds-------");
+          bounds.extend(new window.google.maps.LatLng(
+                            { lat: loginData.userAddress.location.coordinates[0], 
+                            lng:  loginData.userAddress.location.coordinates[1]}
+                          ));  
+          mapCenter = { lat: loginData.userAddress.location.coordinates[0], 
+                            lng:  loginData.userAddress.location.coordinates[1]};
+          flag = false;
+       }if(flag){
            const constants = require("../utils/constants.jsx"); 
            let defLatLng = constants.bounds; //Using bounds from constants
            bounds = new window.google.maps.LatLngBounds();
