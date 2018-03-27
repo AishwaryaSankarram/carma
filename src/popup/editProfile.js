@@ -43,13 +43,27 @@ export class Profile extends Component {
       event.preventDefault();
       var apiBaseUrl = apiUrl;
       var self = this;
-      if(this.state.name.length>0  && this.state.password.length>0 && this.state.oldPassword.length > 0){
-        let payload = {
-          name: this.state.name,
-          password: this.state.password,
-          oldPassword: this.state.oldPassword,
-          userAddress: this.state.autoComplete,
-        }
+      if(this.state.name.length>0){
+          let payload = {
+            name: this.state.name
+          };
+
+          if(this.state.oldPassword.length === 0 && this.state.password.length > 0){
+            self.setState({
+              headerMsg: <div className="alert-danger">Old password is mandatory while changing passwords.</div>
+            });
+            return;
+          }
+
+          if(this.state.password.length > 0 && this.state.oldPassword.length > 0){
+            payload.password = this.state.password;
+            payload.oldPassword = this.state.oldPassword;
+          }
+          
+          if(this.state.autoComplete.length > 0){
+              payload.userAddress = this.state.autoComplete;
+          }
+
         let config = {
           auth: {
             username: this.props.loginData.uuid,
@@ -70,6 +84,7 @@ export class Profile extends Component {
             localStorage.setItem("loginData",JSON.stringify(loginData));
             localStorage.setItem("pwd",payload.password);
             self.setState({headerMsg: headerMsg});
+            self.props.saveAction();
          }
          else{
            console.log("some error ocurred",response.status);
@@ -77,15 +92,14 @@ export class Profile extends Component {
              headerMsg: <div className="alert-danger">Error updating profile. Please Try again.</div>
            });
          }
-         self.props.saveAction();
+         
        }).catch(function (error) {
             console.log(error);
             self.setState({
               headerMsg: <div className="alert-danger">Error updating profile. Please Try again.</div>
             });  
-            self.props.saveAction();
        });
-      }
+      } 
       else{
         self.setState({
               headerMsg: <div className="alert-danger">Please fill all the detail(s).</div>
