@@ -94,9 +94,9 @@ export class Profile extends Component {
          }
          
        }).catch(function (error) {
-            console.log(error);
+            console.log("Catch block------", error.response.data.message);
             self.setState({
-              headerMsg: <div className="alert-danger">Error updating profile. Please Try again.</div>
+              headerMsg: <div className="alert-danger">{error.response.data.message}</div>
             });  
        });
       } 
@@ -151,7 +151,7 @@ export class Profile extends Component {
                 <br />
                 <TextField type="password" hintText="Enter old password" floatingLabelText="Old Password"  value={this.state.oldPassword}
                         onChange={(event, newValue) => this.setState({ oldPassword: newValue })}  className="profile-input"
-                        />
+                        required={this.state.password.length > 0}/>
                 <br/>       
 
                 <TextField type="password" hintText="Enter new password" floatingLabelText="Password"  value={this.state.password}
