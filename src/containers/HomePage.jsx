@@ -95,7 +95,7 @@ export default class HomePage extends Component {
           console.log("Oops...! Get Cars failed with--------" + response.status);
           self.setState({cars: [], count: 0});
          }
-           
+
       }).catch(function (error) {
           self.setState({cars: [], count: 0});
           console.log("The error is------------", error);
@@ -173,7 +173,7 @@ export default class HomePage extends Component {
           index = oldIndex + 1;
         }
       }
-      carData.carId = carData.carLabel;  
+      carData.carId = carData.carLabel;
       carData.color = constants.color_codes[index % 10];
       oldCars.push(carData);
       let newCount = oldCount + 1;
@@ -222,7 +222,7 @@ export default class HomePage extends Component {
      let carId = car.carId;
     const localData=localStorage.getItem("loginData");
     const password=localStorage.getItem("pwd");
-      const header = JSON.parse(localData);    
+      const header = JSON.parse(localData);
      if(car.isSaved){
           let url = apiUrl + 'granular/deleteCarDetails/' + header.id + '?carId=' + carId;
           let auth = { username: header.uuid, password: password  };
@@ -336,15 +336,13 @@ export default class HomePage extends Component {
   	let routes = [];
     let self = this;
 		let cars = this.state.cars;
-		let savedCars = cars.filter(function(car) {
-       	return car.isSaved && car.carId !== self.state.selectedCar.carId;
-     });
+    let unSavedCars = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
     const localData=localStorage.getItem("loginData");
     const password=localStorage.getItem("pwd");
     console.log("localData---->", localData);
-    routes = this.getRoutes(savedCars);
+    routes = this.getRoutes(unSavedCars);
 
-    return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute} 
+    return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
         routes={routes} loginData={localData} pwd={password} />;
     //
   }
@@ -378,16 +376,16 @@ export default class HomePage extends Component {
         routes.push(route);
       }
     });
-    
+
     return routes;
-  } 
+  }
 
   getBounds(routeArray){
     var latLngBounds = new window.google.maps.LatLngBounds();
     for(let i=0; i<routeArray.length;i++){
       let routes = routeArray[i];//[0].markerPos;
       routes.forEach(function(e){
-        latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));     
+        latLngBounds.extend(new window.google.maps.LatLng({ lat:e.lat, lng: e.lng}));
       });
     }
     return latLngBounds;
@@ -422,14 +420,14 @@ export default class HomePage extends Component {
        if(loginData && loginData.userAddress && loginData.userAddress.location){
           console.log("Including saved address bounds-------");
           bounds.extend(new window.google.maps.LatLng(
-                            { lat: loginData.userAddress.location.coordinates[0], 
+                            { lat: loginData.userAddress.location.coordinates[0],
                             lng:  loginData.userAddress.location.coordinates[1]}
-                          ));  
-          mapCenter = { lat: loginData.userAddress.location.coordinates[0], 
+                          ));
+          mapCenter = { lat: loginData.userAddress.location.coordinates[0],
                             lng:  loginData.userAddress.location.coordinates[1]};
           flag = false;
        }if(flag){
-           const constants = require("../utils/constants.jsx"); 
+           const constants = require("../utils/constants.jsx");
            let defLatLng = constants.bounds; //Using bounds from constants
            bounds = new window.google.maps.LatLngBounds();
            defLatLng.forEach(function(point){
@@ -438,7 +436,7 @@ export default class HomePage extends Component {
            console.log("Displaying disabled true map-------");
        }
        console.error("Bounds value===========>"+bounds);
-        content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div> 
+        content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div>
         </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter} bounds={bounds}/></div>
      }
       return content;
@@ -496,8 +494,8 @@ export default class HomePage extends Component {
           shouldCloseOnOverlayClick={false}
           contentLabel="Car Details" className="car-details">
           <div className="modal-title" ref={subtitle => this.subtitle = subtitle}>Car Details</div>
-            <div className="modal-body"> 
-              <Car onSave={this.createCar} carIndex={this.state.count} 
+            <div className="modal-body">
+              <Car onSave={this.createCar} carIndex={this.state.count}
               sourceCar={this.state.sourceCar} onClose={this.closeModal}
               car={this.state.isEditing && this.state.selectedCar}/>
             </div>

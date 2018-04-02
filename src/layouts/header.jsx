@@ -29,7 +29,7 @@ export class Header extends Component {
           <figure className="logo">
             <img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" />
           </figure>
-        </div> 
+        </div>
         <div className="header_title">Carma Route Planner</div>
         <div className="add_car">
           <button className="logout_icon new_car" title={"Logged in as "+userName} onClick={this.menuClick}>
@@ -42,11 +42,6 @@ export class Header extends Component {
           </button>
         </div>
         <div className="add_car">
-          <button className="logout_icon new_car" title="View Routes" onClick={this.openRoutes}>
-            <i className="fa fa-eye"> </i>
-          </button>
-        </div>
-        <div className="add_car">
           <button onClick={this.handleBtnClick} className="new_car" title="Add Car">
             <i className="fa fa-plus"> Add Car</i>
           </button>
@@ -54,4 +49,3 @@ export class Header extends Component {
       </div>;
   }
 }
-

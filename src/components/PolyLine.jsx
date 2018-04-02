@@ -36,21 +36,21 @@ export class PolyLine extends React.Component {
             // console.error("componentDidMount path insert_at event ", e);
             //Here we need to push the speeds to the next vertices
             self.updatePolyLine(e, "insert_at");
-        }); 
+        });
         google.maps.event.addListener(path, 'remove_at', function(e){
             // console.error("componentDidMount  path remove_at event", e);
             //Here we need to push the speeds to the previous vertices
             self.updatePolyLine(e, 'remove_at');
-        }); 
-        google.maps.event.addListener(path, 'set_at', function(e){ 
+        });
+        google.maps.event.addListener(path, 'set_at', function(e){
             // console.log("isDragging----------" + isDragging);
             if(!isDragging) {
                 // console.error("componentDidMount path set_at event==============>", e);
                 //Set the old speed at the new point
                 self.updatePolyLine(e, 'set_at');
-                
+
             }
-        }); 
+        });
     }
 
     updatePolyLine(v, event_name){
@@ -64,13 +64,13 @@ export class PolyLine extends React.Component {
             if(oldPt.speed === pathProps[v].speed){
                 return false;
             }else{
-                isDragging= true; 
+                isDragging= true;
                 oldPt.speed = pathProps[v].speed;
                 path.setAt(v, oldPt); //This will trigger a set_at event; So let's stop that
                 let poly = path.getArray();
                 let pathData = self.createPoly(poly);
                 isDragging = false;
-                self.props.dragHandler(pathData);    
+                self.props.dragHandler(pathData);
             }
             // console.log("updatePolyLine After-------------", pathData, pathProps);
         }else if(event_name === 'insert_at'){
@@ -85,7 +85,7 @@ export class PolyLine extends React.Component {
                 if(index === v){
                    let oldPt = path.getAt(index);
                     oldPt.speed = null;
-                    path.setAt(index,oldPt); 
+                    path.setAt(index,oldPt);
                 }
             });
             let poly = path.getArray();
@@ -110,7 +110,7 @@ export class PolyLine extends React.Component {
             let poly;
             if(path.getArray().length === pathProps.length){ //Somehow remove_at doesn't work; So manually remove the point
                 poly = path.getArray();
-                poly.splice(v, 1);    
+                poly.splice(v, 1);
             }else{
                 pathProps.forEach(function(p, index){
                 if(index > v){
@@ -121,7 +121,7 @@ export class PolyLine extends React.Component {
                 if(index === v){
                    let oldPt = path.getAt(index);
                     oldPt.speed = null;
-                    path.setAt(index,oldPt); 
+                    path.setAt(index,oldPt);
                 }
             });
                 poly = path.getArray();
@@ -132,7 +132,7 @@ export class PolyLine extends React.Component {
             // console.log("updatePolyLine After-------------", self.createPoly(path.getArray()), pathProps);
         }else{
             console.log('moving_pt'); //No handle required as set_at will take care of moved marker
-            
+
         }
 
     }
@@ -145,20 +145,20 @@ export class PolyLine extends React.Component {
             // console.error("componentDidUpdate path insert_at event ", e);
             //Here we need to push the speeds to the next vertices
             self.updatePolyLine(e, "insert_at");
-        }); 
+        });
         google.maps.event.addListener(path, 'remove_at', function(e){
             // console.error("componentDidUpdate path remove_at event", e);
             //Here we need to push the speeds to the previous vertices
             self.updatePolyLine(e, 'remove_at');
-        }); 
-        google.maps.event.addListener(path, 'set_at', function(e){ 
+        });
+        google.maps.event.addListener(path, 'set_at', function(e){
             // console.log("isDragging----------" + isDragging);
             if(!isDragging) {
                 // console.error("componentDidUpdate  path set_at event==============>", e);
                 //Set the old speed at the new point
                 self.updatePolyLine(e, 'set_at');
             }
-        }); 
+        });
     }
 
     componentWillUnmount() {
@@ -174,7 +174,7 @@ export class PolyLine extends React.Component {
     handleClick(e, v){
         let vertex = typeof(v) === 'undefined' ?  e.vertex : v;
         console.log("click on polyline vertex----------->", e, vertex, v);
-        if(vertex > -1){
+        if(vertex > -1  && this.props.pathCoordinates.length !== vertex + 1){
             console.log(this.props.pathCoordinates[vertex]);
             let speed = this.props.pathCoordinates[vertex].speed ;
             this.setState({vertex: vertex, modalIsVisible: true, currentSpeed: speed});
@@ -261,9 +261,9 @@ export class PolyLine extends React.Component {
                 />
                 <Icon markerPos={this.props.pathCoordinates}  clickHandler={this.handleClick}
                 dragHandler={this.handleIconDrag} allowEdit={true} color={this.props.color}/>
-                {this.state.modalIsVisible && 
+                {this.state.modalIsVisible &&
                       <SpeedModal title="Enter Speed" modalIsOpen={this.state.modalIsVisible}
-                      okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex} speed={this.state.currentSpeed} /> } 
+                      okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex} speed={this.state.currentSpeed} /> }
             </div>
         );
     }
