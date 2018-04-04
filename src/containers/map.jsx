@@ -9,7 +9,7 @@ const apiUrl = apiData.baseUrl;
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
-		if((typeof(this.props.car.poly) !== 'undefined') && this.props.car.poly.length > 0){
+		if(this.props.car && (typeof(this.props.car.poly) !== 'undefined') && this.props.car.poly.length > 0){
 			this.state = {
 				markers: this.props.car.markers,
 				showMarker: this.props.car.showMarker,
@@ -352,7 +352,7 @@ export class MapContainer extends React.Component {
 		let mapCenter;
 		let routeArray= this.state.routes;
 		const loginData = JSON.parse(this.props.loginData);
-		if(this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length === 2){
+		if(this.props.car && this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length === 2){
 			 mapCenter = {lat: ((this.props.car.markers[0].lat + this.props.car.markers[1].lat)/2), 
 			  lng: ((this.props.car.markers[0].lng + this.props.car.markers[1].lng)/2)}  ; //Using saved car mapCenter
 		}else if(routeArray.length > 0){
@@ -434,12 +434,14 @@ export class MapContainer extends React.Component {
 		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
+			{this.props.car.carLabel &&  
 			<div className="clearfix">
-			<div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div>
-			<div id="btn-submit-container"  className="pull-right ">
-				<button onClick={this.handleSubmit} className={saveBtnClass}> Save </button>
+				<div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div>
+				<div id="btn-submit-container"  className="pull-right ">
+					<button onClick={this.handleSubmit} className={saveBtnClass}> Save </button>
+				</div>
 			</div>
-			</div>
+			}	
 			<MyMapComponent onClick={this.handleClick} 
 							showMarker={this.state.showMarker} 
 							markerCount={this.state.markerCount} 
@@ -447,11 +449,13 @@ export class MapContainer extends React.Component {
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)} 
 							routes={this.state.routes} allowEdit={true}
-							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carLabel}
+							mapCenter={mapCenter} 
+							color={this.props.car.color ? this.props.car.color : ""} label={this.props.car ? this.props.car.carLabel: ""}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handlePolyEvents}
 							bounds={bounds}
 							pinProps={pinProps}
+							disabled={this.props.car.carLabel? false : true}
 			/>
 			{this.state.modalIsVisible && 
 		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="How do you want to draw the route?" 

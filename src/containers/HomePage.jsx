@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Modal from 'react-modal';
 import {Car} from './car.jsx';
 import {MapContainer} from './map.jsx';
-import {MyMapComponent} from '../components/map.jsx';
 import {Header} from '../layouts/header.jsx';
 // import {Footer} from '../layouts/footer.jsx';
 import '../css/Hompage.css';
@@ -89,11 +88,12 @@ export default class HomePage extends Component {
          if(response.status === 200){
           console.log("Get Cars Hit successful");
           let cars = self.formCarArray(response.data);
-          self.setState({cars: cars, count: cars.length});
+          let selCar = cars.length > 0 ? cars[0] : {};
+          self.setState({cars: cars, count: cars.length, selectedCar: selCar });
          }
          else{
           console.log("Oops...! Get Cars failed with--------" + response.status);
-          self.setState({cars: [], count: 0});
+          self.setState({cars: [], count: 0, selectedCar: {}});
          }
 
       }).catch(function (error) {
@@ -367,6 +367,7 @@ export default class HomePage extends Component {
 
   getRoutes(cars){
     let routes = [];
+
     cars.forEach(function(car){
       let route = car.poly;
       if(route.length > 0){
@@ -393,53 +394,18 @@ export default class HomePage extends Component {
 
   displayContent(){
     let content;
-    let mapCenter = apiData.mapCenter;
+    let self = this;
     if(this.state.mapOpen){
       console.log("Displaying content for car-------");
       content = this.drawMap();
     }else{
       let cars = this.state.cars;
-      let routes = [];
-      let mapHeader = "";
-      let savedCars = cars.filter(function(car) {
-          return car.isSaved;
-       });
-      let bounds = new window.google.maps.LatLngBounds();
       const localData=localStorage.getItem("loginData");
-      const loginData = JSON.parse(localData);
-      var flag = true;
-      if(savedCars.length > 0){ /* Whether to view routes or display disabled map*/
-          routes = this.getRoutes(savedCars);
-          // console.log("Routes-------------------->" , routes);
-          bounds = this.getBounds(routes);
-          mapCenter = routes[0][0];
-          mapHeader = "Displaying routes for saved cars"
-          console.log("Displaying routes for saved cars-------");
-          flag = false;
-       }
-       if(loginData && loginData.userAddress && loginData.userAddress.location){
-          console.log("Including saved address bounds-------");
-          bounds.extend(new window.google.maps.LatLng(
-                            { lat: loginData.userAddress.location.coordinates[0],
-                            lng:  loginData.userAddress.location.coordinates[1]}
-                          ));
-          mapCenter = { lat: loginData.userAddress.location.coordinates[0],
-                            lng:  loginData.userAddress.location.coordinates[1]};
-          flag = false;
-       }if(flag){
-           const constants = require("../utils/constants.jsx");
-           let defLatLng = constants.bounds; //Using bounds from constants
-           bounds = new window.google.maps.LatLngBounds();
-           defLatLng.forEach(function(point){
-              bounds.extend(new window.google.maps.LatLng({ lat:point.lat, lng: point.lng}));
-           });
-           console.log("Displaying disabled true map-------");
-       }
-       console.error("Bounds value===========>"+bounds);
-        let showPin = loginData && loginData.userAddress && loginData.userAddress.location;
-        let pinProps = showPin ? loginData : false;
-        content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div> 
-        </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter} bounds={bounds} pinProps={pinProps}/></div>
+      const password=localStorage.getItem("pwd");
+      let carsWithRoutes = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
+      let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
+      content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
+      routes={routes} loginData={localData} pwd={password} />;
      }
       return content;
   }
