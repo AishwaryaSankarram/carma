@@ -352,7 +352,7 @@ export class MapContainer extends React.Component {
 		let mapCenter;
 		let routeArray= this.state.routes;
 		const loginData = JSON.parse(this.props.loginData);
-		if(this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length == 2){
+		if(this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length === 2){
 			 mapCenter = {lat: ((this.props.car.markers[0].lat + this.props.car.markers[1].lat)/2), 
 			  lng: ((this.props.car.markers[0].lng + this.props.car.markers[1].lng)/2)}  ; //Using saved car mapCenter
 		}else if(routeArray.length > 0){
@@ -363,12 +363,19 @@ export class MapContainer extends React.Component {
 		  let lat = 0, lng = 0, counter=0;
 		  for(let i=0; i<routeArray.length;i++){
 		  	let routes = routeArray[i];//[0].markerPos;
-		  	routes.forEach(function(e){
+		  	for(let j=0; j<routes.length; j++){
+		  		let e = routes[j];
+				lat += e.lat;
+		  		lng += e.lng;
+		  		counter += 1;							
+		  	}
+/*		  	routes.forEach(function(e){
+
 		  		lat += e.lat;
 		  		lng += e.lng;
 		  		counter += 1;							
 		  	});
-	      }
+*/	      }
 	      mapCenter = {lat: lat/counter, lng: lng/counter}; //this.state.routes[this.state.routes.length - 1][0]; //Using mapCenter from first route
 		}else if(loginData.userAddress && loginData.userAddress.location){	 //Using saved Address mapCenter
 			mapCenter = {lat: loginData.userAddress.location.coordinates[0], lng: loginData.userAddress.location.coordinates[1]}	      
@@ -421,6 +428,9 @@ export class MapContainer extends React.Component {
 		let mapCenter = this.deriveMapCenter();
 		let saveBtnClass = this.state.drawPolyline ? "save-highlight" : "" ;
 		let bounds = this.getBounds();
+		const loginData = JSON.parse(this.props.loginData);
+		let showPin = loginData && loginData.userAddress && loginData.userAddress.location;
+		let pinProps = showPin ? loginData : false;
 		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
@@ -441,6 +451,7 @@ export class MapContainer extends React.Component {
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handlePolyEvents}
 							bounds={bounds}
+							pinProps={pinProps}
 			/>
 			{this.state.modalIsVisible && 
 		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="How do you want to draw the route?" 

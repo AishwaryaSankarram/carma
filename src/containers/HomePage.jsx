@@ -436,8 +436,10 @@ export default class HomePage extends Component {
            console.log("Displaying disabled true map-------");
        }
        console.error("Bounds value===========>"+bounds);
-        content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div>
-        </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter} bounds={bounds}/></div>
+        let showPin = loginData && loginData.userAddress && loginData.userAddress.location;
+        let pinProps = showPin ? loginData : false;
+        content = <div className="gMap"><div className="clearfix map_view"><div className="pull-left route_label">{mapHeader} </div> 
+        </div><MyMapComponent disabled="true" routes={routes} mapCenter={mapCenter} bounds={bounds} pinProps={pinProps}/></div>
      }
       return content;
   }
