@@ -436,12 +436,11 @@ export class MapContainer extends React.Component {
 		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
-			{this.props.car.carLabel &&  
+			
 			<div className="clearfix">
-				<div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div>
-					<ScenarioActions handleSubmit={this.handleSubmit}/>
-				</div>
-			}	
+				{this.props.car.carLabel &&   <div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div> }
+				<ScenarioActions handleSubmit={this.handleSubmit} addCarHandler={this.props.addCar}/>
+			</div>
 			<MyMapComponent onClick={this.handleClick} 
 							showMarker={this.state.showMarker} 
 							markerCount={this.state.markerCount} 

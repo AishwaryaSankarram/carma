@@ -343,7 +343,7 @@ export default class HomePage extends Component {
     routes = this.getRoutes(unSavedCars);
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-        routes={routes} loginData={localData} pwd={password} />;
+        routes={routes} loginData={localData} pwd={password} addCar={this.openModal}/>;
     //
   }
 
@@ -405,7 +405,7 @@ export default class HomePage extends Component {
       let carsWithRoutes = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
       let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
       content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-      routes={routes} loginData={localData} pwd={password} />;
+                  routes={routes} loginData={localData} pwd={password} addCar={this.openModal}/>;
      }
       return content;
   }

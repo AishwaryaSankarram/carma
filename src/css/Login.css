@@ -125,6 +125,15 @@
 #edit-profile .auto_address .autoComplete_placeholder{
   left: 0px;
 }
+
+#btn-submit-container .auto_address .autoComplete_placeholder{
+  left: 25px;
+}
+
+#btn-submit-container .focus_auto_address .autoBorder{
+  left: 20px;
+}
+
 #edit-profile .focus_auto_address .autoBorder{
   left: 0px;
 }

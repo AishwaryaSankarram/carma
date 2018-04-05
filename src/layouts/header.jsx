@@ -11,23 +11,13 @@ export class Header extends Component {
   constructor(props){
     super(props);
     this.menuClick = this.menuClick.bind(this);
-    this.handleBtnClick = this.handleBtnClick.bind(this);
-    this.openRoutes = this.openRoutes.bind(this);
     this.state = {
       value: 1,
     };
   }
 
-  handleBtnClick() {
-    this.props.onBtnClick(true);
-  }
-
   menuClick(){
     this.props.menuClickIns();
-  }
-
-  openRoutes(){
-    this.props.viewRoutes();
   }
 
   render(){
@@ -49,11 +39,6 @@ export class Header extends Component {
         <div className="add_car hide">
           <button className="logout_icon new_car" title="Start Simulation">
             <i className="fa fa-play"> </i>
-          </button>
-        </div>
-        <div className="add_car">
-          <button onClick={this.handleBtnClick} className="new_car" title="Add Car">
-            <i className="fa fa-plus"> Add Car</i>
           </button>
         </div>
         <div className="scenario_option">

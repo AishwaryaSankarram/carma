@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {MuiThemeProvider,RaisedButton, TextField}  from 'material-ui';
 import axios from 'axios';
-import Autocomplete from "react-google-autocomplete";
 
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
@@ -13,30 +12,8 @@ export class Profile extends Component {
           name: props.loginData.name || "",
           password: "",
           oldPassword: "",
-          dataSource: [],
           headerMsg:'',
-          focus:false,
-          autoComplete: {
-            address: props.loginData.userAddress ? props.loginData.userAddress.address : "" ,
-            placeId: props.loginData.userAddress ? props.loginData.userAddress.placeId : "",
-            location: {type:"point", coordinates: props.loginData.userAddress ? props.loginData.userAddress.location.coordinates : []}
-         }
         };
-        this.addClass=this.addClass.bind(this);
-        this.getClass = this.getClass.bind(this);
-        this.removeClass = this.removeClass.bind(this);
-        this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
-    }
-
-    setPlace(place){
-      console.log(place);
-      this.setState({
-        autoComplete: {
-            address: place.formatted_address,
-            placeId: place.place_id,
-            location: {type:"point", coordinates:[place.geometry.location.lat(),place.geometry.location.lng()]}
-          }
-      });
     }
 
     handleSave(event){
@@ -60,10 +37,6 @@ export class Profile extends Component {
             payload.oldPassword = this.state.oldPassword;
           }
           
-          if(this.state.autoComplete.length > 0){
-              payload.userAddress = this.state.autoComplete;
-          }
-
         let config = {
           auth: {
             username: this.props.loginData.uuid,
@@ -80,7 +53,6 @@ export class Profile extends Component {
            // Update local storage here
             let loginData = self.props.loginData;
             loginData.name = payload.name;
-            loginData.userAddress = payload.userAddress;
             localStorage.setItem("loginData",JSON.stringify(loginData));
             localStorage.setItem("pwd",payload.password);
             self.setState({headerMsg: headerMsg});
@@ -94,9 +66,10 @@ export class Profile extends Component {
          }
          
        }).catch(function (error) {
-            console.log("Catch block------", error.response.data.message);
+            console.log("Catch block------", error);
+            let msg = error.response ? error.response.data.message : "Error updating profile. Please Try again.";
             self.setState({
-              headerMsg: <div className="alert-danger">{error.response.data.message}</div>
+              headerMsg: <div className="alert-danger">{msg}</div>
             });  
        });
       } 
@@ -110,32 +83,6 @@ export class Profile extends Component {
     cancel(event){
       this.props.cancelAction();
     }
-
-    getClass(){
-        let self = this;
-        if(self.state.focus === false && this.state.autoComplete.address && this.state.autoComplete.address.length > 0) {
-          return "auto_address focus_false_at_data_avail";
-        } else if (self.state.focus === false && !this.state.autoComplete.address && !this.state.autoComplete.address.length > 0) {
-          return "auto_address";
-        } else 
-          return "auto_address focus_auto_address";
-    }
-
-    addClass(){
-      let self = this;
-      self.setState({ focus: true }); 
-    }
-
-    removeClass(){
-      let self = this;
-      self.setState({ focus: false });
-    }
-
-    onChangeAutoComplete(event){
-      this.setState({ autoComplete: {
-        address: event.target.value
-      } });
-    }  
 
     render(){
       return (
@@ -157,16 +104,7 @@ export class Profile extends Component {
                 <TextField type="password" hintText="Enter new password" floatingLabelText="Password"  value={this.state.password}
                         onChange={(event, newValue) => this.setState({ password: newValue })}  className="profile-input"
                         />
-
-                <div className={this.getClass()}>
-                  <Autocomplete className="autoComplete" types={["address"]} placeholder="Enter your Address"
-                    value={this.state.autoComplete.address} onChange={event=> this.onChangeAutoComplete(event)}
-                    onFocus={this.addClass} onBlur={this.removeClass} 
-                    onPlaceSelected={place => this.setPlace(place)}  />
-                    <div className="autoComplete_placeholder">Address</div>
-                  <div className="autoBorder"></div>
-                </div>
-                <div className="modal-footer">
+                 <div className="modal-footer">
                 <RaisedButton label="Save" primary={true} className="action-btns" onClick={event => this.handleSave(event)} />
                 <RaisedButton label="Cancel"  className="action-btns" onClick={event => this.cancel(event)} />
                 </div>
