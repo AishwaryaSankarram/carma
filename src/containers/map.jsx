@@ -1,17 +1,12 @@
 import React from 'react';
 import axios from 'axios';
-import {MuiThemeProvider, RaisedButton, TextField} from 'material-ui';
+import {ScenarioActions} from '../components/scenarioActions';
 import {MyMapComponent} from '../components/map.jsx';
 import {MyModal} from '../popup/Modal.jsx';
 
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
-const style = {
-  margin: 15,
-  customWidth:{
-    width:100
-  }
-};
+
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
@@ -425,21 +420,13 @@ export class MapContainer extends React.Component {
 
 	displayMaps(){
 		let mapCenter = this.deriveMapCenter();
-		let saveBtnClass = this.state.drawPolyline ? "save-highlight" : "" ;
 		let bounds = this.getBounds();
 		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
 			<div className="clearfix">
 			<div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div>
-			<MuiThemeProvider>
-  			<div id="btn-submit-container"  className="pull-right ">
-  			 <TextField className="scenario_val" hintText="scenario name" floatingLabelText="Selected scenario" />
-  			 <TextField className="profile_val" hintText="Your Address" floatingLabelText="Current Address" />
-  				<RaisedButton label="Add Car" primary={true} style={style} />
-  				<RaisedButton label="Save" primary={true} style={style} onClick={event => this.handleSubmit(event)} />
-  			</div>
-			</MuiThemeProvider>
+			<ScenarioActions handleSubmit={this.handleSubmit}/>
 			</div>
 			<MyMapComponent onClick={this.handleClick}
 							showMarker={this.state.showMarker}

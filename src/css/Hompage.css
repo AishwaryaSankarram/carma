@@ -97,7 +97,7 @@ html, body {
 }
 
 .new_car {
-    background: #4dadf7;
+    background: rgb(0, 188, 212);
     outline: none;
     border: 1px solid #fff;
     padding: 6px;
@@ -153,6 +153,7 @@ html, body {
       transform: perspective(1px) translateZ(0);
       box-shadow: 0 0 1px transparent;
 }
+
 .save-highlight{
   -webkit-animation-name: pulse;
       animation-name: pulse;
