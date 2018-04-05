@@ -433,12 +433,12 @@ export class MapContainer extends React.Component {
 			<div className="clearfix">
 			<div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div>
 			<MuiThemeProvider>
-			<div id="btn-submit-container"  className="pull-right ">
-			 <TextField className="scenario_val" hintText="scenario name" floatingLabelText="Selected scenario" />
-			 <TextField className="profile_val" hintText="Your Address" floatingLabelText="Current Address" />
-				<RaisedButton label="Add Car" primary={true} style={style} />
-				<RaisedButton label="Save" primary={true} style={style} onClick={event => this.handleSubmit(event)} />
-			</div>
+  			<div id="btn-submit-container"  className="pull-right ">
+  			 <TextField className="scenario_val" hintText="scenario name" floatingLabelText="Selected scenario" />
+  			 <TextField className="profile_val" hintText="Your Address" floatingLabelText="Current Address" />
+  				<RaisedButton label="Add Car" primary={true} style={style} />
+  				<RaisedButton label="Save" primary={true} style={style} onClick={event => this.handleSubmit(event)} />
+  			</div>
 			</MuiThemeProvider>
 			</div>
 			<MyMapComponent onClick={this.handleClick}
