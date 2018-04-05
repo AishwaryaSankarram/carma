@@ -431,6 +431,8 @@ export class MapContainer extends React.Component {
 		const loginData = JSON.parse(this.props.loginData);
 		let showPin = loginData && loginData.userAddress && loginData.userAddress.location;
 		let pinProps = showPin ? loginData : false;
+		if(pinProps) 
+			 pinProps.pwd = this.props.pwd;
 		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
