@@ -1,12 +1,8 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import {MuiThemeProvider, RaisedButton, TextField} from 'material-ui';
 import Autocomplete from "react-google-autocomplete";
 import AddIcon from 'material-ui/svg-icons/content/add';
 
-
-const apiData = require('../utils/api.jsx');
-const apiUrl = apiData.baseUrl;
 const style = {
   margin: 15,
   customWidth:{
@@ -33,7 +29,7 @@ export class ScenarioActions extends Component {
 		this.state = {
 			focus:false,
           	autoComplete: {
-            	address: address ? address.address : "" ,
+            	address: address ? address.formattedAddress : "" ,
             	placeId: address ? address.placeId : "",
             	location: {type:"point", coordinates: address ? address.location.coordinates : []}
          	}
@@ -48,6 +44,17 @@ export class ScenarioActions extends Component {
         this.onChangeAutoComplete = this.onChangeAutoComplete.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps){
+		let address = nextProps.address;
+		this.setState({
+			focus:false,
+          	autoComplete: {
+            	address: address ? address.formattedAddress : "" ,
+            	placeId: address ? address.placeId : "",
+            	location: {type:"point", coordinates: address ? address.location.coordinates : []}
+         	}
+		});
+	}
 
 
 	handleSubmit(){
@@ -68,6 +75,7 @@ export class ScenarioActions extends Component {
             location: {type:"point", coordinates:[place.geometry.location.lat(),place.geometry.location.lng()]}
           }
       });
+      this.props.onAddressChange(place) ;
     }
 
 	getClass(){
@@ -98,17 +106,17 @@ export class ScenarioActions extends Component {
        });
     }  
 
-
 	render(){
 		return(
 			<MuiThemeProvider>
 	  			<div id="btn-submit-container" className="pull-right ">
-		  			<TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name" />
 		  			<div className={this.getClass()}>
+		  				<TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name" />
                   		<Autocomplete className="autoComplete" types={["address"]} placeholder="Enter your Address"
 			                    value={this.state.autoComplete.address} onChange={event=> this.onChangeAutoComplete(event)}
 			                    onFocus={this.addClass} onBlur={this.removeClass} 
-			                    onPlaceSelected={place => this.setPlace(place)}  />
+			                    onPlaceSelected={place => this.setPlace(place)} 
+			                    title={this.state.autoComplete.address} />
                     	<div className="autoComplete_placeholder">Address</div>
                   		<div className="autoBorder"></div>
                 	</div>

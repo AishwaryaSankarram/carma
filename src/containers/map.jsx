@@ -10,27 +10,36 @@ const apiUrl = apiData.baseUrl;
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
+		const loginData = JSON.parse(this.props.loginData);
+		let address = loginData.userAddress;
+		this.state = {
+				car: this.props.car,
+				poly: [],
+				markers: [],
+				showMarker: false,
+				markerCount: 0,
+				drawPolyline: false,
+				routes: this.props.routes,
+				modalIsVisible: false,
+				address: {
+				  formattedAddress: address ? address.address : null,
+				  location: {
+				    type: "Point",
+				    coordinates: [
+				      address && address.location ? address.location.coordinates[0] : null,
+				      address && address.location ? address.location.coordinates[1] : null
+				    ]
+				  },
+			  	  placeId: address ? address.placeId : null
+			  }
+		};
 		if(this.props.car && (typeof(this.props.car.poly) !== 'undefined') && this.props.car.poly.length > 0){
 			this.state = {
 				markers: this.props.car.markers,
 				showMarker: this.props.car.showMarker,
 				markerCount: this.props.car.markerCount,
 				drawPolyline: this.props.car.drawPolyline,
-				car: this.props.car,
 				poly: this.props.car.poly,
-				routes: this.props.routes,
-				modalIsVisible: false
-			};
-		}else{
-			this.state = {
-				markers: [],
-				showMarker: false,
-				markerCount: 0,
-				drawPolyline: false,
-				car: this.props.car,
-				poly: [],
-				routes: this.props.routes,
-				modalIsVisible: false
 			};
 		}
 
@@ -47,6 +56,7 @@ export class MapContainer extends React.Component {
 		this.handleMarkerDrag = this.handleMarkerDrag.bind(this);
 		this.handlePolyDrag = this.handlePolyDrag.bind(this);
 		this.deleteMarkers = this.deleteMarkers.bind(this);
+		this.changeFocusLocation = this.changeFocusLocation.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -352,7 +362,6 @@ export class MapContainer extends React.Component {
 	deriveMapCenter(){
 		let mapCenter;
 		let routeArray= this.state.routes;
-		const loginData = JSON.parse(this.props.loginData);
 		if(this.props.car && this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length === 2){
 			 mapCenter = {lat: ((this.props.car.markers[0].lat + this.props.car.markers[1].lat)/2), 
 			  lng: ((this.props.car.markers[0].lng + this.props.car.markers[1].lng)/2)}  ; //Using saved car mapCenter
@@ -378,8 +387,11 @@ export class MapContainer extends React.Component {
 		  	});
 */	      }
 	      mapCenter = {lat: lat/counter, lng: lng/counter}; //this.state.routes[this.state.routes.length - 1][0]; //Using mapCenter from first route
-		}else if(loginData.userAddress && loginData.userAddress.location){	 //Using saved Address mapCenter
-			mapCenter = {lat: loginData.userAddress.location.coordinates[0], lng: loginData.userAddress.location.coordinates[1]}
+		}else if(this.state.address.location.coordinates[0]){	 //Using saved Address mapCenter
+			mapCenter = {
+						 lat: this.state.address.location.coordinates[0], 
+						 lng: this.state.address.location.coordinates[1]
+						};
 		}else{
 			const constants = require("../utils/constants.jsx");
 			mapCenter = constants.mapCenter; //Using mapCenter from constants
@@ -407,11 +419,10 @@ export class MapContainer extends React.Component {
 			});
 			flag = false;
 		}
-		const loginData = JSON.parse(this.props.loginData);
-    	if(loginData && loginData.userAddress && loginData.userAddress.location){
+    	if(this.state.address.location.coordinates[0]){
       		latLngBounds.extend(new window.google.maps.LatLng(
-                            { lat: loginData.userAddress.location.coordinates[0],
-                            lng:  loginData.userAddress.location.coordinates[1]}
+                            { lat: this.state.address.location.coordinates[0],
+                              lng:  this.state.address.location.coordinates[1]}
                           ));
       	    flag = false;
     	}
@@ -425,21 +436,32 @@ export class MapContainer extends React.Component {
 		return latLngBounds;
 	}
 
+	changeFocusLocation(place){
+		this.setState({ 
+			address: {
+                placeId: place.place_id,
+                location: {
+                	type: "Point",
+				    coordinates: [place.geometry.location.lat(),place.geometry.location.lng()]
+				},
+                formattedAddress: place.formatted_address
+            }
+        });
+	}
+
 	displayMaps(){
 		let mapCenter = this.deriveMapCenter();
 		let bounds = this.getBounds();
-		const loginData = JSON.parse(this.props.loginData);
-		let showPin = loginData && loginData.userAddress && loginData.userAddress.location;
-		let pinProps = showPin ? loginData : false;
+		let pinProps = this.state.address.formattedAddress ? this.state.address : false;
 		if(pinProps) 
 			 pinProps.pwd = this.props.pwd;
-		console.log("display maps===>"+bounds);
+		console.log("display maps===>", bounds);
 	 	return (
 	 		<div className="gMap">
-			
 			<div className="clearfix">
 				{this.props.car.carLabel &&   <div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div> }
-				<ScenarioActions handleSubmit={this.handleSubmit} addCarHandler={this.props.addCar}/>
+				<ScenarioActions handleSubmit={this.handleSubmit} addCarHandler={this.props.addCar} 
+								address={pinProps} onAddressChange={this.changeFocusLocation}/>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 
 							showMarker={this.state.showMarker} 
@@ -453,7 +475,7 @@ export class MapContainer extends React.Component {
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handlePolyEvents}
 							bounds={bounds}
-							pinProps={pinProps}
+							pinProps={pinProps} onAddressChange={this.changeFocusLocation}
 							disabled={this.props.car.carLabel? false : true}
 			/>
 			{this.state.modalIsVisible &&
