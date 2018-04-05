@@ -76,7 +76,7 @@ export class Profile extends Component {
         axios.put(apiBaseUrl + 'granular/updateAddress', payload, config).then(function (response) {
          console.log(response);
          if(response.status === 200){
-           var headerMsg = <div className="alert-success">Successfully updated chnages to profile.</div>;
+           var headerMsg = <div className="alert-success">Successfully updated changes to profile.</div>;
            // Update local storage here
             let loginData = self.props.loginData;
             loginData.name = payload.name;

@@ -4,6 +4,7 @@ import {withGoogleMap, GoogleMap} from "react-google-maps";
 import {MyMarker} from './marker.jsx';
 import {PolyLine} from './PolyLine.jsx';
 import {MultiPolyLine} from './multiPolyLine.jsx';
+import {MyPin} from './pin';
 
 
 export const MyMapComponent = compose(
@@ -46,7 +47,10 @@ export const MyMapComponent = compose(
         maxZoom: 18,
         minZoom: 12
       }}
-      disableDefaultUI >{props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} /> } </GoogleMap> : 
+      disableDefaultUI >
+          {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} /> }
+          {props.pinProps && <MyPin loginData={props.pinProps}/>}
+       </GoogleMap> : 
       <GoogleMap    
       ref={props.setZoom}
        defaultOptions={{
@@ -64,6 +68,7 @@ export const MyMapComponent = compose(
        {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} allowEdit={props.allowEdit}
         color={props.color} dragHandler={props.onDragPoly} saveHandler={props.onChangeAttr} /> }
        {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} color={props.color} /> }
+       {props.pinProps && <MyPin loginData={props.pinProps}/>}
      </GoogleMap>
 ));
 

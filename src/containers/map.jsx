@@ -10,7 +10,7 @@ const apiUrl = apiData.baseUrl;
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
-		if((typeof(this.props.car.poly) !== 'undefined') && this.props.car.poly.length > 0){
+		if(this.props.car && (typeof(this.props.car.poly) !== 'undefined') && this.props.car.poly.length > 0){
 			this.state = {
 				markers: this.props.car.markers,
 				showMarker: this.props.car.showMarker,
@@ -353,8 +353,8 @@ export class MapContainer extends React.Component {
 		let mapCenter;
 		let routeArray= this.state.routes;
 		const loginData = JSON.parse(this.props.loginData);
-		if(this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length == 2){
-			 mapCenter = {lat: ((this.props.car.markers[0].lat + this.props.car.markers[1].lat)/2),
+		if(this.props.car && this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length === 2){
+			 mapCenter = {lat: ((this.props.car.markers[0].lat + this.props.car.markers[1].lat)/2), 
 			  lng: ((this.props.car.markers[0].lng + this.props.car.markers[1].lng)/2)}  ; //Using saved car mapCenter
 		}else if(routeArray.length > 0){
 			/*if(this.state.markers[0]){
@@ -364,12 +364,19 @@ export class MapContainer extends React.Component {
 		  let lat = 0, lng = 0, counter=0;
 		  for(let i=0; i<routeArray.length;i++){
 		  	let routes = routeArray[i];//[0].markerPos;
-		  	routes.forEach(function(e){
+		  	for(let j=0; j<routes.length; j++){
+		  		let e = routes[j];
+				lat += e.lat;
+		  		lng += e.lng;
+		  		counter += 1;							
+		  	}
+/*		  	routes.forEach(function(e){
+
 		  		lat += e.lat;
 		  		lng += e.lng;
 		  		counter += 1;
 		  	});
-	      }
+*/	      }
 	      mapCenter = {lat: lat/counter, lng: lng/counter}; //this.state.routes[this.state.routes.length - 1][0]; //Using mapCenter from first route
 		}else if(loginData.userAddress && loginData.userAddress.location){	 //Using saved Address mapCenter
 			mapCenter = {lat: loginData.userAddress.location.coordinates[0], lng: loginData.userAddress.location.coordinates[1]}
@@ -421,24 +428,34 @@ export class MapContainer extends React.Component {
 	displayMaps(){
 		let mapCenter = this.deriveMapCenter();
 		let bounds = this.getBounds();
+		const loginData = JSON.parse(this.props.loginData);
+		let showPin = loginData && loginData.userAddress && loginData.userAddress.location;
+		let pinProps = showPin ? loginData : false;
+		if(pinProps) 
+			 pinProps.pwd = this.props.pwd;
 		console.log("display maps===>"+bounds);
 	 	return (
 	 		<div className="gMap">
+			{this.props.car.carLabel &&  
 			<div className="clearfix">
-			<div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div>
-			<ScenarioActions handleSubmit={this.handleSubmit}/>
-			</div>
-			<MyMapComponent onClick={this.handleClick}
-							showMarker={this.state.showMarker}
-							markerCount={this.state.markerCount}
+				<div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div>
+					<ScenarioActions handleSubmit={this.handleSubmit}/>
+				</div>
+			}	
+			<MyMapComponent onClick={this.handleClick} 
+							showMarker={this.state.showMarker} 
+							markerCount={this.state.markerCount} 
 							markerPos={this.state.markers}
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)}
 							routes={this.state.routes} allowEdit={true}
-							mapCenter={mapCenter} color={this.props.car.color} label={this.props.car.carLabel}
+							mapCenter={mapCenter} 
+							color={this.props.car.color ? this.props.car.color : ""} label={this.props.car ? this.props.car.carLabel: ""}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handlePolyEvents}
 							bounds={bounds}
+							pinProps={pinProps}
+							disabled={this.props.car.carLabel? false : true}
 			/>
 			{this.state.modalIsVisible &&
 		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="How do you want to draw the route?"
