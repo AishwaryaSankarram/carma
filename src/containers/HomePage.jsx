@@ -266,10 +266,10 @@ export default class HomePage extends Component {
      let self = this;
      let carId = car.carId;
      const localData=localStorage.getItem("loginData");
-    const password=localStorage.getItem("pwd");
-      const header = JSON.parse(localData);
+     const password=localStorage.getItem("pwd");
+     const header = JSON.parse(localData);
      if(car.isSaved){
-          let url = apiUrl + 'granular/deleteCarDetails/' + header.id + '?carId=' + carId;
+          let url = apiUrl + 'scenario/deleteCar/' + self.state.currentScenario.id + '?carId=' + carId;
           let auth = { username: header.uuid, password: password  };
           axios.delete(url, { auth: auth}).then(function (response) {
             console.log(response);
