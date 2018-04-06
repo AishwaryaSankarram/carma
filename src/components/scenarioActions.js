@@ -110,13 +110,13 @@ export class ScenarioActions extends Component {
 		return(
 			<MuiThemeProvider>
 	  			<div id="btn-submit-container" className="pull-right ">
+	  				<TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name" />
 		  			<div className={this.getClass()}>
-		  				<TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name" />
                   		<Autocomplete className="autoComplete" types={["address"]} placeholder="Enter your Address"
 			                    value={this.state.autoComplete.address} onChange={event=> this.onChangeAutoComplete(event)}
 			                    onFocus={this.addClass} onBlur={this.removeClass} 
 			                    onPlaceSelected={place => this.setPlace(place)} 
-			                    title={this.state.autoComplete.address} />
+			                    title={this.state.autoComplete.address}/>
                     	<div className="autoComplete_placeholder">Address</div>
                   		<div className="autoBorder"></div>
                 	</div>

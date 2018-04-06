@@ -34,13 +34,12 @@ export class MapContainer extends React.Component {
 			  }
 		};
 		if(this.props.car && (typeof(this.props.car.poly) !== 'undefined') && this.props.car.poly.length > 0){
-			this.state = {
-				markers: this.props.car.markers,
+			var newObj = {markers: this.props.car.markers,
 				showMarker: this.props.car.showMarker,
 				markerCount: this.props.car.markerCount,
 				drawPolyline: this.props.car.drawPolyline,
-				poly: this.props.car.poly,
-			};
+				poly: this.props.car.poly}
+			this.state = Object.assign(this.state, newObj);
 		}
 
 		this.handleClick = this.handleClick.bind(this);
