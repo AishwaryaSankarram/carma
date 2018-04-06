@@ -154,6 +154,11 @@ html, body {
       box-shadow: 0 0 1px transparent;
 }
 
+#btn-submit-container button:disabled {
+    background: #afd8f7 !important;
+    cursor: no-drop;
+}
+
 .save-highlight{
   -webkit-animation-name: pulse;
       animation-name: pulse;
