@@ -129,8 +129,9 @@ export class MapContainer extends React.Component {
  		self.props.updateCar(selCar, true);
   	}
 
-	handleSubmit(){
+	handleSubmit(scenarioObj){
 		console.log("Submit Clicked");
+		
 		let selCar = this.props.car;
 		if(this.state.drawPolyline) {
     	let h = this.child.method(); // Get path from PolyLine drawn
@@ -460,7 +461,8 @@ export class MapContainer extends React.Component {
 			<div className="clearfix">
 				{this.props.car.carLabel &&   <div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div> }
 				<ScenarioActions handleSubmit={this.handleSubmit} addCarHandler={this.props.addCar} 
-								address={pinProps} onAddressChange={this.changeFocusLocation}/>
+								address={pinProps} onAddressChange={this.changeFocusLocation}
+								scenario={this.props.scenario}/>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 
 							showMarker={this.state.showMarker} 

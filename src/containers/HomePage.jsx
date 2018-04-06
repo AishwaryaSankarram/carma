@@ -47,6 +47,8 @@ export default class HomePage extends Component {
           mapOpen: false,
           dialogVisible: false,
           action: {},
+          scenarios: [],
+          currentScenario: null,
           modalHeading: "",
           isEditing: false,
           isMenuOpen:false
@@ -74,7 +76,8 @@ export default class HomePage extends Component {
     this.handleProfileSave = this.handleProfileSave.bind(this);
   }
 
-  loadCars(){
+
+  oldLoadCars(){
     let self = this;
     const localData=localStorage.getItem("loginData");
     const password=localStorage.getItem("pwd");
@@ -102,6 +105,48 @@ export default class HomePage extends Component {
       });
   }
 
+  loadCars(){
+    let self = this;
+    const localData=localStorage.getItem("loginData");
+    const password=localStorage.getItem("pwd");
+    console.log("localData---->", localData);
+    const header = JSON.parse(localData);
+    let apiBaseUrl = apiUrl + 'scenario/getAllScenarios/';
+    let params = { page: 0, size: 10};
+    let auth = { username: header.uuid, password: password  }
+     axios.get(apiBaseUrl, {params: params, auth: auth}).then(function (response) {
+         console.log(response);
+         if(response.status === 200){
+          console.log("Get Scenarios Hit successful");
+            if(response.data.length > 0){
+              let s = self.formScenarioArray(response.data);
+              let cars = self.formCarArray(response.data[0].cars);
+              let selCar = cars.length > 0 ? cars[0] : {};
+              self.setState({cars: cars, count: cars.length, selectedCar: selCar, scenarios: s, currentScenario: s[0] }); 
+            }else{
+              self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "" });  
+            }
+         }
+         else{
+          // console.log("Oops...! Get Cars failed with--------" + response.status);
+            self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: ""});
+         }
+
+      }).catch(function (error) {
+          self.setState({cars: [], count: 0, scenarios: [], currentScenario: "" });
+          console.log("The error is------------", error);
+      });
+  }
+
+  formScenarioArray(scenarios){
+    let scenarioArray = [];
+    for(let i=0; i< scenarios.length; i++){
+      scenarioArray.push({
+        id: scenarios[i].scenarioId, name: scenarios[i].name
+      })
+    }
+    return scenarioArray;
+  }
 
   formCarArray(cars){
       let carArray= [], ids = [];
@@ -343,7 +388,8 @@ export default class HomePage extends Component {
     routes = this.getRoutes(unSavedCars);
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-        routes={routes} loginData={localData} pwd={password} addCar={this.openModal} switchCar={this.switchCar.bind(this)}/>;
+        routes={routes} loginData={localData} pwd={password} addCar={this.openModal} 
+        scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
     //
   }
 
@@ -413,7 +459,8 @@ export default class HomePage extends Component {
       let carsWithRoutes = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
       let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
       content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-                  routes={routes} loginData={localData} pwd={password} addCar={this.openModal} switchCar={this.switchCar.bind(this)}/>;
+                  routes={routes} loginData={localData} pwd={password} addCar={this.openModal} 
+                  scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
      }
       return content;
   }
@@ -459,7 +506,7 @@ export default class HomePage extends Component {
     console.info("Rendering HomePage--------------");
     return (
       <div className="App">
-        {<Header onBtnClick={this.openModal} menuClickIns={this.menuClick} viewRoutes={this.displayRoutes}/>}
+        {<Header menuClickIns={this.menuClick}  scenarios={this.state.scenarios} currentScenario={this.state.currentScenario}/>}
              {this.state.dialogVisible &&
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  />}

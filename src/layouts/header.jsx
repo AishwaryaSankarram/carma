@@ -1,24 +1,17 @@
 import React, {Component} from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-const styles = {
-  customWidth: {
-    width: 250,
-  },
-};
+import {Dropdown} from '../components/dropDown';
+
 export class Header extends Component {
+
   constructor(props){
     super(props);
     this.menuClick = this.menuClick.bind(this);
-    this.state = {
-      value: 1,
-    };
   }
 
   menuClick(){
     this.props.menuClickIns();
   }
+
 
   render(){
     var loginData=JSON.parse(localStorage.getItem("loginData"));
@@ -42,15 +35,7 @@ export class Header extends Component {
           </button>
         </div>
         <div className="scenario_option">
-        <MuiThemeProvider >
-        <SelectField
-          value={this.state.value}
-          onChange={this.handleChange} style={styles.customWidth}>
-          <MenuItem value={1} primaryText="New Scenario" />
-          <MenuItem value={2} primaryText="options -1" />
-          <MenuItem value={3} primaryText="options -1" />
-        </SelectField>
-        </MuiThemeProvider>
+          <Dropdown scenarios={this.props.scenarios} currentScenario={this.props.currentScenario} />
         </div>
       </div>
   }

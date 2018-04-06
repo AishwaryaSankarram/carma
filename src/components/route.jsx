@@ -18,7 +18,7 @@ export class Route extends React.Component {
             strokeColor: this.props.color,
             strokeOpacity: 1.0,
             strokeWeight: 4,
-            zIndex: 150
+            zIndex: 100
         };
         console.log("Rendering non-editable route----------" , lineOptions , this.props);
         return (

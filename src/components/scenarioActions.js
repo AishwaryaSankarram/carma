@@ -28,6 +28,7 @@ export class ScenarioActions extends Component {
 		let address = props.address;
 		this.state = {
 			focus:false,
+			scenario: props.scenario,
           	autoComplete: {
             	address: address ? address.formattedAddress : "" ,
             	placeId: address ? address.placeId : "",
@@ -47,6 +48,7 @@ export class ScenarioActions extends Component {
 	componentWillReceiveProps(nextProps){
 		let address = nextProps.address;
 		this.setState({
+			scenario: nextProps.scenario,
 			focus:false,
           	autoComplete: {
             	address: address ? address.formattedAddress : "" ,
@@ -59,7 +61,11 @@ export class ScenarioActions extends Component {
 
 	handleSubmit(){
 		console.log("Submit Clicked on ScenarioActions");
-		this.props.handleSubmit();
+		let scenarioObj= {
+			scenario: this.state.scenario,
+			address: this.state.autoComplete
+		}
+		this.props.handleSubmit(scenarioObj);
 	}
 
 	addCar(){
@@ -110,8 +116,8 @@ export class ScenarioActions extends Component {
 		return(
 			<MuiThemeProvider>
 	  			<div id="btn-submit-container" className="pull-right ">
-	  				<TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name" />
-		  			<div className={this.getClass()}>
+	  				<TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name" value={this.state.scenario.name} />
+	  				<div className={this.getClass()}>
                   		<Autocomplete className="autoComplete" types={["address"]} placeholder="Enter your Address"
 			                    value={this.state.autoComplete.address} onChange={event=> this.onChangeAutoComplete(event)}
 			                    onFocus={this.addClass} onBlur={this.removeClass} 
