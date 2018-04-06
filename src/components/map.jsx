@@ -48,7 +48,7 @@ export const MyMapComponent = compose(
         minZoom: 12
       }}
       disableDefaultUI >
-          {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} /> }
+          {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} switchCar={props.switchCar}/> }
           {props.pinProps && <MyPin address={props.pinProps} onAddressChange={props.onAddressChange}/>}
        </GoogleMap> : 
       <GoogleMap    
@@ -67,7 +67,7 @@ export const MyMapComponent = compose(
                              color={props.color} dragHandler={props.onDragMarker}/> }
        {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} allowEdit={props.allowEdit}
         color={props.color} dragHandler={props.onDragPoly} saveHandler={props.onChangeAttr} /> }
-       {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} color={props.color} /> }
+       {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} color={props.color} switchCar={props.switchCar}/> }
        {props.pinProps && <MyPin address={props.pinProps} onAddressChange={props.onAddressChange}/>}
      </GoogleMap>
 ));

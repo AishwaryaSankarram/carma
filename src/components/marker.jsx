@@ -4,12 +4,18 @@ export class MyMarker extends React.Component {
 	constructor(props) {
 		super(props);
 	    this.state = { markerCount: 0 };
-	    this.handleDrag=this.handleDrag.bind(this);
+        this.handleDrag=this.handleDrag.bind(this);
+	    this.handleClick=this.handleClick.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
        this.setState({markerCount: this.state.markerCount + 1});
   	}
+
+    handleClick(){
+        // console.log("Clicking on other marker------");
+        this.props.switchCar(this.props.carId);
+    }
 
  	handleDrag = (e, index) => {
         console.log("Dragging marker--->" , e, index,  e.latLng, this.props.markerPos[0]);
@@ -17,6 +23,8 @@ export class MyMarker extends React.Component {
         markerPos[index] = {lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
         this.props.dragHandler(markerPos, index);
     }
+
+
 
 	render() {
 		let self = this;
@@ -34,7 +42,7 @@ export class MyMarker extends React.Component {
             return (
             	<Marker key={marker.lat+"_"+marker.lng} position={marker} zIndex={zIndex} 
             	draggable={self.props.allowEdit} icon={icon} title={title} 
-            	onDragEnd={(event) => self.handleDrag(event, index)}
+            	onDragEnd={(event) => self.handleDrag(event, index)} onClick={this.handleClick}
             />);
         });
         console.log("Markers------------>", markers)

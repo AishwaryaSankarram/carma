@@ -220,7 +220,7 @@ export default class HomePage extends Component {
      console.log("Comes to delete------------");
      let self = this;
      let carId = car.carId;
-    const localData=localStorage.getItem("loginData");
+     const localData=localStorage.getItem("loginData");
     const password=localStorage.getItem("pwd");
       const header = JSON.parse(localData);
      if(car.isSaved){
@@ -343,7 +343,7 @@ export default class HomePage extends Component {
     routes = this.getRoutes(unSavedCars);
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-        routes={routes} loginData={localData} pwd={password} addCar={this.openModal}/>;
+        routes={routes} loginData={localData} pwd={password} addCar={this.openModal} switchCar={this.switchCar.bind(this)}/>;
     //
   }
 
@@ -372,6 +372,7 @@ export default class HomePage extends Component {
       let route = car.poly;
       if(route.length > 0){
         route[0].carLabel = car.carLabel;
+        route[0].carId = car.carId;
         route[0].color = car.color;
         route[0].markerPos = [car.poly[0], car.poly[car.poly.length -1]];
         routes.push(route);
@@ -392,6 +393,13 @@ export default class HomePage extends Component {
     return latLngBounds;
   }
 
+  switchCar(carId){
+    let cars = this.state.cars;
+    let selectedCar = cars.filter((car) => car.carId === carId)[0];
+    console.log("In switchCar-----", selectedCar);
+    this.setState({mapOpen: true, selectedCar: selectedCar});
+  }
+
   displayContent(){
     let content;
     let self = this;
@@ -405,7 +413,7 @@ export default class HomePage extends Component {
       let carsWithRoutes = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
       let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
       content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-                  routes={routes} loginData={localData} pwd={password} addCar={this.openModal}/>;
+                  routes={routes} loginData={localData} pwd={password} addCar={this.openModal} switchCar={this.switchCar.bind(this)}/>;
      }
       return content;
   }

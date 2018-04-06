@@ -8,11 +8,16 @@ export class Route extends React.Component {
         this.polyLineEle = this.polyLineEle.bind(this);
     }
 
+    handleClick(){
+        // console.log("Clicking on other PL------");
+        this.props.switchCar(this.props.carId);
+    }
+
     polyLineEle() {
         let lineOptions = {
             strokeColor: this.props.color,
             strokeOpacity: 1.0,
-            strokeWeight: 2,
+            strokeWeight: 4,
             zIndex: 150
         };
         console.log("Rendering non-editable route----------" , lineOptions , this.props);
@@ -20,10 +25,11 @@ export class Route extends React.Component {
             <div>
                 <Polyline path={ this.props.pathCoordinates }
                 options={lineOptions}
-                editable={this.props.allowEdit}
-                draggable={this.props.allowEdit}
+                clickable={true}
+                onClick={this.handleClick.bind(this)}
                 />
-                <Icon markerPos={this.props.pathCoordinates} allowEdit={this.props.allowEdit} color={this.props.color}/>
+                <Icon markerPos={this.props.pathCoordinates} allowEdit={this.props.allowEdit} color={this.props.color}
+                carId={this.props.carId} switchCar={this.props.switchCar}/>
             </div>
         );
     }

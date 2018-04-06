@@ -476,6 +476,7 @@ export class MapContainer extends React.Component {
 							bounds={bounds}
 							pinProps={pinProps} onAddressChange={this.changeFocusLocation}
 							disabled={this.props.car.carLabel? false : true}
+							switchCar={this.props.switchCar}
 			/>
 			{this.state.modalIsVisible &&
 		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="How do you want to draw the route?"

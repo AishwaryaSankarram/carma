@@ -14,9 +14,14 @@ export class Icon extends React.Component {
     }
 
     handleClick = (e, index) => {
-        console.log("Clicking marker--->" , e, index,  e.latLng);
-        let markerPos =  e.latLng ;//{lat: parseFloat(e.latLng.lat()), lng: parseFloat(e.latLng.lng())};
-        this.props.clickHandler(markerPos, index);   
+        // console.log("Clicking speed icon--->" , e, index,  e.latLng);
+        if(this.props.carId){
+            this.props.switchCar(this.props.carId);
+        }else{
+            let markerPos =  e.latLng ;
+            this.props.clickHandler(markerPos, index);       
+        }
+        
     }
 
 	render() {
@@ -37,7 +42,8 @@ export class Icon extends React.Component {
             if(typeof point.speed !== 'undefined' && point.speed){     
         		 markers.push(<Marker key={"icon_" + index} position={point} zIndex={zIndex} 
                         draggable={self.props.allowEdit} icon={icon} title={"Speed: " + point.speed} 
-                        onDragEnd={(event) => self.handleDrag(event, index)} onClick={(event) => self.handleClick(event, index)}
+                        onDragEnd={(event) => self.handleDrag(event, index)} 
+                        onClick={(event) => self.handleClick(event, index)}
                 />);
             }
         });
