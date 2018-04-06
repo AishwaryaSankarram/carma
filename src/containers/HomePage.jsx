@@ -390,7 +390,6 @@ export default class HomePage extends Component {
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
         routes={routes} loginData={localData} pwd={password} addCar={this.openModal} 
         scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
-    //
   }
 
   displayRoutes(){

@@ -19,6 +19,7 @@ export class MapContainer extends React.Component {
 				showMarker: false,
 				markerCount: 0,
 				drawPolyline: false,
+				isDirty: false,
 				routes: this.props.routes,
 				modalIsVisible: false,
 				address: {
@@ -60,7 +61,6 @@ export class MapContainer extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes){ //Reload the map on a different car
-			console.log("Update render------------", nextProps.car);
 			if(typeof nextProps.car.poly !== 'undefined' && nextProps.car.poly && nextProps.car.poly.length > 0){ //Old map props retrieved for saved cars
 				let car = nextProps.car;
 				this.setState({
@@ -86,7 +86,7 @@ export class MapContainer extends React.Component {
 				});
 			}
 		}
-  	}
+  }
 
   	saveRoute(payload){
   		var self = this;
@@ -114,6 +114,10 @@ export class MapContainer extends React.Component {
 			}
 		}).catch(function (error) {
 			console.log("The error is------------", error);
+			let isDirty = self.state.isDirty;
+			if(isDirty) {
+				self.setState({isDirty: false});
+			}
 	 	});
   	}
 
@@ -125,9 +129,11 @@ export class MapContainer extends React.Component {
  		selCar['drawPolyline']=self.state.drawPolyline;
  		selCar['markerCount'] = self.state.markerCount;
 		selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
+		selCar['isDirty'] = false;
  		selCar['showMarker'] = self.state.showMarker;
+		let isDirty = this.state.isDirty;
  		self.props.updateCar(selCar, true);
-  	}
+	}
 
 	handleSubmit(scenarioObj){
 		console.log("Submit Clicked");
@@ -162,6 +168,7 @@ export class MapContainer extends React.Component {
 		}
 	 	selCar['drawPolyline']=this.state.drawPolyline;
 	 	selCar['markerCount'] = this.state.markerCount;
+		selCar['isDirty'] = true;
 		selCar['markers'] = this.state.drawPolyline ? [selCar.poly[0], selCar.poly[selCar.poly.length - 1]] : this.state.markers;
 	 	selCar['showMarker'] = this.state.showMarker;
 	 	console.log("Saving car as------", selCar);
@@ -172,7 +179,7 @@ export class MapContainer extends React.Component {
 	handlePolyEvents(h){
 		let selCar = this.props.car;
 		selCar.poly = h;
-		this.setState({poly: h});
+		this.setState({poly: h, isDirty: true});
 		console.log("Handling poly events------", selCar);
 	}
 
@@ -228,7 +235,8 @@ export class MapContainer extends React.Component {
         self.setState({
         	modalIsVisible: false,
             drawPolyline: true,
-            poly: poly
+            poly: poly,
+						isDirty:true
    		 });
         setTimeout(function(){
         	self.handleSave();
@@ -261,8 +269,10 @@ export class MapContainer extends React.Component {
 
 	handleMarkerDrag(markerPos, index) {
 		let self = this;
+		let selCar = this.state.car;
 		if(this.state.drawPolyline) { //Redraw routes
 			this.setState({markers: markerPos});
+			selCar['isDirty'] = true;
 			setTimeout(function(){ //Load the confirm box and start drawing routes after a delay so that the user can see the marker
            		self.setState({modalIsVisible: true});
             },200);
@@ -291,9 +301,12 @@ export class MapContainer extends React.Component {
 
 	handlePolyDrag(poly){
 		let self = this;
+		let selCar = this.state.car;
+		selCar['isDirty'] = true;
 		this.setState({
 			markers: [poly[0], poly[poly.length - 1]],
-			poly: poly
+			poly: poly,
+			isDirty: true
 		});
 		setTimeout(function(){
 			self.handleSave();
@@ -332,7 +345,7 @@ export class MapContainer extends React.Component {
 		  	p[k] = {lat: parseFloat(z[k][0]), lng: parseFloat(z[k][1])}
 		  }
 		  p[0].speed = self.props.car.speed;
-		  this.setState({modalIsVisible: false, poly: p, markers: [p[0], p[p.length -1]], drawPolyline: true });
+		  this.setState({modalIsVisible: false, poly: p, markers: [p[0], p[p.length -1]], drawPolyline: true, isDirty: true });
 		  setTimeout(function(){
 	        self.handleSave();
           }, 200);
@@ -363,7 +376,7 @@ export class MapContainer extends React.Component {
 		let mapCenter;
 		let routeArray= this.state.routes;
 		if(this.props.car && this.props.car.isSaved && this.props.car.markers && this.props.car.markers.length === 2){
-			 mapCenter = {lat: ((this.props.car.markers[0].lat + this.props.car.markers[1].lat)/2), 
+			 mapCenter = {lat: ((this.props.car.markers[0].lat + this.props.car.markers[1].lat)/2),
 			  lng: ((this.props.car.markers[0].lng + this.props.car.markers[1].lng)/2)}  ; //Using saved car mapCenter
 		}else if(routeArray.length > 0){
 			/*if(this.state.markers[0]){
@@ -377,7 +390,7 @@ export class MapContainer extends React.Component {
 		  		let e = routes[j];
 				lat += e.lat;
 		  		lng += e.lng;
-		  		counter += 1;							
+		  		counter += 1;
 		  	}
 /*		  	routes.forEach(function(e){
 
@@ -421,9 +434,11 @@ export class MapContainer extends React.Component {
 		}
     	if(this.state.address.location.coordinates[0]){
       		latLngBounds.extend(new window.google.maps.LatLng(
-                            { lat: this.state.address.location.coordinates[0],
-                              lng:  this.state.address.location.coordinates[1]}
-                          ));
+                            { 
+                              lat: this.state.address.location.coordinates[0],
+                              lng:  this.state.address.location.coordinates[1]
+                          	}
+                        )); 
       	    flag = false;
     	}
 		if(flag){
@@ -453,16 +468,17 @@ export class MapContainer extends React.Component {
 		let mapCenter = this.deriveMapCenter();
 		let bounds = this.getBounds();
 		let pinProps = this.state.address.formattedAddress ? this.state.address : false;
+		let saveBtnDisabled = !this.state.isDirty; 
 		if(pinProps) 
 			 pinProps.pwd = this.props.pwd;
 		console.log("display maps===>", bounds);
 	 	return (
 	 		<div className="gMap">
 			<div className="clearfix">
-				{this.props.car.carLabel &&   <div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div> }
+				{this.props.car.carLabel && <div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div> }
 				<ScenarioActions handleSubmit={this.handleSubmit} addCarHandler={this.props.addCar} 
 								address={pinProps} onAddressChange={this.changeFocusLocation}
-								scenario={this.props.scenario}/>
+								scenario={this.props.scenario} disabled={saveBtnDisabled}/>
 			</div>
 			<MyMapComponent onClick={this.handleClick} 
 							showMarker={this.state.showMarker} 
@@ -471,7 +487,7 @@ export class MapContainer extends React.Component {
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)}
 							routes={this.state.routes} allowEdit={true}
-							mapCenter={mapCenter} 
+							mapCenter={mapCenter}
 							color={this.props.car.color ? this.props.car.color : ""} label={this.props.car ? this.props.car.carLabel: ""}
 							onDragMarker={this.handleMarkerDrag} onDragPoly={this.handlePolyDrag}
 							onChangeAttr={this.handlePolyEvents}

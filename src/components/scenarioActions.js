@@ -127,8 +127,9 @@ export class ScenarioActions extends Component {
                   		<div className="autoBorder"></div>
                 	</div>
 		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after" icon={<AddIcon />} label="Add Car" 
-		  			 		primary={true} style={style} onClick={this.addCar}/>
-		  			<RaisedButton label="Save" primary={true} style={style} onClick={event => this.handleSubmit(event)} />
+		  			 		primary={true} style={style} onClick={this.addCar} />
+		  			<RaisedButton label="Save" primary={true} style={style} disabled={this.props.disabled} 
+		  										onClick={event => this.handleSubmit(event)} />
 	  			</div>
 			</MuiThemeProvider>
 		);
