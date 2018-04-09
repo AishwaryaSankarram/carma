@@ -28,7 +28,7 @@ export class ScenarioActions extends Component {
 		let address = props.address;
 		this.state = {
 			focus:false,
-			scenario: props.scenario,
+			scenario: (!props.scenario.name ||  props.scenario.length === 0) ?  {name: "", id: ""} : props.scenario,
           	autoComplete: {
             	address: address ? address.formattedAddress : "" ,
             	placeId: address ? address.placeId : "",
@@ -112,6 +112,15 @@ export class ScenarioActions extends Component {
        });
     }
 
+    handleChange = (event) => {
+      var scenario_name = event.target.value;
+      var scenarioObj = this.state.scenario;
+      scenarioObj.name = scenario_name;
+      this.setState({
+        scenario: scenarioObj
+      });
+    }  
+  
 	render(){
 		return(
 			<MuiThemeProvider>
@@ -125,8 +134,10 @@ export class ScenarioActions extends Component {
                     	<div className="autoComplete_placeholder">Address</div>
                   		<div className="autoBorder"></div>
                 	</div>
-            <TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name" value={this.state.scenario.name} />
-		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after" icon={<AddIcon />} label="Add Car"
+            <TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name"
+             		   value={this.state.scenario.name} onChange={this.handleChange}/>
+		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after" 
+		  					icon={<AddIcon />} label="Add Car"
 		  			 		primary={true} style={style} onClick={this.addCar} />
 		  			<RaisedButton label="Save" primary={true} style={style} disabled={this.props.disabled}
 		  										onClick={event => this.handleSubmit(event)} />

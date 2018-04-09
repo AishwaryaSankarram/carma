@@ -76,35 +76,6 @@ export default class HomePage extends Component {
     this.handleProfileSave = this.handleProfileSave.bind(this);
   }
 
-
-  oldLoadCars(){
-    let self = this;
-    const localData=localStorage.getItem("loginData");
-    const password=localStorage.getItem("pwd");
-    console.log("localData---->", localData);
-    const header = JSON.parse(localData);
-    let apiBaseUrl = apiUrl + 'granular/getGranularPoints/';
-    let params = { page: 0, size: 10};
-    let auth = { username: header.uuid, password: password  }
-     axios.get(apiBaseUrl + header.id, {params: params, auth: auth}).then(function (response) {
-         console.log(response);
-         if(response.status === 200){
-          console.log("Get Cars Hit successful");
-          let cars = self.formCarArray(response.data);
-          let selCar = cars.length > 0 ? cars[0] : {};
-          self.setState({cars: cars, count: cars.length, selectedCar: selCar });
-         }
-         else{
-          console.log("Oops...! Get Cars failed with--------" + response.status);
-          self.setState({cars: [], count: 0, selectedCar: {}});
-         }
-
-      }).catch(function (error) {
-          self.setState({cars: [], count: 0});
-          console.log("The error is------------", error);
-      });
-  }
-
   loadCars(){
     let self = this;
     const localData=localStorage.getItem("loginData");
@@ -128,7 +99,7 @@ export default class HomePage extends Component {
             }
          }
          else{
-          // console.log("Oops...! Get Cars failed with--------" + response.status);
+            console.log("Oops...! Get Scenarios failed with--------" + response.status);
             self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: ""});
          }
 
@@ -163,7 +134,6 @@ export default class HomePage extends Component {
                   point.speed = p.speed;
                 }
                 poly.push(point);
-
               });
               c.poly = poly;
               c.drawPolyline = true;
@@ -284,7 +254,7 @@ export default class HomePage extends Component {
                 self.forceUpdate();
             }
              else{
-              console.log("Oops...! Get Cars failed with--------" + response.status);
+              console.log("Oops...! Delete Cars failed with--------" + response.status);
              }
         }).catch(function (error) {
                 console.log("The error is------------" + error);
@@ -363,23 +333,78 @@ export default class HomePage extends Component {
      self.setState({cars: cars, isEditing: false, mapOpen: true});
   }
 
-  updateRoute(car, isRest) {
+  updateRoute(objToSave, isRest) {
       let self = this;
-      const cars = this.state.cars;
-      for(let index=0; index<cars.length; index ++){
-        if(cars[index].carLabel === car.carLabel){
-            cars[index] = car;
-            break;
-        }
-      }
-      this.setState({
-        cars: cars, showHeader: isRest
-      });
       if(isRest){
-       setTimeout(function(){
-          self.setState({showHeader: false});
-        }, 5000);
+        let cars = this.state.cars.slice(); //Copy of cars state variable
+        for(let j=0; j<cars.length; j++){
+          if(cars[j]["carId"] === cars[j]["carLabel"])
+              delete(cars[j]["carId"]);
+          let poly = [];  
+          cars[j].poly.forEach(function(p) {
+            let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
+            if(p.speed)
+                point.speed = p.speed;
+            poly.push(point);
+          });            
+          cars[j].poly =  poly;
+        }
+        let payload = {
+          name: objToSave.scenario.name,
+          userAddress: objToSave.address,
+          cars: cars
+        };
+        if(objToSave.scenario.id && objToSave.scenario.id.length > 0){ //Add Scenario ID if for a PUT call
+          payload.scenarioId = objToSave.scenario.id ;
+        }
+        self.callApi(payload);
+        if(isRest){
+         setTimeout(function(){
+            self.setState({showHeader: false});
+          }, 5000);
+        }  
+      }else{
+          const cars = this.state.cars;
+          for(let index=0; index<cars.length; index ++){
+            if(cars[index].carLabel === objToSave.carLabel){
+              cars[index] = objToSave;
+              break;
+            }
+        }
+          self.setState({
+            cars: cars, showHeader: isRest
+          });
       }
+  }
+
+  callApi(payload){
+    const localData=localStorage.getItem("loginData");
+    const pwd=localStorage.getItem("pwd");
+    const loginResp = JSON.parse(localData);
+    const apiBaseUrl =  apiUrl + "scenario/";
+    let method = payload.scenarioId ? 'PUT' : 'POST';
+    let context = payload.scenarioId ? 'updateScenario' : 'createScenario ';
+    axios({
+          method: method,
+          url: apiBaseUrl + context,
+          data: payload,
+          auth: {
+            username: loginResp.uuid,
+            password: pwd
+          }
+    }).then(function (response) {
+          console.log(response);
+          if(response.status === 200){
+            // self.updateProps(response.data.carId); Update scenario and Car-ID
+            // isSaved on the cars
+            // state => cars, selCar, scenario, currentScenario
+          }
+          else{
+            console.log("Oops...! Rest HIT failed with--------" + response.status);
+          }
+   }).catch(function (error) {
+          console.log("The error is------------", error);
+   });
   }
 
   drawMap(){

@@ -131,13 +131,13 @@ export class MapContainer extends React.Component {
 		selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
 		selCar['isDirty'] = false;
  		selCar['showMarker'] = self.state.showMarker;
-		let isDirty = this.state.isDirty;
  		self.props.updateCar(selCar, true);
 	}
 
 	handleSubmit(scenarioObj){
-		console.log("Submit Clicked");
-		
+		console.log("Submit Clicked", scenarioObj);
+		this.props.updateCar(scenarioObj, true);	
+		/*
 		let selCar = this.props.car;
 		if(this.state.drawPolyline) {
     	let h = this.child.method(); // Get path from PolyLine drawn
@@ -152,7 +152,7 @@ export class MapContainer extends React.Component {
 		  delete(payload.carId);
 		}
    		this.saveRoute(payload);
-	 	}
+	 	}*/
 	}
 
 	handleSave(){
