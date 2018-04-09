@@ -19,30 +19,30 @@ export class Icon extends React.Component {
             this.props.switchCar(this.props.carId);
         }else{
             let markerPos =  e.latLng ;
-            this.props.clickHandler(markerPos, index);       
+            this.props.clickHandler(markerPos, index);
         }
-        
+
     }
 
 	render() {
 		let self = this;
         let google = window.google;
         let svg = [
-                    '<?xml version="1.0"?>', 
+                    '<?xml version="1.0"?>',
                     '<svg height="1024" width="767.5" xmlns="http://www.w3.org/2000/svg">',
                       '<polygon stroke="#fffff" stroke-width="100" points="300,0 600,520 0,520" fill="#000000"/>',
                     '</svg>'
                 ].join('\n');
-	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), 
+	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
                      anchor: new google.maps.Point(12, 0),
                      scaledSize: new google.maps.Size(30, 30)};
 		let zIndex = self.props.allowEdit ? 160 : 137 ;
         let markers = [];
         self.props.markerPos.forEach(function(point, index) {
-            if(typeof point.speed !== 'undefined' && point.speed){     
-        		 markers.push(<Marker key={"icon_" + index} position={point} zIndex={zIndex} 
-                        draggable={self.props.allowEdit} icon={icon} title={"Speed: " + point.speed} 
-                        onDragEnd={(event) => self.handleDrag(event, index)} 
+            if(typeof point.speed !== 'undefined' && point.speed && index !== self.props.markerPos.length - 1){     
+        		 markers.push(<Marker key={"icon_" + index} position={point} zIndex={zIndex}
+                        draggable={self.props.allowEdit} icon={icon} title={"Speed: " + point.speed}
+                        onDragEnd={(event) => self.handleDrag(event, index)}
                         onClick={(event) => self.handleClick(event, index)}
                 />);
             }

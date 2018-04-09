@@ -122,9 +122,9 @@ export default class HomePage extends Component {
               let s = self.formScenarioArray(response.data);
               let cars = self.formCarArray(response.data[0].cars);
               let selCar = cars.length > 0 ? cars[0] : {};
-              self.setState({cars: cars, count: cars.length, selectedCar: selCar, scenarios: s, currentScenario: s[0] }); 
+              self.setState({cars: cars, count: cars.length, selectedCar: selCar, scenarios: s, currentScenario: s[0] });
             }else{
-              self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "" });  
+              self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "" });
             }
          }
          else{
@@ -157,8 +157,13 @@ export default class HomePage extends Component {
             let poly = [];
             if(c.poly && c.poly.length > 0){
               c.speed = c.poly[0].speed;
-              c.poly.forEach(function(p) {
-                 poly.push({lat: parseFloat(p.lat), lng: parseFloat(p.lng), speed: p.speed});
+              c.poly.forEach(function(p, index) {
+                let point = {lat: parseFloat(p.lat), lng: parseFloat(p.lng)}
+                if(index !== c.poly.length - 1) {
+                  point.speed = p.speed;
+                }
+                poly.push(point);
+
               });
               c.poly = poly;
               c.drawPolyline = true;
@@ -388,7 +393,7 @@ export default class HomePage extends Component {
     routes = this.getRoutes(unSavedCars);
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-        routes={routes} loginData={localData} pwd={password} addCar={this.openModal} 
+        routes={routes} loginData={localData} pwd={password} addCar={this.openModal}
         scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
   }
 
@@ -458,7 +463,7 @@ export default class HomePage extends Component {
       let carsWithRoutes = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
       let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
       content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-                  routes={routes} loginData={localData} pwd={password} addCar={this.openModal} 
+                  routes={routes} loginData={localData} pwd={password} addCar={this.openModal}
                   scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
      }
       return content;
