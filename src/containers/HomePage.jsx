@@ -124,7 +124,7 @@ export default class HomePage extends Component {
      if(response.status === 200){
       console.log("Get Cars from scenario hit successful");
         if(response.data.length > 0){
-          let cars = self.formCarArray(response.data[0].cars);
+          let cars = response.data[0].cars ? self.formCarArray(response.data[0].cars) : [];
           let selCar = cars.length > 0 ? cars[0] : {};
           self.setState({cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario});
         }else{
@@ -159,7 +159,7 @@ export default class HomePage extends Component {
   }
 
   formCarArray(cars){
-      let carArray= [], ids = [];
+      let carArray= [], ids = [], unwanted_keys=['createdAt', 'deleted', 'emailId', 'geoFileName', 'parentUserId', 'updatedAt', 'scenarioId'];
       for(let i=0; i< cars.length; i++){
           let c=cars[i];
           if(ids.indexOf(c.carId) === -1){
@@ -186,6 +186,9 @@ export default class HomePage extends Component {
               c.markers.push({lat: poly[0].lat, lng: poly[0].lng});
               c.markers.push({lat: poly[last_index].lat, lng: poly[last_index].lng});
             }
+            unwanted_keys.forEach(function(k){
+              delete(c[k]);
+            });
             carArray.push(c);
             ids.push(c.carId);
           }
@@ -373,9 +376,13 @@ export default class HomePage extends Component {
       let self = this;
       if(isRest){
         let cars = this.state.cars.slice(); //Copy of cars state variable
+        let extraKeys = ['markers', 'isSaved', 'isDirty', 'drawPolyline', 'showMarker', 'markerCount'];
         for(let j=0; j<cars.length; j++){
           if(cars[j]["carId"] === cars[j]["carLabel"])
               delete(cars[j]["carId"]);
+/*          extraKeys.forEach(function(key){
+              delete(cars[j][key]);
+          });*/  
           let poly = [];  
           cars[j].poly.forEach(function(p) {
             let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
