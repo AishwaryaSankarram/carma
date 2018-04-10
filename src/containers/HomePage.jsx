@@ -46,6 +46,7 @@ export default class HomePage extends Component {
           sourceCar: {},
           mapOpen: false,
           dialogVisible: false,
+          address: null,
           action: {},
           scenarios: [],
           currentScenario: null,
@@ -87,14 +88,15 @@ export default class HomePage extends Component {
     let params = { page: 0, size: 10};
     let auth = { username: header.uuid, password: password  }
      axios.get(apiBaseUrl, {params: params, auth: auth}).then(function (response) {
-         console.log(response);
+         console.log("Get Scenarios Hit", response);
          if(response.status === 200){
-          console.log("Get Scenarios Hit successful");
             if(response.data.length > 0){
               let s = self.formScenarioArray(response.data);
               let cars = self.formCarArray(response.data[0].cars);
               let selCar = cars.length > 0 ? cars[0] : {};
-              self.setState({cars: cars, count: cars.length, selectedCar: selCar, scenarios: s, currentScenario: s[0] });
+              let adr = response.data[0].userAddress || null;
+              self.setState({cars: cars, count: cars.length, 
+                              selectedCar: selCar, scenarios: s, currentScenario: s[0], address: adr });
             }else{
               self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "" });
             }
@@ -105,7 +107,7 @@ export default class HomePage extends Component {
          }
 
       }).catch(function (error) {
-          self.setState({cars: [], count: 0, scenarios: [], currentScenario: "" });
+          self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "" });
           console.log("The error is------------", error);
       });
   }
@@ -117,22 +119,21 @@ export default class HomePage extends Component {
     const password=localStorage.getItem("pwd");
     const header = JSON.parse(localData);
     let apiBaseUrl = apiUrl + 'scenario/getScenario/' + scenario.id;
-    let params = { page: 0, size: 10};
     let auth = { username: header.uuid, password: password };
-    axios.get(apiBaseUrl, {params: params, auth: auth}).then(function (response) {
-     console.log(response);
+    axios.get(apiBaseUrl, {auth: auth}).then(function (response) {
+     console.log("Get by ID", response);
      if(response.status === 200){
-      console.log("Get Cars from scenario hit successful");
         if(response.data.length > 0){
           let cars = response.data[0].cars ? self.formCarArray(response.data[0].cars) : [];
           let selCar = cars.length > 0 ? cars[0] : {};
-          self.setState({cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario});
+          let adr = response.data[0].userAddress || null;
+          self.setState({cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario, address: adr});
         }else{
           self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: scenario });
         }
      }
      else{
-        console.log("Oops...! Get Scenarios failed with--------" + response.status);
+        console.log("Oops...! Get Scenario failed with--------" + response.status);
         self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: ""});
      }}).catch(function (error) {
         self.setState({cars: [], count: 0, selectedCar: {},  scenarios: [], currentScenario: "" });
@@ -141,7 +142,6 @@ export default class HomePage extends Component {
   }
 
   updateScenario(s){
-    console.log("Scenario changed to.......", s);
     if(s)
       this.fetchCars(s);
     else
@@ -196,14 +196,14 @@ export default class HomePage extends Component {
       return carArray;
     }
 
-  componentWillReceiveProps(nextProps){
+/*  componentWillReceiveProps(nextProps){
       if(nextProps.cars && nextProps.cars !== this.props.cars) {
         this.setState({cars: nextProps.cars, count: nextProps.count});
       }else{
         this.loadCars();
       }
   }
-
+*/
   openModal() {
     this.setState({modalIsOpen: true, sourceCar: {}});
   }
@@ -251,7 +251,6 @@ export default class HomePage extends Component {
       let selectedCar = cars.filter(function(car) {
          return car.carId === carId;
        })[0];
-      console.log(selectedCar);
       this.setState({mapOpen: true, selectedCar: selectedCar});
     }
   }
@@ -376,7 +375,7 @@ export default class HomePage extends Component {
       let self = this;
       if(isRest){
         let cars = this.state.cars.slice(); //Copy of cars state variable
-        let extraKeys = ['markers', 'isSaved', 'isDirty', 'drawPolyline', 'showMarker', 'markerCount'];
+        // let extraKeys = ['markers', 'isSaved', 'isDirty', 'drawPolyline', 'showMarker', 'markerCount'];
         for(let j=0; j<cars.length; j++){
           if(cars[j]["carId"] === cars[j]["carLabel"])
               delete(cars[j]["carId"]);
@@ -440,9 +439,23 @@ export default class HomePage extends Component {
     }).then(function (response) {
           console.log(response);
           if(response.status === 200){
-            // self.updateProps(response.data.carId); Update scenario and Car-ID
-            // isSaved on the cars
-            // state => cars, selCar, scenario, currentScenario
+             let s = {name: response.data.name, id: response.data.scenarioId};
+             let scenarios = self.state.scenarios;
+             if(method === 'POST')
+                  scenarios.push(s);
+             else{
+                scenarios.forEach(function(scenario){
+                    if(scenario.id === s.id)
+                        scenario.name = s.name;
+                });
+              }     
+             let cars = response.data.cars ? self.formCarArray(response.data.cars) : [];
+             let selCar = self.state.selCar;
+             if(selCar.carLabel){
+              selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
+              selCar['isDirty'] = false;
+             }
+             self.setState({cars: cars, count: cars.length, currentScenario: s, scenarios: scenarios, address: response.data.userAddress});             
           }
           else{
             console.log("Oops...! Rest HIT failed with--------" + response.status);
@@ -454,18 +467,14 @@ export default class HomePage extends Component {
 
   drawMap(){
   	let routes = [];
-    let self = this;
+    let self = this;  
 		let cars = this.state.cars;
     let unSavedCars = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
-    const localData=localStorage.getItem("loginData");
-    const password=localStorage.getItem("pwd");
-    console.log("localData---->", localData);
     routes = this.getRoutes(unSavedCars);
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-        routes={routes} loginData={localData} pwd={password} addCar={this.openModal}
-        onRef={this.props.onRef}
-        scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
+            routes={routes} userAddress={this.state.address} addCar={this.openModal} updateAddress={this.updateAddress.bind(this)}
+            scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
   }
 
   displayRoutes(){
@@ -529,12 +538,10 @@ export default class HomePage extends Component {
       content = this.drawMap();
     }else{
       let cars = this.state.cars;
-      const localData=localStorage.getItem("loginData");
-      const password=localStorage.getItem("pwd");
       let carsWithRoutes = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
       let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
       content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-                  routes={routes} loginData={localData} pwd={password} addCar={this.openModal}
+                  routes={routes} userAddress={this.state.address} addCar={this.openModal} updateAddress={this.updateAddress.bind(this)}
                   scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
      }
       return content;
@@ -575,6 +582,10 @@ export default class HomePage extends Component {
 
   handleProfileSave(){
     this.setState({dialogVisible: false, action: "", modalHeading: "", message: ""});
+  }
+
+  updateAddress(address){
+    this.setState({address: address});
   }
 
  render() {

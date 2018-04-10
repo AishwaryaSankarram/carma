@@ -10,8 +10,7 @@ const apiUrl = apiData.baseUrl;
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
-		const loginData = JSON.parse(this.props.loginData);
-		let address = loginData.userAddress;
+		let address = this.props.userAddress;
 		this.state = {
 				car: this.props.car,
 				poly: [],
@@ -61,6 +60,7 @@ export class MapContainer extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+			let address = nextProps.userAddress;
 		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes){ //Reload the map on a different car
 			if(typeof nextProps.car.poly !== 'undefined' && nextProps.car.poly && nextProps.car.poly.length > 0){ //Old map props retrieved for saved cars
 				let car = nextProps.car;
@@ -72,6 +72,17 @@ export class MapContainer extends React.Component {
 					car: nextProps.car,
 					poly: nextProps.car.poly,
 					routes: nextProps.routes,
+					address: {
+					  formattedAddress: address ? address.address : null,
+					  location: {
+					    type: "Point",
+					    coordinates: [
+					      address && address.location ? address.location.coordinates[0] : null,
+					      address && address.location ? address.location.coordinates[1] : null
+					    ]
+					  },
+		  	  		   placeId: address ? address.placeId : null
+			  		},
 					modalIsVisible: false
 				});
 			}else{			//Rendering new map for unsaved car
@@ -83,7 +94,18 @@ export class MapContainer extends React.Component {
 					car: nextProps.car,
 					poly: [],
 					routes: nextProps.routes,
-					modalIsVisible: false
+					modalIsVisible: false,
+					address: {
+					  formattedAddress: address ? address.address : null,
+					  location: {
+					    type: "Point",
+					    coordinates: [
+					      address && address.location ? address.location.coordinates[0] : null,
+					      address && address.location ? address.location.coordinates[1] : null
+					    ]
+					  },
+		  	  		   placeId: address ? address.placeId : null
+			  		}
 				});
 			}
 		}
@@ -454,23 +476,19 @@ export class MapContainer extends React.Component {
 	}
 
 	changeFocusLocation(place){
-		this.setState({
-			address: {
+        let address = {
                 placeId: place.place_id,
                 location: {
                 	type: "Point",
 				    coordinates: [place.geometry.location.lat(),place.geometry.location.lng()]
 				},
-                formattedAddress: place.formatted_address
-            },
-			isDirty: true
-        });
+                address: place.formatted_address
+            }
+        this.props.updateAddress(address);
 	}
 
 	changedScenarioName(name) {
 		let isDirty = this.state.isDirty;
-		console.log("Argument name --> ", name)
-		console.log("Prop name --> ", this.props.scenario.name)
 	 	if(!isDirty) {
 			this.setState({isDirty: true});
 		}
@@ -481,8 +499,6 @@ export class MapContainer extends React.Component {
 		let bounds = this.getBounds();
 		let pinProps = this.state.address.formattedAddress ? this.state.address : false;
 		let saveBtnDisabled = !this.state.isDirty;
-		if(pinProps)
-			 pinProps.pwd = this.props.pwd;
 		console.log("display maps===>", bounds);
 	 	return (
 	 		<div className="gMap">

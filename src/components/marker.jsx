@@ -14,7 +14,8 @@ export class MyMarker extends React.Component {
 
     handleClick(){
         // console.log("Clicking on other marker------");
-        this.props.switchCar(this.props.carId);
+        if(this.props.switchCar)
+            this.props.switchCar(this.props.carId);
     }
 
  	handleDrag = (e, index) => {
