@@ -74,6 +74,7 @@ export default class HomePage extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleProfileSave = this.handleProfileSave.bind(this);
+    this.fetchCars = this.fetchCars.bind(this);
   }
 
   loadCars(){
@@ -107,6 +108,44 @@ export default class HomePage extends Component {
           self.setState({cars: [], count: 0, scenarios: [], currentScenario: "" });
           console.log("The error is------------", error);
       });
+  }
+
+
+  fetchCars(scenario){
+    let self = this;
+    const localData=localStorage.getItem("loginData");
+    const password=localStorage.getItem("pwd");
+    const header = JSON.parse(localData);
+    let apiBaseUrl = apiUrl + 'scenario/getScenario/' + scenario.id;
+    let params = { page: 0, size: 10};
+    let auth = { username: header.uuid, password: password };
+    axios.get(apiBaseUrl, {params: params, auth: auth}).then(function (response) {
+     console.log(response);
+     if(response.status === 200){
+      console.log("Get Cars from scenario hit successful");
+        if(response.data.length > 0){
+          let cars = self.formCarArray(response.data[0].cars);
+          let selCar = cars.length > 0 ? cars[0] : {};
+          self.setState({cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario});
+        }else{
+          self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: scenario });
+        }
+     }
+     else{
+        console.log("Oops...! Get Scenarios failed with--------" + response.status);
+        self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: ""});
+     }}).catch(function (error) {
+        self.setState({cars: [], count: 0, selectedCar: {},  scenarios: [], currentScenario: "" });
+        console.log("The error is------------", error);
+    }); 
+  }
+
+  updateScenario(s){
+    console.log("Scenario changed to.......", s);
+    if(s)
+      this.fetchCars(s);
+    else
+      this.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "" });
   }
 
   formScenarioArray(scenarios){
@@ -276,8 +315,6 @@ export default class HomePage extends Component {
       if(newCount === 0){
         self.setState({cars: newCars, count: newCount, selectedCar: {}, mapOpen: false, dialogVisible: false});
       }else{
-         //condition if the focus car is deleted
-        // let selCar = (self.state.selectedCar.carId == carId) ? newCars[newCount -1] : self.state.selectedCar ;
         let selCar = (newCount === carIndex) ? newCars[newCount -1] : newCars[carIndex]
         self.setState({cars: newCars, count: newCount, selectedCar: selCar, dialogVisible: false});
       }
@@ -313,7 +350,6 @@ export default class HomePage extends Component {
             );
      }
     return <div id="car-panel">{buttons}</div> || null;
-    //EOF
   }
 
   updateCarProps(car){
@@ -351,9 +387,11 @@ export default class HomePage extends Component {
         }
         let payload = {
           name: objToSave.scenario.name,
-          userAddress: objToSave.address,
           cars: cars
         };
+
+        if(objToSave.address.location.coordinates.length > 0)
+          payload.userAddress = objToSave.address ;
         if(objToSave.scenario.id && objToSave.scenario.id.length > 0){ //Add Scenario ID if for a PUT call
           payload.scenarioId = objToSave.scenario.id ;
         }
@@ -535,7 +573,8 @@ export default class HomePage extends Component {
     console.info("Rendering HomePage--------------");
     return (
       <div className="App">
-        {<Header menuClickIns={this.menuClick}  scenarios={this.state.scenarios} currentScenario={this.state.currentScenario}/>}
+        {<Header menuClickIns={this.menuClick} scenarios={this.state.scenarios} 
+                currentScenario={this.state.currentScenario} fetchCars={this.updateScenario.bind(this)}/>}
              {this.state.dialogVisible &&
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  />}

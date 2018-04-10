@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import axios from 'axios';
 const styles = {
   customWidth: {
     width: 250,
@@ -19,27 +18,23 @@ export class Dropdown extends Component {
   }
   
   handleChange(event, index, value) {
-    console.log("EVENT =>", event);
     this.setState({value: value});
-    // this.props.fetchCars(index);
+    this.props.changeHandler(value);
   }
 
   componentWillReceiveProps(nextProps){
-    console.log("again------", nextProps);
     if(nextProps && nextProps.scenarios !== this.state.items)
       this.setState({value: nextProps.currentScenario, items: nextProps.scenarios});
   }
   
   render() {
     let self = this;
-    console.log("MENU ITEMS =>", self.state.items, self.props.scenarios);
     let menuElements = self.state.items.map( (item, index) => {
       return (
           <MenuItem key={index + "_" + item.id} value={item} primaryText={item.name} />
         );
     });
     menuElements.push(<MenuItem key={menuElements.length + "_" + 0} value="" primaryText="New Scenario" />);
-    console.log("menuElements =>", menuElements);
     return(
       <div>
         <MuiThemeProvider >

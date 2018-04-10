@@ -48,7 +48,7 @@ export class ScenarioActions extends Component {
 	componentWillReceiveProps(nextProps){
 		let address = nextProps.address;
 		this.setState({
-			scenario: nextProps.scenario,
+			scenario: (!nextProps.scenario.name ||  nextProps.scenario.length === 0) ?  {name: "", id: ""} : nextProps.scenario,
 			focus:false,
           	autoComplete: {
             	address: address ? address.formattedAddress : "" ,
@@ -61,11 +61,13 @@ export class ScenarioActions extends Component {
 
 	handleSubmit(){
 		console.log("Submit Clicked on ScenarioActions");
-		let scenarioObj= {
+		if(this.state.scenario.name && this.state.scenario.name.length > 0){
+			let scenarioObj= {
 			scenario: this.state.scenario,
 			address: this.state.autoComplete
 		}
-		this.props.handleSubmit(scenarioObj);
+			this.props.handleSubmit(scenarioObj);	
+		}
 	}
 
 	addCar(){
@@ -135,7 +137,7 @@ export class ScenarioActions extends Component {
                   		<div className="autoBorder"></div>
                 	</div>
             <TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name"
-             		   value={this.state.scenario.name} onChange={this.handleChange}/>
+             		   value={this.state.scenario.name} onChange={this.handleChange} required/>
 		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after" 
 		  					icon={<AddIcon />} label="Add Car"
 		  			 		primary={true} style={style} onClick={this.addCar} />
