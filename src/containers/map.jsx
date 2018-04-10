@@ -158,6 +158,14 @@ export class MapContainer extends React.Component {
  		self.props.updateCar(selCar, true);
 	}
 
+	componentDidMount() {
+		this.props.mapRef(this);
+	}
+
+	componentWillUnMount() {
+		this.props.mapRef(null);
+	}
+
 	handleSubmit(scenarioObj){
 		console.log("Submit Clicked", scenarioObj);
 		this.props.updateCar(scenarioObj, true);

@@ -95,7 +95,7 @@ export default class HomePage extends Component {
               let cars = self.formCarArray(response.data[0].cars);
               let selCar = cars.length > 0 ? cars[0] : {};
               let adr = response.data[0].userAddress || null;
-              self.setState({cars: cars, count: cars.length, 
+              self.setState({cars: cars, count: cars.length,
                               selectedCar: selCar, scenarios: s, currentScenario: s[0], address: adr });
             }else{
               self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "" });
@@ -426,6 +426,7 @@ export default class HomePage extends Component {
     const pwd=localStorage.getItem("pwd");
     const loginResp = JSON.parse(localData);
     const apiBaseUrl =  apiUrl + "scenario/";
+    let self = this;
     let method = payload.scenarioId ? 'PUT' : 'POST';
     let context = payload.scenarioId ? 'updateScenario' : 'createScenario ';
     axios({
@@ -448,14 +449,16 @@ export default class HomePage extends Component {
                     if(scenario.id === s.id)
                         scenario.name = s.name;
                 });
-              }     
+              }
              let cars = response.data.cars ? self.formCarArray(response.data.cars) : [];
-             let selCar = self.state.selCar;
+             let selCar = self.state.selectedCar;
              if(selCar.carLabel){
               selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
               selCar['isDirty'] = false;
              }
-             self.setState({cars: cars, count: cars.length, currentScenario: s, scenarios: scenarios, address: response.data.userAddress});             
+             self.setState({cars: cars, count: cars.length, currentScenario: s, scenarios: scenarios, address: response.data.userAddress});
+             console.log("MAP REF =>", self.mapRef);
+             self.mapRef.setState({isDirty: false});
           }
           else{
             console.log("Oops...! Rest HIT failed with--------" + response.status);
@@ -467,12 +470,13 @@ export default class HomePage extends Component {
 
   drawMap(){
   	let routes = [];
-    let self = this;  
+    let self = this;
 		let cars = this.state.cars;
     let unSavedCars = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
     routes = this.getRoutes(unSavedCars);
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
+    mapRef={this.handleRef.bind(this)}
             routes={routes} userAddress={this.state.address} addCar={this.openModal} updateAddress={this.updateAddress.bind(this)}
             scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
   }
@@ -540,11 +544,15 @@ export default class HomePage extends Component {
       let cars = this.state.cars;
       let carsWithRoutes = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
       let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
-      content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
+      content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}  mapRef={this.handleRef.bind(this)}
                   routes={routes} userAddress={this.state.address} addCar={this.openModal} updateAddress={this.updateAddress.bind(this)}
                   scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
      }
       return content;
+  }
+
+  handleRef(mapComp){
+    this.mapRef = mapComp;
   }
 
   menuClick (){
