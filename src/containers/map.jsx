@@ -57,6 +57,7 @@ export class MapContainer extends React.Component {
 		this.handlePolyDrag = this.handlePolyDrag.bind(this);
 		this.deleteMarkers = this.deleteMarkers.bind(this);
 		this.changeFocusLocation = this.changeFocusLocation.bind(this);
+		this.changedScenarioName = this.changedScenarioName.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -107,18 +108,19 @@ export class MapContainer extends React.Component {
         }).then(function (response) {
 			console.log(response);
 			if(response.status === 200){
+				console.log("Response 200.")
 			  self.updateProps(response.data.carId);
+				let isDirty = self.state.isDirty;
+				if(isDirty) {
+					self.setState({isDirty: false});
+				}
 			}
 			else{
 			  console.log("Oops...! Rest HIT failed with--------" + response.status);
 			}
 		}).catch(function (error) {
 			console.log("The error is------------", error);
-			let isDirty = self.state.isDirty;
-			if(isDirty) {
-				self.setState({isDirty: false});
-			}
-	 	});
+		 });
   	}
 
   	updateProps(carId){
@@ -136,7 +138,7 @@ export class MapContainer extends React.Component {
 
 	handleSubmit(scenarioObj){
 		console.log("Submit Clicked", scenarioObj);
-		this.props.updateCar(scenarioObj, true);	
+		this.props.updateCar(scenarioObj, true);
 		/*
 		let selCar = this.props.car;
 		if(this.state.drawPolyline) {
@@ -402,7 +404,7 @@ export class MapContainer extends React.Component {
 	      mapCenter = {lat: lat/counter, lng: lng/counter}; //this.state.routes[this.state.routes.length - 1][0]; //Using mapCenter from first route
 		}else if(this.state.address.location.coordinates[0]){	 //Using saved Address mapCenter
 			mapCenter = {
-						 lat: this.state.address.location.coordinates[0], 
+						 lat: this.state.address.location.coordinates[0],
 						 lng: this.state.address.location.coordinates[1]
 						};
 		}else{
@@ -434,11 +436,11 @@ export class MapContainer extends React.Component {
 		}
     	if(this.state.address.location.coordinates[0]){
       		latLngBounds.extend(new window.google.maps.LatLng(
-                            { 
+                            {
                               lat: this.state.address.location.coordinates[0],
                               lng:  this.state.address.location.coordinates[1]
                           	}
-                        )); 
+                        ));
       	    flag = false;
     	}
 		if(flag){
@@ -452,7 +454,7 @@ export class MapContainer extends React.Component {
 	}
 
 	changeFocusLocation(place){
-		this.setState({ 
+		this.setState({
 			address: {
                 placeId: place.place_id,
                 location: {
@@ -460,29 +462,40 @@ export class MapContainer extends React.Component {
 				    coordinates: [place.geometry.location.lat(),place.geometry.location.lng()]
 				},
                 formattedAddress: place.formatted_address
-            }
+            },
+			isDirty: true
         });
+	}
+
+	changedScenarioName(name) {
+		let isDirty = this.state.isDirty;
+		console.log("Argument name --> ", name)
+		console.log("Prop name --> ", this.props.scenario.name)
+	 	if(!isDirty) {
+			this.setState({isDirty: true});
+		}
 	}
 
 	displayMaps(){
 		let mapCenter = this.deriveMapCenter();
 		let bounds = this.getBounds();
 		let pinProps = this.state.address.formattedAddress ? this.state.address : false;
-		let saveBtnDisabled = !this.state.isDirty; 
-		if(pinProps) 
+		let saveBtnDisabled = !this.state.isDirty;
+		if(pinProps)
 			 pinProps.pwd = this.props.pwd;
 		console.log("display maps===>", bounds);
 	 	return (
 	 		<div className="gMap">
 			<div className="clearfix">
 				{this.props.car.carLabel && <div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div> }
-				<ScenarioActions handleSubmit={this.handleSubmit} addCarHandler={this.props.addCar} 
+				<ScenarioActions handleSubmit={this.handleSubmit} addCarHandler={this.props.addCar}
 								address={pinProps} onAddressChange={this.changeFocusLocation}
+								onNameChange={this.changedScenarioName}
 								scenario={this.props.scenario} disabled={saveBtnDisabled}/>
 			</div>
-			<MyMapComponent onClick={this.handleClick} 
-							showMarker={this.state.showMarker} 
-							markerCount={this.state.markerCount} 
+			<MyMapComponent onClick={this.handleClick}
+							showMarker={this.state.showMarker}
+							markerCount={this.state.markerCount}
 							markerPos={this.state.markers}
 							drawPolyline={this.state.drawPolyline} poly={this.state.poly}
 							onRef={ref => (this.child = ref)}

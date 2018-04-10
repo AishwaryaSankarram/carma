@@ -137,7 +137,7 @@ export default class HomePage extends Component {
      }}).catch(function (error) {
         self.setState({cars: [], count: 0, selectedCar: {},  scenarios: [], currentScenario: "" });
         console.log("The error is------------", error);
-    }); 
+    });
   }
 
   updateScenario(s){
@@ -382,14 +382,14 @@ export default class HomePage extends Component {
               delete(cars[j]["carId"]);
 /*          extraKeys.forEach(function(key){
               delete(cars[j][key]);
-          });*/  
-          let poly = [];  
+          });*/
+          let poly = [];
           cars[j].poly.forEach(function(p) {
             let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
             if(p.speed)
                 point.speed = p.speed;
             poly.push(point);
-          });            
+          });
           cars[j].poly =  poly;
         }
         let payload = {
@@ -407,7 +407,7 @@ export default class HomePage extends Component {
          setTimeout(function(){
             self.setState({showHeader: false});
           }, 5000);
-        }  
+        }
       }else{
           const cars = this.state.cars;
           for(let index=0; index<cars.length; index ++){
@@ -464,6 +464,7 @@ export default class HomePage extends Component {
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
         routes={routes} loginData={localData} pwd={password} addCar={this.openModal}
+        onRef={this.props.onRef}
         scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
   }
 
@@ -580,7 +581,7 @@ export default class HomePage extends Component {
     console.info("Rendering HomePage--------------");
     return (
       <div className="App">
-        {<Header menuClickIns={this.menuClick} scenarios={this.state.scenarios} 
+        {<Header menuClickIns={this.menuClick} scenarios={this.state.scenarios}
                 currentScenario={this.state.currentScenario} fetchCars={this.updateScenario.bind(this)}/>}
              {this.state.dialogVisible &&
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}

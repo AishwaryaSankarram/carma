@@ -66,7 +66,7 @@ export class ScenarioActions extends Component {
 			scenario: this.state.scenario,
 			address: this.state.autoComplete
 		}
-			this.props.handleSubmit(scenarioObj);	
+			this.props.handleSubmit(scenarioObj);
 		}
 	}
 
@@ -121,8 +121,11 @@ export class ScenarioActions extends Component {
       this.setState({
         scenario: scenarioObj
       });
-    }  
-  
+      if(this.props.disabled) {
+        this.props.onNameChange(this.state.scenario.name)
+      }
+    }
+
 	render(){
 		return(
 			<MuiThemeProvider>
@@ -138,7 +141,7 @@ export class ScenarioActions extends Component {
                 	</div>
             <TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name"
              		   value={this.state.scenario.name} onChange={this.handleChange} required/>
-		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after" 
+		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after"
 		  					icon={<AddIcon />} label="Add Car"
 		  			 		primary={true} style={style} onClick={this.addCar} />
 		  			<RaisedButton label="Save" primary={true} style={style} disabled={this.props.disabled}
