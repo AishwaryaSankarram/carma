@@ -133,8 +133,8 @@ export default class HomePage extends Component {
                    {cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario, address: adr}
           self.setState(updateObj);
         }else{
-           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: scenario, scenarios: list} : 
-                              {cars: [], count: 0, selectedCar: {}, currentScenario: scenario }
+           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: list} : 
+                              {cars: [], count: 0, selectedCar: {}, currentScenario: "" }
            self.setState(updateObj);
         }
      }
@@ -165,7 +165,7 @@ export default class HomePage extends Component {
   }
 
   formCarArray(cars){
-      let carArray= [], ids = [], unwanted_keys=['createdAt', 'deleted', 'emailId', 'geoFileName', 'parentUserId', 'updatedAt', 'scenarioId'];
+      let carArray= [], ids = [], unwanted_keys=['createdAt', 'deleted', 'emailId', 'geoFileName', 'parentUserId', 'updatedAt', 'scenarioId', 'configFileName', 'granularPoints'];
       for(let i=0; i< cars.length; i++){
           let c=cars[i];
           if(ids.indexOf(c.carId) === -1){
@@ -462,7 +462,8 @@ export default class HomePage extends Component {
               selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
               selCar['isDirty'] = false;
              }
-             self.setState({cars: cars, count: cars.length, currentScenario: s, scenarios: scenarios, address: response.data.userAddress});
+             self.setState({cars: cars, count: cars.length, currentScenario: s, selectedCar: selCar,
+                              scenarios: scenarios, address: response.data.userAddress});
              console.log("MAP REF =>", self.mapRef);
              self.mapRef.setState({isDirty: false});
           }

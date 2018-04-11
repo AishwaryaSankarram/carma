@@ -23,11 +23,12 @@ export class Dropdown extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps && nextProps.scenarios !== this.state.items)
+    if(nextProps && (nextProps.scenarios.length !== this.state.items.length ||  nextProps.currentScenario !== this.state.value))
       this.setState({value: nextProps.currentScenario, items: nextProps.scenarios});
   }
   
   render() {
+    // console.info("Rendering scenario Actions----", this.state, this.props);
     let self = this;
     let menuElements = self.state.items.map( (item, index) => {
       return (
