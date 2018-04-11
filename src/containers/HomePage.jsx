@@ -70,6 +70,7 @@ export default class HomePage extends Component {
 
     this.displayContent = this.displayContent.bind(this);
     this.updateCarPanel = this.updateCarPanel.bind(this);
+    this.updateScenarioList = this.updateScenarioList.bind(this);
     this.displayRoutes = this.displayRoutes.bind(this);
     this.deleteCar = this.deleteCar.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -113,7 +114,7 @@ export default class HomePage extends Component {
   }
 
 
-  fetchCars(scenario){
+  fetchCars(scenario, list){
     let self = this;
     const localData=localStorage.getItem("loginData");
     const password=localStorage.getItem("pwd");
@@ -127,9 +128,14 @@ export default class HomePage extends Component {
           let cars = response.data[0].cars ? self.formCarArray(response.data[0].cars) : [];
           let selCar = cars.length > 0 ? cars[0] : {};
           let adr = response.data[0].userAddress || null;
-          self.setState({cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario, address: adr});
+          let updateObj = list ? {cars: cars, count: cars.length, selectedCar: selCar, scenarios: list,
+                                    currentScenario: scenario, address: adr} : 
+                   {cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario, address: adr}
+          self.setState(updateObj);
         }else{
-          self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: scenario });
+           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: scenario, scenarios: list} : 
+                              {cars: [], count: 0, selectedCar: {}, currentScenario: scenario }
+           self.setState(updateObj);
         }
      }
      else{
@@ -476,7 +482,7 @@ export default class HomePage extends Component {
     routes = this.getRoutes(unSavedCars);
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-    mapRef={this.handleRef.bind(this)}
+            mapRef={this.handleRef.bind(this)}  deleteScenario={this.deleteScenario.bind(this)}
             routes={routes} userAddress={this.state.address} addCar={this.openModal} updateAddress={this.updateAddress.bind(this)}
             scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
   }
@@ -484,6 +490,39 @@ export default class HomePage extends Component {
   displayRoutes(){
     this.setState({mapOpen: false, selectedCar: {}});
   }
+
+
+  deleteScenario(s){
+     let self = this;
+     const localData = localStorage.getItem("loginData");
+     const password = localStorage.getItem("pwd");
+     const header = JSON.parse(localData);
+     let url = apiUrl + 'scenario/deleteScenario/' + s.id;
+     let auth = { username: header.uuid, password: password  };
+     axios.delete(url, { auth: auth}).then(function (response) {
+        console.log(response);
+        if(response.status === 200){
+          console.log("Delete Scenario Hit successful");
+          self.updateScenarioList(s.id);
+        }
+        else{
+          console.log("Oops...! Delete Scenario failed with--------" + response.status);
+        }
+      }).catch(function (error) {
+            console.log("The error is------------" , error);
+      });
+  }
+
+  updateScenarioList(scenarioId){
+    let self = this;
+    let scenarios = this.state.scenarios;
+    let otherScenarios = scenarios.filter((s) => s.id !== scenarioId);
+    if(otherScenarios.length > 0){
+      self.fetchCars(otherScenarios[0], otherScenarios);
+    }else{
+      self.setState({scenarios: otherScenarios, currentScenario: "", cars: [], count: 0, selectedCar: {}});  
+    }
+  } 
 
   logout() {
     let confimation = "Are you sure you would want to log out ?";
@@ -501,7 +540,6 @@ export default class HomePage extends Component {
 
   getRoutes(cars){
     let routes = [];
-
     cars.forEach(function(car){
       let route = car.poly;
       if(route.length > 0){
@@ -546,7 +584,7 @@ export default class HomePage extends Component {
       let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
       content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}  mapRef={this.handleRef.bind(this)}
                   routes={routes} userAddress={this.state.address} addCar={this.openModal} updateAddress={this.updateAddress.bind(this)}
-                  scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
+                  scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)} deleteScenario={this.deleteScenario.bind(this)}/>;
      }
       return content;
   }

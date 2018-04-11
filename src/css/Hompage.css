@@ -104,6 +104,11 @@ html, body {
     color: #fff;
 }
 
+.deleteBtn {
+    min-width: 10px !important;
+    margin: 0px !important;
+}
+
 .new_car .fa {
     margin: 0 5px;
 }

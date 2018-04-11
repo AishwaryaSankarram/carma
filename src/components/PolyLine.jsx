@@ -244,7 +244,7 @@ export class PolyLine extends React.Component {
         let lineOptions = {
             strokeColor: this.props.color,
             strokeOpacity: 1.0,
-            strokeWeight: 2,
+            strokeWeight: 4,
             zIndex: 150
         };
         console.log("Rendering red polyline----------" , lineOptions , this.props);

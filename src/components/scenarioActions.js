@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {MuiThemeProvider, RaisedButton, TextField} from 'material-ui';
 import Autocomplete from "react-google-autocomplete";
 import AddIcon from 'material-ui/svg-icons/content/add';
+import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import {MyModal} from '../popup/Modal.jsx';
 
 const style = {
   margin: 15,
@@ -29,6 +31,7 @@ export class ScenarioActions extends Component {
 		this.state = {
 			focus:false,
 			scenario: (!props.scenario.name ||  props.scenario.length === 0) ?  {name: "", id: ""} : props.scenario,
+			modalIsVisible: false,
           	autoComplete: {
             	address: address ? address.formattedAddress : "" ,
             	placeId: address ? address.placeId : "",
@@ -126,6 +129,18 @@ export class ScenarioActions extends Component {
       }
     }
 
+    deleteScenario(){
+    	this.setState({modalIsVisible: true});
+    }
+
+    confirmDelete(){
+    	this.props.handleDelete(this.state.scenario);
+    }
+
+    closeModal(){
+    	this.setState({modalIsVisible: false});
+    }
+
 	render(){
 		return(
 			<MuiThemeProvider>
@@ -141,12 +156,19 @@ export class ScenarioActions extends Component {
                 	</div>
             <TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name"
              		   value={this.state.scenario.name} onChange={this.handleChange} required/>
+             		<RaisedButton className="deleteBtn" labelStyle={labelStyle} labelPosition="after"
+		  					icon={<DeleteIcon />} disabled={this.state.scenario.id.length === 0}
+		  			 		primary={true} style={style} onClick={this.deleteScenario.bind(this)} title="Delete Scenario" />   
 		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after"
-		  					icon={<AddIcon />} label="Add Car"
+		  					icon={<AddIcon />} label="Add Car" title="Add Car"
 		  			 		primary={true} style={style} onClick={this.addCar} />
 		  			<RaisedButton label="Save" primary={true} style={style} disabled={this.props.disabled}
-		  										onClick={event => this.handleSubmit(event)} />
-	  			</div>
+		  						  title="Save Scenario" onClick={event => this.handleSubmit(event)} />
+	  			
+	  			{this.state.modalIsVisible &&
+		          <MyModal title="Delete Scenario" modalIsOpen={this.state.modalIsVisible} content="Are you sure you want to delete this scenario?"
+		          okAction={this.confirmDelete.bind(this)} cancelAction={this.closeModal.bind(this)} />}
+		        </div>
 			</MuiThemeProvider>
 		);
 

@@ -44,8 +44,7 @@ export const MyMapComponent = compose(
           minZoom: 12
       }} 
       options={{
-        maxZoom: 18,
-        minZoom: 12
+        maxZoom: 18
       }}
       disableDefaultUI >
           {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} switchCar={props.switchCar}/> }
@@ -58,8 +57,7 @@ export const MyMapComponent = compose(
           minZoom: 16
        }}
        options={{
-        maxZoom: 18,
-        minZoom: 12
+        maxZoom: 18
       }}
       defaultZoom={16} 
        mapTypeId="roadmap" onClick={props.onClick}>

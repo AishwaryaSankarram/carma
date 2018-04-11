@@ -514,8 +514,9 @@ export class MapContainer extends React.Component {
 				{this.props.car.carLabel && <div className="pull-left route_label">Plan your route for {this.props.car.carLabel} </div> }
 				<ScenarioActions handleSubmit={this.handleSubmit} addCarHandler={this.props.addCar}
 								address={pinProps} onAddressChange={this.changeFocusLocation}
-								onNameChange={this.changedScenarioName}
-								scenario={this.props.scenario} disabled={saveBtnDisabled}/>
+								onNameChange={this.changedScenarioName} handleDelete={this.props.deleteScenario}
+								scenario={this.props.scenario} disabled={saveBtnDisabled}
+								/>
 			</div>
 			<MyMapComponent onClick={this.handleClick}
 							showMarker={this.state.showMarker}
