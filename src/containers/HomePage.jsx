@@ -353,7 +353,7 @@ export default class HomePage extends Component {
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
                        <i key={'icon_trash_' + car.carId} title="Delete" className={'fa fa-trash-o car_item_delete' + showDelete}
                         onClick={() => this.deleteCar(car)} ></i>
-                        <div className="load_ev_icon">EV</div>
+                        <div className="load_ev_icon" title="This is your EV">EV</div>
                        </div>
             buttons.push(
                btnHtml

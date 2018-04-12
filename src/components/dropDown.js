@@ -16,7 +16,7 @@ export class Dropdown extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
   }
-  
+
   handleChange(event, index, value) {
     this.setState({value: value});
     this.props.changeHandler(value);
@@ -26,7 +26,7 @@ export class Dropdown extends Component {
     if(nextProps && (nextProps.scenarios.length !== this.state.items.length ||  nextProps.currentScenario !== this.state.value))
       this.setState({value: nextProps.currentScenario, items: nextProps.scenarios});
   }
-  
+
   render() {
     // console.info("Rendering scenario Actions----", this.state, this.props);
     let self = this;
@@ -39,7 +39,7 @@ export class Dropdown extends Component {
     return(
       <div>
         <MuiThemeProvider >
-          <SelectField value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
+          <SelectField floatingLabelText="Scenario" value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
             {menuElements}
           </SelectField>
         </MuiThemeProvider>

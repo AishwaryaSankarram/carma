@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {MuiThemeProvider, RaisedButton, TextField} from 'material-ui';
 import Autocomplete from "react-google-autocomplete";
 import AddIcon from 'material-ui/svg-icons/content/add';
-import DeleteIcon from 'material-ui/svg-icons/action/delete';
-import {MyModal} from '../popup/Modal.jsx';
 
 const style = {
   margin: 15,
@@ -30,8 +28,7 @@ export class ScenarioActions extends Component {
 		let address = props.address;
 		this.state = {
 			focus:false,
-			scenario: (!props.scenario.name ||  props.scenario.length === 0) ?  {name: "", id: ""} : props.scenario,
-			modalIsVisible: false,
+			scenario: props.scenario,
           	autoComplete: {
             	address: address ? address.formattedAddress : "" ,
             	placeId: address ? address.placeId : "",
@@ -51,7 +48,7 @@ export class ScenarioActions extends Component {
 	componentWillReceiveProps(nextProps){
 		let address = nextProps.address;
 		this.setState({
-			scenario: (!nextProps.scenario.name ||  nextProps.scenario.length === 0) ?  {name: "", id: ""} : nextProps.scenario,
+			scenario: nextProps.scenario,
 			focus:false,
           	autoComplete: {
             	address: address ? address.formattedAddress : "" ,
@@ -64,13 +61,11 @@ export class ScenarioActions extends Component {
 
 	handleSubmit(){
 		console.log("Submit Clicked on ScenarioActions");
-		if(this.state.scenario.name && this.state.scenario.name.length > 0){
-			let scenarioObj= {
+		let scenarioObj= {
 			scenario: this.state.scenario,
 			address: this.state.autoComplete
 		}
-			this.props.handleSubmit(scenarioObj);
-		}
+		this.props.handleSubmit(scenarioObj);
 	}
 
 	addCar(){
@@ -117,30 +112,6 @@ export class ScenarioActions extends Component {
        });
     }
 
-    handleChange = (event) => {
-      var scenario_name = event.target.value;
-      var scenarioObj = this.state.scenario;
-      scenarioObj.name = scenario_name;
-      this.setState({
-        scenario: scenarioObj
-      });
-      if(this.props.disabled) {
-        this.props.onNameChange(this.state.scenario.name)
-      }
-    }
-
-    deleteScenario(){
-    	this.setState({modalIsVisible: true});
-    }
-
-    confirmDelete(){
-    	this.props.handleDelete(this.state.scenario);
-    }
-
-    closeModal(){
-    	this.setState({modalIsVisible: false});
-    }
-
 	render(){
 		return(
 			<MuiThemeProvider>
@@ -154,21 +125,15 @@ export class ScenarioActions extends Component {
                     	<div className="autoComplete_placeholder">Address</div>
                   		<div className="autoBorder"></div>
                 	</div>
-            <TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name"
-             		   value={this.state.scenario.name} onChange={this.handleChange} required/>
-             		<RaisedButton className="deleteBtn" labelStyle={labelStyle} labelPosition="after"
-		  					icon={<DeleteIcon />} disabled={this.state.scenario.id.length === 0}
-		  			 		primary={true} style={style} onClick={this.deleteScenario.bind(this)} title="Delete Scenario" />   
-		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after"
-		  					icon={<AddIcon />} label="Add Car" title="Add Car"
+            <TextField className="scenario_val" hintText="Scenario name" floatingLabelText="Scenario Name" value={this.state.scenario.name} />
+		  			<RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after" icon={<AddIcon />} label="Add Car"
 		  			 		primary={true} style={style} onClick={this.addCar} />
 		  			<RaisedButton label="Save" primary={true} style={style} disabled={this.props.disabled}
-		  						  title="Save Scenario" onClick={event => this.handleSubmit(event)} />
-	  			
-	  			{this.state.modalIsVisible &&
-		          <MyModal title="Delete Scenario" modalIsOpen={this.state.modalIsVisible} content="Are you sure you want to delete this scenario?"
-		          okAction={this.confirmDelete.bind(this)} cancelAction={this.closeModal.bind(this)} />}
-		        </div>
+		  										onClick={event => this.handleSubmit(event)} />
+          <div className="scenario-delete-container">
+            <div className="scenario-delete-icon"><i className="fa fa-trash-o"></i></div>
+          </div>
+	  			</div>
 			</MuiThemeProvider>
 		);
 
