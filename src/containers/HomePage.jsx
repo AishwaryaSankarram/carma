@@ -129,11 +129,11 @@ export default class HomePage extends Component {
           let selCar = cars.length > 0 ? cars[0] : {};
           let adr = response.data[0].userAddress || null;
           let updateObj = list ? {cars: cars, count: cars.length, selectedCar: selCar, scenarios: list,
-                                    currentScenario: scenario, address: adr} : 
+                                    currentScenario: scenario, address: adr} :
                    {cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario, address: adr}
           self.setState(updateObj);
         }else{
-           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: list} : 
+           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: list} :
                               {cars: [], count: 0, selectedCar: {}, currentScenario: "" }
            self.setState(updateObj);
         }
@@ -347,11 +347,13 @@ export default class HomePage extends Component {
             let btnHtml = <div key={'div_' + car.carId}  className={"car-btn "+ cloneIcon + colorClass + activeClass}>
                         <button key={'btn_' + car.carId} data-carid={car.carId}
                        className={"pull-left load_car " } onClick={this.showMap} onDoubleClick={(event) => this.editCar(event, car)}>
+
                        <div className="fa fa-car "></div>
                        <div className="car_name_no">{this.state.cars[i].carLabel} </div></button>
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
                        <i key={'icon_trash_' + car.carId} title="Delete" className={'fa fa-trash-o car_item_delete' + showDelete}
                         onClick={() => this.deleteCar(car)} ></i>
+                        <div className="load_ev_icon">EV</div>
                        </div>
             buttons.push(
                btnHtml
@@ -521,9 +523,9 @@ export default class HomePage extends Component {
     if(otherScenarios.length > 0){
       self.fetchCars(otherScenarios[0], otherScenarios);
     }else{
-      self.setState({scenarios: otherScenarios, currentScenario: "", cars: [], count: 0, selectedCar: {}});  
+      self.setState({scenarios: otherScenarios, currentScenario: "", cars: [], count: 0, selectedCar: {}});
     }
-  } 
+  }
 
   logout() {
     let confimation = "Are you sure you would want to log out ?";
