@@ -49,8 +49,17 @@ export class ScenarioActions extends Component {
 
 	componentWillReceiveProps(nextProps){
 		let address = nextProps.address;
+    //For new scenario, change in name not persisted
+    let s;
+    if((!nextProps.scenario.name ||  nextProps.scenario.length === 0) && this.state.scenario.id.length === 0) //Reloading empty scenario
+        s = this.state.scenario;
+    else if(!nextProps.scenario.name ||  nextProps.scenario.length === 0) //Change to new scenario
+        s = {name: "", id: ""};
+    else
+        s = nextProps.scenario;
+
 		this.setState({
-			scenario: (!nextProps.scenario.name ||  nextProps.scenario.length === 0) ?  {name: "", id: ""} : nextProps.scenario,
+			scenario: s,
 			focus:false,
           	autoComplete: {
             	address: address ? address.formattedAddress : "" ,

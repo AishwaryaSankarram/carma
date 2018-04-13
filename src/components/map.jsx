@@ -15,18 +15,35 @@ export const MyMapComponent = compose(
   }),
   lifecycle({
     componentWillMount() {
-      const refs = {}
+      const refs = {};
 
       this.setState({
         setZoom: ref => {
-          refs.map = ref
-          if (!ref) { return }
+          refs.map = ref;
+          if (!ref) { return; }
           var bounds = this.props.bounds;
-          console.log("setzooom===>" + bounds)
-          refs.map.fitBounds(bounds)
+          console.log("setzooom===>" + bounds);
+          refs.map.fitBounds(bounds);
         }
-      })
-    }
+      });
+    },
+    componentWillReceiveProps(nextProps) {
+        var bounds = nextProps.bounds;
+        const refs = {}
+        this.setState({
+          setZoom: ref => {
+            refs.map = ref
+            if (!ref) { return }
+            let mapBounds = refs.map.getBounds();  
+            if(!(mapBounds.contains(bounds.getNorthEast()) && mapBounds.contains(bounds.getSouthWest())))  {
+              if(this.props.event_name.length > 0){
+                console.log("Change Bounds now");
+                refs.map.fitBounds(bounds);
+              }
+            }
+          }
+        });
+      }
   }),
 
   withGoogleMap

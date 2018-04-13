@@ -147,7 +147,7 @@ export default class HomePage extends Component {
     });
   }
 
-  updateScenario(s){
+  updateScenario(s){    
     if(s)
       this.fetchCars(s);
     else
@@ -242,12 +242,14 @@ export default class HomePage extends Component {
       let newCount = oldCount + 1;
       this.setState({cars: oldCars, count: newCount, selectedCar: carData, mapOpen: true});
     }
+    if(!this.mapRef.state.isDirty)
+        this.mapRef.setState({isDirty: true});
   }
 
   showMap(e) {
     let carId = typeof e.target.dataset.carid === 'undefined' ? e.target.parentElement.dataset.carid : e.target.dataset.carid;
     console.log("Display map for the selected car---------",  carId);
-    if(typeof carId !== 'undefined' && carId != null){
+    if((typeof carId !== 'undefined' && carId != null) && this.state.selectedCar.carId !== carId){
       let cars = this.state.cars;
       let selectedCar = cars.filter(function(car) {
          return car.carId === carId;
@@ -346,8 +348,8 @@ export default class HomePage extends Component {
             let colorClass = constants.color_classes[constants.color_codes.indexOf(car.color)];
             let evDiv= car.useAsEv ? <div className="load_ev_icon" title="This is your EV">EV</div> :
                     <div className="load_ev_icon disable_ev" title="Mark as EV" onClick={(event) => this.markEV(car)}>EV</div>
-            let btnHtml = <div key={'div_' + car.carId}  className={"car-btn "+ cloneIcon + colorClass + activeClass}>
-                        <button key={'btn_' + car.carId} data-carid={car.carId}
+            let btnHtml = <div key={'div_' + car.carId + i}  className={"car-btn "+ cloneIcon + colorClass + activeClass}>
+                        <button key={'btn_' + car.carId + i} data-carid={car.carId}
                        className={"pull-left load_car " } onClick={this.showMap} 
                        onDoubleClick={(event) => this.editCar(event, car)}>
 
@@ -373,6 +375,8 @@ export default class HomePage extends Component {
     }
     selCar.useAsEv = selCar.carId === car.carId;         
     this.setState({cars: cars, selectedCar: selCar});
+    if(!this.mapRef.state.isDirty)
+        this.mapRef.setState({isDirty: true});
   }
 
   updateCarProps(car){
@@ -457,7 +461,7 @@ export default class HomePage extends Component {
     }).then(function (response) {
           console.log(response);
           if(response.status === 200){
-             let s = {name: response.data.name, id: response.data.scenarioId};
+             let s = {id: response.data.scenarioId, name: response.data.name};
              let scenarios = self.state.scenarios;
              if(method === 'POST')
                   scenarios.push(s);
@@ -472,10 +476,10 @@ export default class HomePage extends Component {
              if(selCar.carLabel){
               selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
               selCar['isDirty'] = false;
-             }
+              }
+             //Check for old & new current scenario
              self.setState({cars: cars, count: cars.length, currentScenario: s, selectedCar: selCar,
                               scenarios: scenarios, address: response.data.userAddress});
-             console.log("MAP REF =>", self.mapRef);
              self.mapRef.setState({isDirty: false});
           }
           else{
@@ -643,7 +647,7 @@ export default class HomePage extends Component {
   }
 
   updateAddress(address){
-    this.mapRef.setState({isDirty: true});
+    // this.mapRef.setState({isDirty: true});
     this.setState({address: address});
   }
 

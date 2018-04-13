@@ -6,11 +6,11 @@ import {MyModal} from '../popup/Modal.jsx';
 
 const apiData = require('../utils/api.jsx');
 const apiUrl = apiData.baseUrl;
-
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
 		let address = this.props.userAddress;
+		this.event_name = "";
 		this.state = {
 				car: this.props.car,
 				poly: [],
@@ -61,6 +61,13 @@ export class MapContainer extends React.Component {
 
 	componentWillReceiveProps(nextProps) {
 		let address = nextProps.userAddress;
+		//scenario doesn't change but address does, change isDirty if required
+		let isDirty = this.state.isDirty;
+		if(nextProps.scenario.id === this.props.scenario.id && (address && address.address != this.state.address.formattedAddress))
+			if(!isDirty)
+				isDirty = true;
+		if(nextProps.scenario.id !== this.props.scenario.id)	
+				this.event_name = "scenario_change";
 		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes || (address && address.address != this.state.address.formattedAddress)){ //Reload the map on a different car
 			let currentAddress = {
 			  formattedAddress: address ? address.address : null,
@@ -73,6 +80,7 @@ export class MapContainer extends React.Component {
 			  },
   	  		   placeId: address ? address.placeId : null
 			};
+
 			if(typeof nextProps.car.poly !== 'undefined' && nextProps.car.poly && nextProps.car.poly.length > 0){ //Old map props retrieved for saved cars
 				let car = nextProps.car;
 				this.setState({
@@ -84,7 +92,8 @@ export class MapContainer extends React.Component {
 					poly: nextProps.car.poly,
 					routes: nextProps.routes,
 					address: currentAddress,
-					modalIsVisible: false
+					modalIsVisible: false,
+					isDirty: isDirty
 				});
 			}else{			//Rendering new map for unsaved car
 				this.setState({
@@ -96,7 +105,8 @@ export class MapContainer extends React.Component {
 					car: nextProps.car,
 					routes: nextProps.routes,
 					modalIsVisible: false,
-					address: currentAddress
+					address: currentAddress,
+					isDirty: isDirty
 				});
 			}
 		}
@@ -483,6 +493,7 @@ export class MapContainer extends React.Component {
 				},
                 address: place.formatted_address
             }
+        this.event_name="location_change"; 
         this.props.updateAddress(address);
 	}
 
@@ -499,6 +510,8 @@ export class MapContainer extends React.Component {
 		let pinProps = this.state.address.formattedAddress ? this.state.address : false;
 		let saveBtnDisabled = !this.state.isDirty;
 		console.log("display maps===>", bounds);
+		let event_name = this.event_name;
+		this.event_name = "";
 	 	return (
 	 		<div className="gMap">
 			<div className="clearfix">
@@ -523,7 +536,7 @@ export class MapContainer extends React.Component {
 							bounds={bounds}
 							pinProps={pinProps} onAddressChange={this.changeFocusLocation}
 							disabled={this.props.car.carLabel? false : true}
-							switchCar={this.props.switchCar}
+							switchCar={this.props.switchCar} event_name={event_name}
 			/>
 			{this.state.modalIsVisible &&
 		          <MyModal title="Draw Routes" modalIsOpen={this.state.modalIsVisible} content="How do you want to draw the route?"

@@ -23,7 +23,7 @@ export class Dropdown extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(nextProps && (nextProps.scenarios.length !== this.state.items.length ||  nextProps.currentScenario !== this.state.value))
+    if(nextProps && (nextProps.scenarios.length !== this.state.items.length ||  JSON.stringify(nextProps.currentScenario) !== JSON.stringify(this.state.value)))
       this.setState({value: nextProps.currentScenario, items: nextProps.scenarios});
   }
 
