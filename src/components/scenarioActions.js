@@ -157,7 +157,7 @@ export class ScenarioActions extends Component {
             <RaisedButton className="saveBtn" labelStyle={labelStyle} labelPosition="after"
                     icon={<AddIcon />} label="Add Car" title="Add Car"
 	 									primary={true} style={style} onClick={this.addCar} />
-		  			<RaisedButton label="Save" primary={true} style={style} disabled={this.props.disabled}
+		  			<RaisedButton label="Save" primary={true} style={style} disabled={this.props.disabled || this.state.scenario.name.length === 0}
 		  										title="Save Scenario" onClick={event => this.handleSubmit(event)} />
             {this.state.modalIsVisible &&
                <MyModal title="Delete Scenario" modalIsOpen={this.state.modalIsVisible} 

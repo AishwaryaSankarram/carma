@@ -60,8 +60,19 @@ export class MapContainer extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-			let address = nextProps.userAddress;
-		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes){ //Reload the map on a different car
+		let address = nextProps.userAddress;
+		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes || (address && address.address != this.state.address.formattedAddress)){ //Reload the map on a different car
+			let currentAddress = {
+			  formattedAddress: address ? address.address : null,
+			  location: {
+			    type: "Point",
+			    coordinates: [
+			      address && address.location ? address.location.coordinates[0] : null,
+			      address && address.location ? address.location.coordinates[1] : null
+			    ]
+			  },
+  	  		   placeId: address ? address.placeId : null
+			};
 			if(typeof nextProps.car.poly !== 'undefined' && nextProps.car.poly && nextProps.car.poly.length > 0){ //Old map props retrieved for saved cars
 				let car = nextProps.car;
 				this.setState({
@@ -72,17 +83,7 @@ export class MapContainer extends React.Component {
 					car: nextProps.car,
 					poly: nextProps.car.poly,
 					routes: nextProps.routes,
-					address: {
-					  formattedAddress: address ? address.address : null,
-					  location: {
-					    type: "Point",
-					    coordinates: [
-					      address && address.location ? address.location.coordinates[0] : null,
-					      address && address.location ? address.location.coordinates[1] : null
-					    ]
-					  },
-		  	  		   placeId: address ? address.placeId : null
-			  		},
+					address: currentAddress,
 					modalIsVisible: false
 				});
 			}else{			//Rendering new map for unsaved car
@@ -91,21 +92,11 @@ export class MapContainer extends React.Component {
 					showMarker: false,
 					markerCount: 0,
 					drawPolyline: false,
-					car: nextProps.car,
 					poly: [],
+					car: nextProps.car,
 					routes: nextProps.routes,
 					modalIsVisible: false,
-					address: {
-					  formattedAddress: address ? address.address : null,
-					  location: {
-					    type: "Point",
-					    coordinates: [
-					      address && address.location ? address.location.coordinates[0] : null,
-					      address && address.location ? address.location.coordinates[1] : null
-					    ]
-					  },
-		  	  		   placeId: address ? address.placeId : null
-			  		}
+					address: currentAddress
 				});
 			}
 		}

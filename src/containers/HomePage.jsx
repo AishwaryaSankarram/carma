@@ -643,6 +643,7 @@ export default class HomePage extends Component {
   }
 
   updateAddress(address){
+    this.mapRef.setState({isDirty: true});
     this.setState({address: address});
   }
 
