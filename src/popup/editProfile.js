@@ -46,7 +46,7 @@ export class Profile extends Component {
 
         console.log("payload : " +payload);
 
-        axios.put(apiBaseUrl + 'granular/updateAddress', payload, config).then(function (response) {
+        axios.put(apiBaseUrl + 'scenario/updateAddress', payload, config).then(function (response) {
          console.log(response);
          if(response.status === 200){
            var headerMsg = <div className="alert-success">Successfully updated changes to profile.</div>;

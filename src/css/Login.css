@@ -31,7 +31,16 @@
       height: 26px;
       margin-top: 40px;
 }
-.auto_address .autoComplete_placeholder{
+.scenario-dropdown{
+  color: rgba(0, 0, 0, 0.3);
+  font-size: 10px;
+  font-weight: bold;
+  position: absolute;
+  font-family: Roboto, sans-serif;
+  opacity: 1;
+}
+
+.auto_address .autoComplete_placeholder,.scenario-dropdown .autoComplete_placeholder{
   color: rgba(0, 0, 0, 0.3);
   font-size: 16px;
   font-weight: bold;
@@ -40,7 +49,6 @@
   transform-origin: left top 0px;
   pointer-events: none;
   user-select: none;
-  color: rgba(0, 0, 0, 0.3);
   position: absolute;
     bottom: 3px;
     left: 70px;

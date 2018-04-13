@@ -37,13 +37,16 @@ export class Dropdown extends Component {
     });
     menuElements.push(<MenuItem key={menuElements.length + "_" + 0} value="" primaryText="New Scenario" />);
     return(
-      <div>
+      
         <MuiThemeProvider >
-          <SelectField floatingLabelText="Scenario" value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
+        <div>
+          <div className="scenario-dropdown">Scenario</div>
+          <SelectField value={this.state.value} onChange={this.handleChange} style={styles.customWidth}>
             {menuElements}
           </SelectField>
+          </div>
         </MuiThemeProvider>
-      </div>
+      
     );
   }
 }

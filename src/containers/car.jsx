@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { FormGroup, FormControl, ControlLabel,Checkbox } from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel} from "react-bootstrap";
 import {MuiThemeProvider,RaisedButton}  from 'material-ui';
 //import axios from 'axios';
 import '../css/car.css';
@@ -13,18 +13,16 @@ export class Car extends Component {
     carLabel = carLabel.length === 0 ? this.props.car.carLabel || "" : carLabel ;
     let speed = this.props.sourceCar.speed || "";
     speed = speed.length === 0 ? this.props.car.speed || ""  : speed ;
-    let useAsEv = this.props.car.useAsEv || false ;
     this.state = {
       carLabel: carLabel,
-	    speed: speed,
-      useAsEv: useAsEv
+	    speed: speed
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
   }
 
   validateForm() {
-    return true; //TODO: Validations for the form
+    return (this.state.carLabel.length > 0 && parseFloat(this.state.speed) > 0) ? true : false; //TODO: Validations for the form
   }
 
   handleChange = (event, item) => {
@@ -97,7 +95,7 @@ export class Car extends Component {
               onChange={this.handleChange}
             />
           </FormGroup>
-          <Checkbox checked={this.state.useAsEv} onChange={(event) => this.handleChange(event, "useAsEv")}>Use as EV </Checkbox>
+          
           <div className="modal-footer">
             <RaisedButton className="action-btns" disabled={!this.validateForm()} label="Save" primary={true} type="submit"/>
             <RaisedButton className="action-btns" label="Cancel" onClick={this.handleCancel}/>

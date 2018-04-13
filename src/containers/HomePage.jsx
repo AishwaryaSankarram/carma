@@ -4,7 +4,7 @@ import {Car} from './car.jsx';
 import {MapContainer} from './map.jsx';
 import {Header} from '../layouts/header.jsx';
 // import {Footer} from '../layouts/footer.jsx';
-import '../css/Hompage.css';
+import '../css/HomePage.css';
 import {MyModal} from '../popup/Modal.jsx';
 import {Profile} from '../popup/editProfile';
 import axios from 'axios';
@@ -228,12 +228,7 @@ export default class HomePage extends Component {
       let oldCars = this.state.cars;
       let oldCount = this.state.count;
       let index = oldCount;
-
-      if(carData.useAsEv){
-        oldCars.forEach(function(c){
-          c.useAsEv = false;
-        });
-      }
+      carData.useAsEv = oldCount === 0 ? true : false;
       if(oldCount > 0){
         let oldColor = oldCars[oldCount -1].color;
         let oldIndex = constants.color_codes.indexOf(oldColor);
@@ -315,7 +310,10 @@ export default class HomePage extends Component {
       console.log("Updating cars------------");
       let oldCars = self.state.cars;
       let newCars = [], carIndex;
+      let isEvCar = false;
       oldCars.forEach(function(car, index) {
+          if(car.carId === carId && car.useAsEv)
+            isEvCar = true;
           car.carId !== carId ? newCars.push(car) : carIndex = index ;
        });
       let oldCount = self.state.count;
@@ -323,6 +321,8 @@ export default class HomePage extends Component {
       if(newCount === 0){
         self.setState({cars: newCars, count: newCount, selectedCar: {}, mapOpen: false, dialogVisible: false});
       }else{
+        if(isEvCar)
+            newCars[0].useAsEv=true;
         let selCar = (newCount === carIndex) ? newCars[newCount -1] : newCars[carIndex]
         self.setState({cars: newCars, count: newCount, selectedCar: selCar, dialogVisible: false});
       }
@@ -344,22 +344,35 @@ export default class HomePage extends Component {
             let activeClass = ( car === this.state.selectedCar )? ' car_selected' : '';
             let showDelete = ( car === this.state.selectedCar )? ' ' : ' hide';
             let colorClass = constants.color_classes[constants.color_codes.indexOf(car.color)];
+            let evDiv= car.useAsEv ? <div className="load_ev_icon" title="This is your EV">EV</div> :
+                    <div className="load_ev_icon disable_ev" title="Mark as EV" onClick={(event) => this.markEV(car)}>EV</div>
             let btnHtml = <div key={'div_' + car.carId}  className={"car-btn "+ cloneIcon + colorClass + activeClass}>
                         <button key={'btn_' + car.carId} data-carid={car.carId}
-                       className={"pull-left load_car " } onClick={this.showMap} onDoubleClick={(event) => this.editCar(event, car)}>
+                       className={"pull-left load_car " } onClick={this.showMap} 
+                       onDoubleClick={(event) => this.editCar(event, car)}>
 
                        <div className="fa fa-car "></div>
                        <div className="car_name_no">{this.state.cars[i].carLabel} </div></button>
                        <i key={'icon_' + car.carId} title="Copy" className='fa fa-copy new_car_copy ' onClick={() => this.cloneCar(car)}></i>
                        <i key={'icon_trash_' + car.carId} title="Delete" className={'fa fa-trash-o car_item_delete' + showDelete}
                         onClick={() => this.deleteCar(car)} ></i>
-                        <div className="load_ev_icon" title="This is your EV">EV</div>
-                       </div>
+                        {evDiv}
+                        </div>
             buttons.push(
                btnHtml
             );
      }
     return <div id="car-panel">{buttons}</div> || null;
+  }
+
+  markEV(car){
+    let cars = this.state.cars;
+    let selCar = this.state.selectedCar;
+    for(let i=0;i<cars.length; i++){
+      cars[i].useAsEv = cars[i].carId === car.carId;
+    }
+    selCar.useAsEv = selCar.carId === car.carId;         
+    this.setState({cars: cars, selectedCar: selCar});
   }
 
   updateCarProps(car){
@@ -370,10 +383,6 @@ export default class HomePage extends Component {
       if(c.carId === car.carId){
         c.carLabel = car.carLabel;
         c.speed = car.speed;
-        c.useAsEv = car.useAsEv;
-      }
-      if(car.useAsEv && c.carId !== car.carId){
-        c.useAsEv = false;
       }
      });
      self.setState({cars: cars, isEditing: false, mapOpen: true});
