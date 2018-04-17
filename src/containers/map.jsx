@@ -66,7 +66,7 @@ export class MapContainer extends React.Component {
 		if(nextProps.scenario.id === this.props.scenario.id && (address && address.address != this.state.address.formattedAddress))
 			if(!isDirty)
 				isDirty = true;
-		if(nextProps.scenario.id !== this.props.scenario.id)	
+		if(nextProps.scenario.id !== this.props.scenario.id)
 				this.event_name = "scenario_change";
 		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes || (address && address.address != this.state.address.formattedAddress)){ //Reload the map on a different car
 			let currentAddress = {
@@ -131,11 +131,11 @@ export class MapContainer extends React.Component {
         }).then(function (response) {
 			console.log(response);
 			if(response.status === 200){
-				console.log("Response 200.")
 			  self.updateProps(response.data.carId);
 				let isDirty = self.state.isDirty;
 				if(isDirty) {
 					self.setState({isDirty: false});
+					self.props.mapRef(this);
 				}
 			}
 			else{
@@ -213,6 +213,7 @@ export class MapContainer extends React.Component {
 		let selCar = this.props.car;
 		selCar.poly = h;
 		this.setState({poly: h, isDirty: true});
+		this.props.mapRef(this);
 		console.log("Handling poly events------", selCar);
 	}
 
@@ -271,6 +272,7 @@ export class MapContainer extends React.Component {
             poly: poly,
 						isDirty:true
    		 });
+			 self.props.mapRef(this);
         setTimeout(function(){
         	self.handleSave();
         }, 200);
@@ -341,6 +343,7 @@ export class MapContainer extends React.Component {
 			poly: poly,
 			isDirty: true
 		});
+		this.props.mapRef(this);
 		setTimeout(function(){
 			self.handleSave();
 		}, 200);
@@ -379,6 +382,7 @@ export class MapContainer extends React.Component {
 		  }
 		  p[0].speed = self.props.car.speed;
 		  this.setState({modalIsVisible: false, poly: p, markers: [p[0], p[p.length -1]], drawPolyline: true, isDirty: true });
+			this.props.mapRef(this);
 		  setTimeout(function(){
 	        self.handleSave();
           }, 200);
@@ -493,7 +497,7 @@ export class MapContainer extends React.Component {
 				},
                 address: place.formatted_address
             }
-        this.event_name="location_change"; 
+        this.event_name="location_change";
         this.props.updateAddress(address);
 	}
 
@@ -501,6 +505,7 @@ export class MapContainer extends React.Component {
 		let isDirty = this.state.isDirty;
 	 	if(!isDirty) {
 			this.setState({isDirty: true});
+			this.props.mapRef(this);
 		}
 	}
 

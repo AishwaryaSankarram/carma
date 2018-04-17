@@ -18,9 +18,11 @@ export class Dropdown extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
+    this.onSaveConfirm = this.onSaveConfirm.bind(this);
   }
 
   closeDialog(){
+    this.props.changeHandler(this.state.value);
     this.setState({dialogVisible: false});
   }
 
@@ -36,6 +38,13 @@ export class Dropdown extends Component {
     if(nextProps && (nextProps.scenarios.length !== this.state.items.length ||  JSON.stringify(nextProps.currentScenario) !== JSON.stringify(this.state.value)))
       this.setState({value: nextProps.currentScenario, items: nextProps.scenarios});
   }
+
+  onSaveConfirm() {
+    this.props.changeAndSave(this.state.value);
+    this.setState({dialogVisible: false});
+  }
+
+
 
   render() {
     console.info("Rendering scenario Actions----", this.state, this.props);
@@ -60,7 +69,7 @@ export class Dropdown extends Component {
         content="Do you want to save this scenario before switching?"
         labelCancel="Discard Changes"
         data={this.state.value}
-               okAction={this.props.changeHandler} cancelAction={this.closeDialog} /> }
+               okAction={this.onSaveConfirm} cancelAction={this.closeDialog} /> }
       </div>
 
     );

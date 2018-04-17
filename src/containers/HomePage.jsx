@@ -148,10 +148,21 @@ export default class HomePage extends Component {
   }
 
   updateScenario(s){
-    if(s)
+    if(s) {
       this.fetchCars(s);
-    else
+    } else {
       this.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "" });
+    }
+  }
+
+  saveAndUpdateScenario(s) {
+    if(s) {
+      let scenarioObj = {scenario: this.state.currentScenario, address: this.state.address};
+      this.updateRoute(scenarioObj, true, s);
+
+    } else {
+      this.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "" });
+    }
   }
 
   formScenarioArray(scenarios){
@@ -392,7 +403,7 @@ export default class HomePage extends Component {
      self.setState({cars: cars, isEditing: false, mapOpen: true});
   }
 
-  updateRoute(objToSave, isRest) {
+  updateRoute(objToSave, isRest, changedScenario) {
       let self = this;
       if(isRest){
         let cars = this.state.cars.slice(); //Copy of cars state variable
@@ -422,7 +433,7 @@ export default class HomePage extends Component {
         if(objToSave.scenario.id && objToSave.scenario.id.length > 0){ //Add Scenario ID if for a PUT call
           payload.scenarioId = objToSave.scenario.id ;
         }
-        self.callApi(payload);
+        self.callApi(payload, changedScenario);
         if(isRest){
          setTimeout(function(){
             self.setState({showHeader: false});
@@ -442,7 +453,7 @@ export default class HomePage extends Component {
       }
   }
 
-  callApi(payload){
+  callApi(payload, changedScenario){
     const localData=localStorage.getItem("loginData");
     const pwd=localStorage.getItem("pwd");
     const loginResp = JSON.parse(localData);
@@ -459,7 +470,7 @@ export default class HomePage extends Component {
             password: pwd
           }
     }).then(function (response) {
-          console.log(response);
+          console.log("RESPONSE ->", response);
           if(response.status === 200){
              let s = {id: response.data.scenarioId, name: response.data.name};
              let scenarios = self.state.scenarios;
@@ -471,6 +482,9 @@ export default class HomePage extends Component {
                         scenario.name = s.name;
                 });
               }
+            if(changedScenario) {
+              self.updateScenario(changedScenario);
+            } else {
              let cars = response.data.cars ? self.formCarArray(response.data.cars) : [];
              let selCar = self.state.selectedCar;
              if(selCar.carLabel){
@@ -480,6 +494,7 @@ export default class HomePage extends Component {
              //Check for old & new current scenario
              self.setState({cars: cars, count: cars.length, currentScenario: s, selectedCar: selCar,
                               scenarios: scenarios, address: response.data.userAddress});
+            }
              self.mapRef.setState({isDirty: false});
           }
           else{
@@ -498,7 +513,7 @@ export default class HomePage extends Component {
     routes = this.getRoutes(unSavedCars);
 
     return <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}
-            mapRef={this.handleRef.bind(this)}  deleteScenario={this.deleteScenario.bind(this)}
+            mapRef={this.handleMapRef.bind(this)}  deleteScenario={this.deleteScenario.bind(this)}
             routes={routes} userAddress={this.state.address} addCar={this.openModal} updateAddress={this.updateAddress.bind(this)}
             scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)}/>;
   }
@@ -652,11 +667,14 @@ export default class HomePage extends Component {
   }
 
  render() {
-    console.info("Rendering HomePage--------------");
+
+    console.info("Rendering HomePage--------------", this.mapRef);
     return (
       <div className="App">
-        {<Header menuClickIns={this.menuClick} scenarios={this.state.scenarios}
-                currentScenario={this.state.currentScenario} fetchCars={this.updateScenario.bind(this)}/>}
+         <Header menuClickIns={this.menuClick} scenarios={this.state.scenarios}
+        mapRef={this.mapRef}
+        changeAndSave={this.saveAndUpdateScenario.bind(this)}
+                currentScenario={this.state.currentScenario} fetchCars={this.updateScenario.bind(this)}/>
              {this.state.dialogVisible &&
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  />}
@@ -691,7 +709,7 @@ export default class HomePage extends Component {
           </Menu>
         </Popover>
         </MuiThemeProvider>
-        {this.state.cars && this.displayContent()}
+      {this.state.cars && this.displayContent()}
       </div>
     );
   }

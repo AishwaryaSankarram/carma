@@ -37,6 +37,7 @@ export class Header extends Component {
         <div className="scenario_option">
           <Dropdown scenarios={this.props.scenarios}
           mapRef={this.props.mapRef}
+          changeAndSave={this.props.changeAndSave}
          currentScenario={this.props.currentScenario} changeHandler={this.props.fetchCars} />
         </div>
       </div>);
