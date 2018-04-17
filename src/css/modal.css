@@ -29,7 +29,7 @@ z-index: 1400;
 	transform: translate(0px, 64px);
 }
 
-.log-out, .car-details, .draw-routes, .delete-car, .speed-collector, .edit-profile-settings, .delete-scenario {
+.log-out, .car-details, .draw-routes, .delete-car, .speed-collector, .edit-profile-settings, .delete-scenario, .please-confirm {
 	position: absolute;
 	top: 40px;
 	right: 40px;
@@ -63,7 +63,7 @@ z-index: 1400;
 .speed-collector .icon-close{
 	display: none;
 }
-.log-out, .delete-car, .delete-scenario{
+.log-out, .delete-car, .delete-scenario, .please-confirm{
 	width: 400px;
 	height: 230px;
 }

@@ -147,7 +147,7 @@ export default class HomePage extends Component {
     });
   }
 
-  updateScenario(s){    
+  updateScenario(s){
     if(s)
       this.fetchCars(s);
     else
@@ -350,7 +350,7 @@ export default class HomePage extends Component {
                     <div className="load_ev_icon disable_ev" title="Mark as EV" onClick={(event) => this.markEV(car)}>EV</div>
             let btnHtml = <div key={'div_' + car.carId + i}  className={"car-btn "+ cloneIcon + colorClass + activeClass}>
                         <button key={'btn_' + car.carId + i} data-carid={car.carId}
-                       className={"pull-left load_car " } onClick={this.showMap} 
+                       className={"pull-left load_car " } onClick={this.showMap}
                        onDoubleClick={(event) => this.editCar(event, car)}>
 
                        <div className="fa fa-car "></div>
@@ -373,7 +373,7 @@ export default class HomePage extends Component {
     for(let i=0;i<cars.length; i++){
       cars[i].useAsEv = cars[i].carId === car.carId;
     }
-    selCar.useAsEv = selCar.carId === car.carId;         
+    selCar.useAsEv = selCar.carId === car.carId;
     this.setState({cars: cars, selectedCar: selCar});
     if(!this.mapRef.state.isDirty)
         this.mapRef.setState({isDirty: true});
@@ -598,14 +598,14 @@ export default class HomePage extends Component {
       let cars = this.state.cars;
       let carsWithRoutes = cars.filter((car) => car.poly && car.carId !== self.state.selectedCar.carId)
       let routes = carsWithRoutes.length > 0 ? this.getRoutes(carsWithRoutes) : []; /* Whether to view routes or display disabled map*/
-      content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}  mapRef={this.handleRef.bind(this)}
+      content = <MapContainer car={this.state.selectedCar} updateCar={this.updateRoute}  mapRef={this.handleMapRef.bind(this)}
                   routes={routes} userAddress={this.state.address} addCar={this.openModal} updateAddress={this.updateAddress.bind(this)}
                   scenario={this.state.currentScenario} switchCar={this.switchCar.bind(this)} deleteScenario={this.deleteScenario.bind(this)}/>;
      }
       return content;
   }
 
-  handleRef(mapComp){
+  handleMapRef(mapComp){
     this.mapRef = mapComp;
   }
 

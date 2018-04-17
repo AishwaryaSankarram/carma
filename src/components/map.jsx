@@ -34,9 +34,9 @@ export const MyMapComponent = compose(
           setZoom: ref => {
             refs.map = ref
             if (!ref) { return }
-            let mapBounds = refs.map.getBounds();  
+            let mapBounds = refs.map.getBounds();
+            if(this.props.event_name.length > 0){
             if(!(mapBounds.contains(bounds.getNorthEast()) && mapBounds.contains(bounds.getSouthWest())))  {
-              if(this.props.event_name.length > 0){
                 console.log("Change Bounds now");
                 refs.map.fitBounds(bounds);
               }
@@ -49,7 +49,7 @@ export const MyMapComponent = compose(
   withGoogleMap
 )((props) => (
      props.disabled ?  <GoogleMap ref={props.setZoom} mapTypeId="roadmap"
-        defaultZoom={16} 
+        defaultZoom={16}
         defaultOptions={{
           streetViewControl: false,
           scaleControl: false,
@@ -59,15 +59,15 @@ export const MyMapComponent = compose(
           fullscreenControl: false,
           maxZoom: 18,
           minZoom: 12
-      }} 
+      }}
       options={{
         maxZoom: 18
       }}
       disableDefaultUI >
           {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} switchCar={props.switchCar}/> }
           {props.pinProps && <MyPin address={props.pinProps} onAddressChange={props.onAddressChange}/>}
-       </GoogleMap> : 
-      <GoogleMap    
+       </GoogleMap> :
+      <GoogleMap
       ref={props.setZoom}
        defaultOptions={{
           maxZoom: 18,
@@ -76,7 +76,7 @@ export const MyMapComponent = compose(
        options={{
         maxZoom: 18
       }}
-      defaultZoom={16} 
+      defaultZoom={16}
        mapTypeId="roadmap" onClick={props.onClick}>
        {props.showMarker && <MyMarker markerPos={props.markerPos} allowEdit={props.allowEdit} title={"Route of " + props.label}
                              color={props.color} dragHandler={props.onDragMarker}/> }
@@ -86,4 +86,3 @@ export const MyMapComponent = compose(
        {props.pinProps && <MyPin address={props.pinProps} onAddressChange={props.onAddressChange}/>}
      </GoogleMap>
 ));
-

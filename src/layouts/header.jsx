@@ -17,7 +17,7 @@ export class Header extends Component {
     var loginData=JSON.parse(localStorage.getItem("loginData"));
     let userName=loginData ? loginData.name : "";
     console.log("username: ", loginData);
-    return <div className="header_part">
+    return (<div className="header_part">
         <div className="page_logo">
           <figure className="logo">
             <img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" />
@@ -35,8 +35,10 @@ export class Header extends Component {
           </button>
         </div>
         <div className="scenario_option">
-          <Dropdown scenarios={this.props.scenarios} currentScenario={this.props.currentScenario} changeHandler={this.props.fetchCars} />
+          <Dropdown scenarios={this.props.scenarios}
+          mapRef={this.props.mapRef}
+         currentScenario={this.props.currentScenario} changeHandler={this.props.fetchCars} />
         </div>
-      </div>
+      </div>);
   }
 }
