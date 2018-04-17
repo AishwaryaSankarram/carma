@@ -1,5 +1,7 @@
 import React from 'react';
-import { Marker } from "react-google-maps";
+import { Marker } from 'react-google-maps';
+import SpeedIcon from '../images/speed-icon';
+
 export class Icon extends React.Component {
 	constructor(props) {
 		super(props);
@@ -27,19 +29,15 @@ export class Icon extends React.Component {
 	render() {
 		let self = this;
         let google = window.google;
-        let svg = [
-                    '<?xml version="1.0"?>',
-                    '<svg height="1024" width="767.5" xmlns="http://www.w3.org/2000/svg">',
-                      '<polygon stroke="#fffff" stroke-width="100" points="300,0 600,520 0,520" fill="#000000"/>',
-                    '</svg>'
-                ].join('\n');
-	  	let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
-                     anchor: new google.maps.Point(12, 0),
-                     scaledSize: new google.maps.Size(30, 30)};
-		let zIndex = self.props.allowEdit ? 160 : 137 ;
+        let zIndex = self.props.allowEdit ? 160 : 137 ;
         let markers = [];
         self.props.markerPos.forEach(function(point, index) {
             if(typeof point.speed !== 'undefined' && point.speed && index !== self.props.markerPos.length - 1){     
+                let svg = SpeedIcon.replace(/SpeedVal/g, point.speed);
+                let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+                     anchor: new google.maps.Point(15, -3),
+                     scaledSize: new google.maps.Size(50, 50)};
+        
         		 markers.push(<Marker key={"icon_" + index} position={point} zIndex={zIndex}
                         draggable={self.props.allowEdit} icon={icon} title={"Speed: " + point.speed}
                         onDragEnd={(event) => self.handleDrag(event, index)}

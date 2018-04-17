@@ -62,7 +62,11 @@ export class PolyLine extends React.Component {
             // console.log("updatePolyLine-------------", self.createPoly(path.getArray()), pathProps, event_name);
             let oldPt = path.getAt(v);
             if(oldPt.speed === pathProps[v].speed){
-                return false;
+                let poly = path.getArray();
+                let pathData = self.createPoly(poly);
+                isDragging = false;
+                self.props.dragHandler(pathData);
+                // return false;
             }else{
                 isDragging= true;
                 oldPt.speed = pathProps[v].speed;

@@ -91,6 +91,7 @@ export class Car extends Component {
             <FormControl
               type="text"
               value={this.state.speed}
+              maxLength={3}
               placeholder="Miles per hour"
               onChange={this.handleChange}
             />
