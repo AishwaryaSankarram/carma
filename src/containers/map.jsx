@@ -63,12 +63,12 @@ export class MapContainer extends React.Component {
 		let address = nextProps.userAddress;
 		//scenario doesn't change but address does, change isDirty if required
 		let isDirty = this.state.isDirty;
-		if(nextProps.scenario.id === this.props.scenario.id && (address && address.address != this.state.address.formattedAddress))
+		if(nextProps.scenario.id === this.props.scenario.id && (address && address.address !== this.state.address.formattedAddress))
 			if(!isDirty)
 				isDirty = true;
 		if(nextProps.scenario.id !== this.props.scenario.id)	
 				this.event_name = "scenario_change";
-		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes || (address && address.address != this.state.address.formattedAddress)){ //Reload the map on a different car
+		if(nextProps.car.carId !== this.state.car.carId || nextProps.routes !== this.state.routes || (address && address.address !== this.state.address.formattedAddress)){ //Reload the map on a different car
 			let currentAddress = {
 			  formattedAddress: address ? address.address : null,
 			  location: {
