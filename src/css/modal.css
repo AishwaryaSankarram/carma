@@ -52,8 +52,8 @@ z-index: 1400;
 }
 
 .speed-collector {
-	width: 400px;
-	height: 260px;
+	width: 110px;
+    height: 80px;
 }
 .speed-collector .modal-body{
 	top: unset;

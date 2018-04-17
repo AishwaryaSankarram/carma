@@ -39,33 +39,24 @@ export class SpeedModal extends Component {
 
   render(){
    	return (
-	   	<Modal isOpen={this.state.modalIsOpen}
+	   	<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal}
 	         contentLabel={this.props.title} className="speed-collector">
 	         <MuiThemeProvider>
-	         <div className="confirmation-modal">
-	         <div className="modal-title">
-	         <h4 ref={subtitle => this.subtitle = subtitle}>{this.props.title}
-	         </h4>
-	         </div>
-	         	<form onSubmit={this.onSave}>
-	         	<div className="modal-body">
+	         <form onSubmit={this.onSave}>
 	           <FormGroup controlId="speed" bsSize="sm">
-	               <ControlLabel>Speed at the point</ControlLabel>
+	               <ControlLabel>Speed</ControlLabel>
 	               <FormControl
 	                 autoFocus
 	                 type="text"
+	                 maxLength={3}
+	                 style={{width: "50px"}}
 	                 value={this.state.speed}
 	                 placeholder="Miles per hour"
 	                 onChange={this.handleChange}
+	                 onKeyPress={this.onKeyPress}
 	               />
 	             </FormGroup>
-	             </div>
-	             <div className="modal-footer">
-		   	      		<RaisedButton className="action-btns" label="OK" primary={true} type="submit"  onClick={this.onSave}/>
-		   	      		<RaisedButton className="action-btns" label="Cancel" onClick={this.closeModal}/>
-		         </div>
 	             </form>
-	         </div>
 	         </MuiThemeProvider>
 	   	</Modal> 
    	);
