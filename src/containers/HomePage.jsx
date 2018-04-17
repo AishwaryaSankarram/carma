@@ -253,8 +253,10 @@ export default class HomePage extends Component {
       let newCount = oldCount + 1;
       this.setState({cars: oldCars, count: newCount, selectedCar: carData, mapOpen: true});
     }
-    if(!this.mapRef.state.isDirty)
-        this.mapRef.setState({isDirty: true});
+    if(!this.mapRef.state.isDirty){
+       this.mapRef.setState({isDirty: true});
+    }
+        
   }
 
   showMap(e) {
@@ -384,10 +386,11 @@ export default class HomePage extends Component {
     for(let i=0;i<cars.length; i++){
       cars[i].useAsEv = cars[i].carId === car.carId;
     }
-    selCar.useAsEv = selCar.carId === car.carId;
+    selCar.useAsEv = selCar.carId === car.carId; 
+    if(!this.mapRef.state.isDirty){
+      this.mapRef.setState({isDirty: true});
+    }        
     this.setState({cars: cars, selectedCar: selCar});
-    if(!this.mapRef.state.isDirty)
-        this.mapRef.setState({isDirty: true});
   }
 
   updateCarProps(car){
@@ -400,6 +403,7 @@ export default class HomePage extends Component {
         c.speed = car.speed;
       }
      });
+     self.mapRef.setState({isDirty: true});
      self.setState({cars: cars, isEditing: false, mapOpen: true});
   }
 
@@ -662,7 +666,8 @@ export default class HomePage extends Component {
   }
 
   updateAddress(address){
-    // this.mapRef.setState({isDirty: true});
+    if(!this.mapRef.state.isDirty)
+      this.mapRef.setState({isDirty: true});
     this.setState({address: address});
   }
 

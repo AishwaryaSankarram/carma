@@ -92,8 +92,8 @@ export class MapContainer extends React.Component {
 					poly: nextProps.car.poly,
 					routes: nextProps.routes,
 					address: currentAddress,
-					modalIsVisible: false,
-					isDirty: isDirty
+					modalIsVisible: false/*,
+					isDirty: isDirty*/
 				});
 			}else{			//Rendering new map for unsaved car
 				this.setState({
@@ -105,8 +105,8 @@ export class MapContainer extends React.Component {
 					car: nextProps.car,
 					routes: nextProps.routes,
 					modalIsVisible: false,
-					address: currentAddress,
-					isDirty: isDirty
+					address: currentAddress/*,
+					isDirty: isDirty*/
 				});
 			}
 		}
