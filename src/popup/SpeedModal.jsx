@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Modal from 'react-modal';
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import {MuiThemeProvider,RaisedButton}  from 'material-ui';
+import {MuiThemeProvider}  from 'material-ui';
 import '../css/modal.css';
 
 export class SpeedModal extends Component {

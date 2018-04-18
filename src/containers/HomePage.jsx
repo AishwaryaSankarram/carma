@@ -7,6 +7,7 @@ import {Header} from '../layouts/header.jsx';
 import '../css/HomePage.css';
 import {MyModal} from '../popup/Modal.jsx';
 import {Profile} from '../popup/editProfile';
+import {NewScenario} from '../popup/switchScenario';
 import axios from 'axios';
 import Popover from "material-ui/Popover";
 import Menu from "material-ui/Menu";
@@ -113,8 +114,8 @@ export default class HomePage extends Component {
       });
   }
 
-
-  fetchCars(scenario, list){
+  //Called on scenario change 
+  fetchCars(scenario, list, isClone){
     let self = this;
     const localData=localStorage.getItem("loginData");
     const password=localStorage.getItem("pwd");
@@ -127,42 +128,212 @@ export default class HomePage extends Component {
         if(response.data.length > 0){
           let cars = response.data[0].cars ? self.formCarArray(response.data[0].cars) : [];
           let selCar = cars.length > 0 ? cars[0] : {};
+          if(isClone === 'isClone'){
+            for(let i=0;i<cars.length; i++){
+              cars[i]["carId"] = cars[i].carLabel;
+            }
+          }
           let adr = response.data[0].userAddress || null;
-          let updateObj = list ? {cars: cars, count: cars.length, selectedCar: selCar, scenarios: list,
-                                    currentScenario: scenario, address: adr} :
-                   {cars: cars, count: cars.length, selectedCar: selCar, currentScenario: scenario, address: adr}
+          let currentScenario = isClone === 'isClone' ? "" : scenario ;
+          let updateObj = list ? 
+                            {cars: cars, count: cars.length, selectedCar: selCar, scenarios: list,
+                                    currentScenario: currentScenario, address: adr, dialogVisible: false} :
+                            {cars: cars, count: cars.length, selectedCar: selCar, 
+                                    currentScenario: currentScenario, address: adr, dialogVisible: false};
           self.setState(updateObj);
         }else{
-           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: list} :
-                              {cars: [], count: 0, selectedCar: {}, currentScenario: "" }
+           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: list, dialogVisible: false} :
+                              {cars: [], count: 0, selectedCar: {}, currentScenario: "", dialogVisible: false }
            self.setState(updateObj);
         }
      }
      else{
         console.log("Oops...! Get Scenario failed with--------" + response.status);
-        self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: ""});
+        self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "", dialogVisible: false});
      }}).catch(function (error) {
-        self.setState({cars: [], count: 0, selectedCar: {},  scenarios: [], currentScenario: "" });
+        self.setState({cars: [], count: 0, selectedCar: {},  scenarios: [], currentScenario: "", dialogVisible: false });
         console.log("The error is------------", error);
     });
   }
-
-  updateScenario(s){
-    if(s) {
-      this.fetchCars(s);
-    } else {
-      this.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "" });
+  
+  //Called as change handler on drop-down
+  handleScenarioChange(newScenario){
+    if(this.mapRef.state.isDirty || !newScenario){ //Show popup if there are edits / new scenario is to be created
+      this.setState({dialogVisible: true, action: this.onConfirmSwitch.bind(this), message: newScenario, modalHeading: null });
+    }else{ // Just switch to specified scenario
+      this.fetchCars(newScenario);
     }
   }
 
-  saveAndUpdateScenario(s) {
-    if(s) {
-      let scenarioObj = {scenario: this.state.currentScenario, address: this.state.address};
-      this.updateRoute(scenarioObj, true, s);
+  //OK is clicked in scenario-change modal
+  onConfirmSwitch(scenarioDetails){
+    let newScenario = scenarioDetails.scenario;
+    let objToSave = {scenario: this.state.currentScenario, address: this.state.address};
+    let payload = this.getPayload(objToSave);
+    if(newScenario){ //Switch to an existing scenario 
+        this.saveCurrent(payload, 'save_and_switch', newScenario);
+    }else{ //Create New scenario
+      if(scenarioDetails.cloneType === "start-new"){ 
+        this.saveCurrent(payload, 'save_and_new');
+      }
+      else{
+        if(this.state.currentScenario.id === scenarioDetails.cloneFrom.id)
+          this.saveCurrent(payload, 'save_and_clone');
+        else
+          this.saveCurrent(payload, 'save_clone_other', scenarioDetails.cloneFrom);
+      }
+    } 
+  }
 
-    } else {
-      this.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "" });
+  //Constructs payload for scenario PUT/ POST call
+  getPayload(objToSave){
+    let cars = this.state.cars.slice(); //Copy of cars state variable
+    for(let j=0; j<cars.length; j++){
+      if(cars[j]["carId"] === cars[j]["carLabel"])
+          delete(cars[j]["carId"]);
+      let poly = [];
+      cars[j].poly.forEach(function(p) {
+        let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
+        if(p.speed)
+            point.speed = p.speed;
+        poly.push(point);
+      });
+      cars[j].poly =  poly;
     }
+    let payload = {
+      name: objToSave.scenario.name,
+      cars: cars
+    };
+    if(objToSave.address.location.coordinates.length > 0)
+      payload.userAddress = objToSave.address ;
+    if(objToSave.scenario.id && objToSave.scenario.id.length > 0){ //Add Scenario ID if for a PUT call
+      payload.scenarioId = objToSave.scenario.id ;
+    }
+    return payload;
+  }
+
+  //To clone from a saved scenario without switching
+  cloneScenario(response, scenarios){
+    if(response.data.length > 0){
+      let cars = response.data[0].cars ? self.formCarArray(response.data[0].cars) : [];
+      let selCar = cars.length > 0 ? cars[0] : {};
+      for(let i=0;i<cars.length; i++){
+        cars[i]["carId"] = cars[i].carLabel;
+      } 
+      let adr = response.data[0].userAddress || null;
+      let updateObj = {cars: cars, count: cars.length, selectedCar: selCar, 
+                          currentScenario: "", address: adr, dialogVisible: false};
+      if(scenarios)
+          updateObj.scenarios = scenarios;                    
+      self.setState(updateObj);
+    }else{
+      let updateObj = {cars: [], count: 0, selectedCar: {}, currentScenario: "", dialogVisible: false };
+      if(scenarios)
+          updateObj.scenarios = scenarios;
+      self.setState(updateObj);
+    }
+  }
+
+  //Handles Scenario PUT/POST calls and sets state based on action
+  saveCurrent(payload, action, changedScenario){
+    console.log("Action now ========", action);
+    let self = this;
+    const localData=localStorage.getItem("loginData");
+    const pwd=localStorage.getItem("pwd");
+    const loginResp = JSON.parse(localData);
+    const apiBaseUrl =  apiUrl + "scenario/";
+    let method = payload.scenarioId ? 'PUT' : 'POST';
+    let context = payload.scenarioId ? 'updateScenario' : 'createScenario ';
+    axios({
+          method: method,
+          url: apiBaseUrl + context,
+          data: payload,
+          auth: {
+            username: loginResp.uuid,
+            password: pwd
+          }
+    }).then(function (response) {
+          console.log("RESPONSE ->", response);
+          if(response.status === 200){
+            let s, scenarios;
+             s = {id: response.data.scenarioId, name: response.data.name}; 
+             scenarios = self.state.scenarios;
+             if(method === 'POST')
+                  scenarios.push(s);
+             else{
+                scenarios.forEach(function(scenario){
+                    if(scenario.id === s.id)
+                        scenario.name = s.name;
+                });
+            }
+            if(self.mapRef.state.isDirty)
+               self.mapRef.setState({isDirty: false});
+            if(action === 'save'){  //Update/ Save current scenario
+                let cars = response.data.cars ? self.formCarArray(response.data.cars) : [];
+                let selCar = self.state.selectedCar;
+                if(selCar.carLabel){
+                  selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
+                  selCar['isDirty'] = false;
+                }
+                //Check for old & new current scenario
+                self.setState({cars: cars, count: cars.length, currentScenario: s, selectedCar: selCar,
+                                scenarios: scenarios, address: response.data.userAddress});
+            }else if(action === 'save_and_switch'){ //Switch to other scenario
+                self.fetchCars(changedScenario, scenarios);
+            }else if(action === 'save_and_new'){ //Switch to a new scenario w/o cloning
+                self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: scenarios, dialogVisible: false });
+            }else if(action === 'save_and_clone'){
+               self.cloneScenario(response, scenarios);   
+            }else if(action === 'save_clone_other'){
+                self.fetchCars(changedScenario, scenarios, 'isClone');
+            }
+            
+          }
+        else{
+          console.log("Oops...! Rest HIT failed with--------" + response.status);
+        }
+    }).catch(function (error) {
+          console.log("The error is------------", error);
+   });
+  }
+
+  //Discard Changes is clicked in the popup
+  discardEdits(details){
+    let newScenario = details.scenario;
+    if(newScenario){ //Switch to other existing scenario
+      console.log("Simple switch");
+      this.fetchCars(newScenario);
+    }else if(details.cloneType === 'start-new'){ //Create a new scenario from scratch
+      console.log("Just switch new");
+      this.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", dialogVisible: false });
+    }else if(details.cloneType === 'clone-from' && details.cloneFrom){ //Clone from an old scenario
+      console.log("clone w/o Save");
+      this.fetchCars(newScenario, null, "isClone");
+    }
+  }
+
+  updateRoute(objToSave, isRest, changedScenario) {
+      let self = this;
+      if(isRest){
+        let payload = this.getPayload();
+        this.saveCurrent(payload, 'save');
+        if(isRest){
+         setTimeout(function(){
+            self.setState({showHeader: false});
+          }, 5000);
+        }
+      }else{
+          const cars = this.state.cars;
+          for(let index=0; index<cars.length; index ++){
+            if(cars[index].carLabel === objToSave.carLabel){
+              cars[index] = objToSave;
+              break;
+            }
+        }
+          self.setState({
+            cars: cars, showHeader: isRest
+          });
+      }
   }
 
   formScenarioArray(scenarios){
@@ -407,107 +578,7 @@ export default class HomePage extends Component {
      self.setState({cars: cars, isEditing: false, mapOpen: true});
   }
 
-  updateRoute(objToSave, isRest, changedScenario) {
-      let self = this;
-      if(isRest){
-        let cars = this.state.cars.slice(); //Copy of cars state variable
-        // let extraKeys = ['markers', 'isSaved', 'isDirty', 'drawPolyline', 'showMarker', 'markerCount'];
-        for(let j=0; j<cars.length; j++){
-          if(cars[j]["carId"] === cars[j]["carLabel"])
-              delete(cars[j]["carId"]);
-/*          extraKeys.forEach(function(key){
-              delete(cars[j][key]);
-          });*/
-          let poly = [];
-          cars[j].poly.forEach(function(p) {
-            let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
-            if(p.speed)
-                point.speed = p.speed;
-            poly.push(point);
-          });
-          cars[j].poly =  poly;
-        }
-        let payload = {
-          name: objToSave.scenario.name,
-          cars: cars
-        };
-
-        if(objToSave.address.location.coordinates.length > 0)
-          payload.userAddress = objToSave.address ;
-        if(objToSave.scenario.id && objToSave.scenario.id.length > 0){ //Add Scenario ID if for a PUT call
-          payload.scenarioId = objToSave.scenario.id ;
-        }
-        self.callApi(payload, changedScenario);
-        if(isRest){
-         setTimeout(function(){
-            self.setState({showHeader: false});
-          }, 5000);
-        }
-      }else{
-          const cars = this.state.cars;
-          for(let index=0; index<cars.length; index ++){
-            if(cars[index].carLabel === objToSave.carLabel){
-              cars[index] = objToSave;
-              break;
-            }
-        }
-          self.setState({
-            cars: cars, showHeader: isRest
-          });
-      }
-  }
-
-  callApi(payload, changedScenario){
-    const localData=localStorage.getItem("loginData");
-    const pwd=localStorage.getItem("pwd");
-    const loginResp = JSON.parse(localData);
-    const apiBaseUrl =  apiUrl + "scenario/";
-    let self = this;
-    let method = payload.scenarioId ? 'PUT' : 'POST';
-    let context = payload.scenarioId ? 'updateScenario' : 'createScenario ';
-    axios({
-          method: method,
-          url: apiBaseUrl + context,
-          data: payload,
-          auth: {
-            username: loginResp.uuid,
-            password: pwd
-          }
-    }).then(function (response) {
-          console.log("RESPONSE ->", response);
-          if(response.status === 200){
-             let s = {id: response.data.scenarioId, name: response.data.name};
-             let scenarios = self.state.scenarios;
-             if(method === 'POST')
-                  scenarios.push(s);
-             else{
-                scenarios.forEach(function(scenario){
-                    if(scenario.id === s.id)
-                        scenario.name = s.name;
-                });
-              }
-            if(changedScenario) {
-              self.updateScenario(changedScenario);
-            } else {
-             let cars = response.data.cars ? self.formCarArray(response.data.cars) : [];
-             let selCar = self.state.selectedCar;
-             if(selCar.carLabel){
-              selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
-              selCar['isDirty'] = false;
-              }
-             //Check for old & new current scenario
-             self.setState({cars: cars, count: cars.length, currentScenario: s, selectedCar: selCar,
-                              scenarios: scenarios, address: response.data.userAddress});
-            }
-             self.mapRef.setState({isDirty: false});
-          }
-          else{
-            console.log("Oops...! Rest HIT failed with--------" + response.status);
-          }
-   }).catch(function (error) {
-          console.log("The error is------------", error);
-   });
-  }
+  
 
   drawMap(){
   	let routes = [];
@@ -673,16 +744,20 @@ export default class HomePage extends Component {
 
  render() {
 
-    console.info("Rendering HomePage--------------", this.mapRef);
+    console.info("Rendering HomePage--------------");
     return (
       <div className="App">
          <Header menuClickIns={this.menuClick} scenarios={this.state.scenarios}
-        mapRef={this.mapRef}
-        changeAndSave={this.saveAndUpdateScenario.bind(this)}
-                currentScenario={this.state.currentScenario} fetchCars={this.updateScenario.bind(this)}/>
-             {this.state.dialogVisible &&
+                 currentScenario={this.state.currentScenario} 
+                 scenarioChangeHandler={this.handleScenarioChange.bind(this)}/>
+        {this.state.dialogVisible && (this.state.modalHeading ? 
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
-          okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  />}
+          okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  /> :
+          <NewScenario modalIsOpen={this.state.dialogVisible} scenarios={this.state.scenarios} 
+              okAction={this.state.action} 
+              cancelAction={this.discardEdits.bind(this)} data={this.state.currentScenario}
+              message={this.state.message} isDirty={this.mapRef.state.isDirty} /> )
+        }
         {this.state.cars && this.displayCars()}
         {this.state.showHeader && <div className="alert-success" id="hideMe">Route for {this.state.selectedCar.carLabel} has been saved</div> }
         {this.state.modalIsOpen && <Modal isOpen={this.state.modalIsOpen}
