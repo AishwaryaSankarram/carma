@@ -35,18 +35,18 @@ export class NewScenario extends Component {
   }
 
 	closeModal() {
-  	this.setState({modalIsOpen: false});
     let new_scenario = this.props.message.length === 0 ?
-                            {scenario: this.props.message, cloneFrom: this.state.cloneFrom, cloneType: this.cloneType} : 
-                            {scenario: this.props.message, cloneFrom: "", cloneType: ""};
+                    {scenario: this.props.message, cloneFrom: this.state.cloneFrom, cloneType: this.cloneType} : 
+                    {scenario: this.props.message, cloneFrom: "", cloneType: ""};
+    this.setState({modalIsOpen: false});       
     this.props.cancelAction(new_scenario);
   }
 
   onSave() {
-    this.setState({modalIsOpen: false});
     let new_scenario = this.props.message.length === 0 ?
                             {scenario: this.props.message, cloneFrom: this.state.cloneFrom, cloneType: this.cloneType} : 
                             {scenario: this.props.message, cloneFrom: "", cloneType: ""};
+    this.setState({modalIsOpen: false});                            
     this.props.okAction(new_scenario);
   }
 

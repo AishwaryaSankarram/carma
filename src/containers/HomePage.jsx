@@ -131,6 +131,7 @@ export default class HomePage extends Component {
           if(isClone === 'isClone'){
             for(let i=0;i<cars.length; i++){
               cars[i]["carId"] = cars[i].carLabel;
+              cars[i]["isSaved"] = false;
             }
           }
           let adr = response.data[0].userAddress || null;
@@ -187,8 +188,9 @@ export default class HomePage extends Component {
 
   //Constructs payload for scenario PUT/ POST call
   getPayload(objToSave){
-    let cars = this.state.cars.slice(); //Copy of cars state variable
-    for(let j=0; j<cars.length; j++){
+    let allCars = this.state.cars.slice(); //Copy of cars state variable
+    let cars = allCars.filter((car) => !car.isSaved);
+    for(let j=0; j< cars.length; j++){
       if(cars[j]["carId"] === cars[j]["carLabel"])
           delete(cars[j]["carId"]);
       let poly = [];
@@ -236,7 +238,6 @@ export default class HomePage extends Component {
 
   //Handles Scenario PUT/POST calls and sets state based on action
   saveCurrent(payload, action, changedScenario){
-    console.log("Action now ========", action);
     let self = this;
     const localData=localStorage.getItem("loginData");
     const pwd=localStorage.getItem("pwd");
@@ -301,27 +302,22 @@ export default class HomePage extends Component {
   discardEdits(details){
     let newScenario = details.scenario;
     if(newScenario){ //Switch to other existing scenario
-      console.log("Simple switch");
       this.fetchCars(newScenario);
     }else if(details.cloneType === 'start-new'){ //Create a new scenario from scratch
-      console.log("Just switch new");
       this.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", dialogVisible: false });
     }else if(details.cloneType === 'clone-from' && details.cloneFrom){ //Clone from an old scenario
-      console.log("clone w/o Save");
-      this.fetchCars(newScenario, null, "isClone");
+      this.fetchCars(details.cloneFrom, null, "isClone");
     }
   }
 
-  updateRoute(objToSave, isRest, changedScenario) {
+  updateRoute(objToSave, isRest) {
       let self = this;
       if(isRest){
-        let payload = this.getPayload();
+        let payload = this.getPayload(objToSave);
         this.saveCurrent(payload, 'save');
-        if(isRest){
          setTimeout(function(){
             self.setState({showHeader: false});
-          }, 5000);
-        }
+         }, 5000);
       }else{
           const cars = this.state.cars;
           for(let index=0; index<cars.length; index ++){
@@ -329,7 +325,7 @@ export default class HomePage extends Component {
               cars[index] = objToSave;
               break;
             }
-        }
+          }
           self.setState({
             cars: cars, showHeader: isRest
           });
@@ -341,7 +337,7 @@ export default class HomePage extends Component {
     for(let i=0; i< scenarios.length; i++){
       scenarioArray.push({
         id: scenarios[i].scenarioId, name: scenarios[i].name
-      })
+      });
     }
     return scenarioArray;
   }

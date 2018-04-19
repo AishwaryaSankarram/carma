@@ -1,11 +1,8 @@
 import React from 'react';
-import axios from 'axios';
 import {ScenarioActions} from '../components/scenarioActions';
 import {MyMapComponent} from '../components/map.jsx';
 import {MyModal} from '../popup/Modal.jsx';
 
-const apiData = require('../utils/api.jsx');
-const apiUrl = apiData.baseUrl;
 export class MapContainer extends React.Component {
 	constructor(props) {
 		super(props);
@@ -112,53 +109,6 @@ export class MapContainer extends React.Component {
 		}
   }
 
-  	saveRoute(payload){
-  		var self = this;
-		var loginResp = JSON.parse(this.props.loginData);
-        var pwd = this.props.pwd;
-        console.log(payload);
-  		const apiBaseUrl =  apiUrl + "granular/";
-  		let method = payload.carId ? 'PUT' : 'POST';
-  		let context = payload.carId ? 'updateTripDetails' : 'createGranularPoints';
-  		axios({
-            method: method,
-            url: apiBaseUrl + context,
-            data: payload,
-            auth: {
-			  username: loginResp.uuid,
-			  password: pwd
-		  	}
-        }).then(function (response) {
-			console.log(response);
-			if(response.status === 200){
-			  self.updateProps(response.data.carId);
-				let isDirty = self.state.isDirty;
-				if(isDirty) {
-					self.setState({isDirty: false});
-					self.props.mapRef(this);
-				}
-			}
-			else{
-			  console.log("Oops...! Rest HIT failed with--------" + response.status);
-			}
-		}).catch(function (error) {
-			console.log("The error is------------", error);
-		 });
-  	}
-
-  	updateProps(carId){
-  		var self = this;
-  		let selCar = self.props.car;
- 		selCar.carId = carId;
- 		selCar['isSaved'] = true;
- 		selCar['drawPolyline']=self.state.drawPolyline;
- 		selCar['markerCount'] = self.state.markerCount;
-		selCar['markers'] = [selCar.poly[0], selCar.poly[selCar.poly.length - 1]];
-		selCar['isDirty'] = false;
- 		selCar['showMarker'] = self.state.showMarker;
- 		self.props.updateCar(selCar, true);
-	}
-
 	componentDidMount() {
 		this.props.mapRef(this);
 	}
@@ -202,6 +152,7 @@ export class MapContainer extends React.Component {
 	 	selCar['drawPolyline']=this.state.drawPolyline;
 	 	selCar['markerCount'] = this.state.markerCount;
 		selCar['isDirty'] = true;
+		selCar['isSaved'] = false;
 		selCar['markers'] = this.state.drawPolyline ? [selCar.poly[0], selCar.poly[selCar.poly.length - 1]] : this.state.markers;
 	 	selCar['showMarker'] = this.state.showMarker;
 	 	console.log("Saving car as------", selCar);
@@ -212,8 +163,10 @@ export class MapContainer extends React.Component {
 	handlePolyEvents(h){
 		let selCar = this.props.car;
 		selCar.poly = h;
+		selCar.isSaved = false;
+		selCar.isDirty = true;
 		this.setState({poly: h, isDirty: true});
-		this.props.mapRef(this);
+		// this.props.mapRef(this);
 		console.log("Handling poly events------", selCar);
 	}
 
