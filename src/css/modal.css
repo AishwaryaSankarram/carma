@@ -56,8 +56,17 @@ z-index: 1400;
 	height: 330px;	
 }
 
+.new-scenario label{
+    font-weight: normal !important;
+}
+
+.clone-existing-option{
+    width: 260px !important;
+    float: left;
+}
+
 .speed-collector {
-	width: 110px;
+	width: 125px;
     height: 80px;
 }
 .speed-collector .modal-body{

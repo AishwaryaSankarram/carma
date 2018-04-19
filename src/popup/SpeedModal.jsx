@@ -49,12 +49,13 @@ export class SpeedModal extends Component {
 	                 autoFocus
 	                 type="text"
 	                 maxLength={3}
-	                 style={{width: "50px"}}
+	                 style={{float: "left", width: 45}}
 	                 value={this.state.speed}
 	                 placeholder="Miles per hour"
 	                 onChange={this.handleChange}
 	                 onKeyPress={this.onKeyPress}
-	               />
+	               /><div style={{marginTop: 5}}>&nbsp; mph</div>
+
 	             </FormGroup>
 	             </form>
 	         </MuiThemeProvider>

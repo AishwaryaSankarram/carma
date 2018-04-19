@@ -76,18 +76,18 @@ export class NewScenario extends Component {
           <MuiThemeProvider>
     					<div className="confirmation-modal">
         					<div className="modal-header">
-        					     <h4 className="modal-title">Create New Scenario</h4>
+        					     <h4 className="modal-title">{this.props.message.length === 0 ? "Create New Scenario" : "Change Scenario"}</h4>
         					</div>
                   <div className="modal-body">
-                     {this.props.isDirty && <div>Do you want to save this scenario before switching?</div>}              
+                     {this.props.isDirty && <div style={{marginBottom: 20}}>Do you want to save this scenario before switching?</div>}              
         					   {this.props.message.length === 0 && 
                       <RadioButtonGroup name="cloneType" defaultSelected={this.cloneType} onChange={this.handleSwitch.bind(this)}>
                       <RadioButton
                         value="start-new"
-                        label="Create New Scenario from start"
+                        label="Create new scenario from start"
                         style={style.radioButton}
                       />
-                      <RadioButton
+                      <RadioButton className="clone-existing-option"
                         value="clone-from"
                         label="Clone using existing scenario"
                         style={style.radioButton}
