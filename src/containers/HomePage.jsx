@@ -47,7 +47,8 @@ export default class HomePage extends Component {
           sourceCar: {},
           mapOpen: false,
           dialogVisible: false,
-          address: null,
+          scenarioMap: {},
+          address: constants.address,
           action: {},
           scenarios: [],
           currentScenario: null,
@@ -94,24 +95,36 @@ export default class HomePage extends Component {
          if(response.status === 200){
             if(response.data.length > 0){
               let s = self.formScenarioArray(response.data);
+              let sMap = self.formScenarioMap(response.data);
               let cars = self.formCarArray(response.data[0].cars);
               let selCar = cars.length > 0 ? cars[0] : {};
               let adr = response.data[0].userAddress || null;
               self.setState({cars: cars, count: cars.length,
-                              selectedCar: selCar, scenarios: s, currentScenario: s[0], address: adr });
+                              selectedCar: selCar, scenarios: s, currentScenario: s[0], address: adr, scenarioMap: sMap });
             }else{
-              self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "" });
+              self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "", scenarioMap: {}  });
             }
          }
          else{
             console.log("Oops...! Get Scenarios failed with--------" + response.status);
-            self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: ""});
+            self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "", scenarioMap: {}});
          }
 
       }).catch(function (error) {
-          self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "" });
+          self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "", scenarioMap: {} });
           console.log("The error is------------", error);
       });
+  }
+
+  formScenarioMap(scenarios){
+    let scenarioMap = [];
+    for(let i=0; i< scenarios.length; i++){
+      if(scenarios[i].scenarioId)
+        scenarioMap[scenarios[i].scenarioId] = scenarios[i].name;
+      else
+        scenarioMap[scenarios[i].id] = scenarios[i].name;
+    }
+    return scenarioMap;
   }
 
   //Called on scenario change 
@@ -138,21 +151,21 @@ export default class HomePage extends Component {
           let currentScenario = isClone === 'isClone' ? "" : scenario ;
           let updateObj = list ? 
                             {cars: cars, count: cars.length, selectedCar: selCar, scenarios: list,
-                                    currentScenario: currentScenario, address: adr, dialogVisible: false} :
+                                    currentScenario: currentScenario, address: adr, dialogVisible: false, scenarioMap: self.formScenarioMap(list)} :
                             {cars: cars, count: cars.length, selectedCar: selCar, 
                                     currentScenario: currentScenario, address: adr, dialogVisible: false};
           self.setState(updateObj);
         }else{
-           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: list, dialogVisible: false} :
+           let updateObj = list ? {cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: list, dialogVisible: false, scenarioMap: self.formScenarioMap(list)} :
                               {cars: [], count: 0, selectedCar: {}, currentScenario: "", dialogVisible: false }
            self.setState(updateObj);
         }
      }
      else{
         console.log("Oops...! Get Scenario failed with--------" + response.status);
-        self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "", dialogVisible: false});
+        self.setState({cars: [], count: 0, selectedCar: {}, scenarios: [], currentScenario: "", dialogVisible: false, scenarioMap: {}});
      }}).catch(function (error) {
-        self.setState({cars: [], count: 0, selectedCar: {},  scenarios: [], currentScenario: "", dialogVisible: false });
+        self.setState({cars: [], count: 0, selectedCar: {},  scenarios: [], currentScenario: "", dialogVisible: false, scenarioMap: {} });
         console.log("The error is------------", error);
     });
   }
@@ -259,12 +272,17 @@ export default class HomePage extends Component {
             let s, scenarios;
              s = {id: response.data.scenarioId, name: response.data.name}; 
              scenarios = self.state.scenarios;
-             if(method === 'POST')
-                  scenarios.push(s);
+             let sMap = self.state.scenarioMap;
+             if(method === 'POST'){
+                scenarios.push(s);
+                sMap[s.id] = s.name;
+             }
              else{
                 scenarios.forEach(function(scenario){
-                    if(scenario.id === s.id)
-                        scenario.name = s.name;
+                    if(scenario.id === s.id){
+                      scenario.name = s.name;
+                      sMap[s.id] = s.name;
+                    }
                 });
             }
             if(self.mapRef.state.isDirty)
@@ -278,11 +296,11 @@ export default class HomePage extends Component {
                 }
                 //Check for old & new current scenario
                 self.setState({cars: cars, count: cars.length, currentScenario: s, selectedCar: selCar,
-                                scenarios: scenarios, address: response.data.userAddress});
+                                scenarios: scenarios, address: response.data.userAddress, scenarioMap: sMap});
             }else if(action === 'save_and_switch'){ //Switch to other scenario
                 self.fetchCars(changedScenario, scenarios);
             }else if(action === 'save_and_new'){ //Switch to a new scenario w/o cloning
-                self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarios: scenarios, dialogVisible: false });
+                self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarioMap: sMap, scenarios: scenarios, dialogVisible: false });
             }else if(action === 'save_and_clone'){
                self.cloneScenario(response, scenarios);   
             }else if(action === 'save_clone_other'){
@@ -301,6 +319,8 @@ export default class HomePage extends Component {
   //Discard Changes is clicked in the popup
   discardEdits(details){
     let newScenario = details.scenario;
+    let s = this.state.currentScenario;
+    s.name = this.state.scenarioMap[s.id] ? this.state.scenarioMap[s.id] : "";
     if(newScenario){ //Switch to other existing scenario
       this.fetchCars(newScenario);
     }else if(details.cloneType === 'start-new'){ //Create a new scenario from scratch
