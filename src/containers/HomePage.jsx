@@ -206,6 +206,9 @@ export default class HomePage extends Component {
     for(let j=0; j< cars.length; j++){
       if(cars[j]["carId"] === cars[j]["carLabel"])
           delete(cars[j]["carId"]);
+      delete(cars[j].markers);
+      delete(cars[j].showMarker); 
+      delete(cars[j].markerCount); 
       let poly = [];
       cars[j].poly.forEach(function(p) {
         let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
@@ -224,11 +227,13 @@ export default class HomePage extends Component {
     if(objToSave.scenario.id && objToSave.scenario.id.length > 0){ //Add Scenario ID if for a PUT call
       payload.scenarioId = objToSave.scenario.id ;
     }
+    // console.log("Payload:  ", payload);
     return payload;
   }
 
   //To clone from a saved scenario without switching
   cloneScenario(response, scenarios){
+    let self = this;
     if(response.data.length > 0){
       let cars = response.data[0].cars ? self.formCarArray(response.data[0].cars) : [];
       let selCar = cars.length > 0 ? cars[0] : {};
@@ -300,7 +305,8 @@ export default class HomePage extends Component {
             }else if(action === 'save_and_switch'){ //Switch to other scenario
                 self.fetchCars(changedScenario, scenarios);
             }else if(action === 'save_and_new'){ //Switch to a new scenario w/o cloning
-                self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarioMap: sMap, scenarios: scenarios, dialogVisible: false });
+                self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarioMap: sMap, 
+                                  scenarios: scenarios, dialogVisible: false });
             }else if(action === 'save_and_clone'){
                self.cloneScenario(response, scenarios);   
             }else if(action === 'save_clone_other'){
