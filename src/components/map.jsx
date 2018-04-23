@@ -22,7 +22,8 @@ export const MyMapComponent = compose(
           refs.map = ref;
           if (!ref) { return; }
           var bounds = this.props.bounds;
-          console.log("setzooom===>" + bounds);
+          console.log("setzooom===>" , bounds, refs.map);
+          this.setState({ mapObj: refs.map});
           refs.map.fitBounds(bounds);
         }
       });
@@ -81,7 +82,7 @@ export const MyMapComponent = compose(
        {props.showMarker && <MyMarker markerPos={props.markerPos} allowEdit={props.allowEdit} title={"Route of " + props.label}
                              color={props.color} dragHandler={props.onDragMarker}/> }
        {props.drawPolyline && <PolyLine pathCoordinates={props.poly} onRef={props.onRef} allowEdit={props.allowEdit}
-        color={props.color} dragHandler={props.onDragPoly} saveHandler={props.onChangeAttr} /> }
+        color={props.color} dragHandler={props.onDragPoly} saveHandler={props.onChangeAttr} mapObj={props.mapObj}/> }
        {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} color={props.color} switchCar={props.switchCar}/> }
        {props.pinProps && <MyPin address={props.pinProps} onAddressChange={props.onAddressChange}/>}
      </GoogleMap>

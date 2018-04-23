@@ -179,6 +179,18 @@ export class PolyLine extends React.Component {
         let vertex = typeof(v) === 'undefined' ?  e.vertex : v;
         console.log("click on polyline vertex----------->", e, vertex, v);
         if(vertex > -1  && this.props.pathCoordinates.length !== vertex + 1){
+        let latLng = e.latLng || e;
+        let google = window.google;
+        let map = this.props.mapObj;
+        console.log("Map Props------", map, latLng);    
+        if(map && map.getProjection()){
+            let coordinates = map.getProjection().fromLatLngToPoint(latLng);
+            let pt =  new google.maps.Point(coordinates.x, coordinates.y);    
+            console.log("Map ready now------------", pt, coordinates);
+        }else{ 
+            console.log("Map not at--------", new Date());
+        }
+        
             console.log(this.props.pathCoordinates[vertex]);
             let speed = this.props.pathCoordinates[vertex].speed ;
             this.setState({vertex: vertex, modalIsVisible: true, currentSpeed: speed});
