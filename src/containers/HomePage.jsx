@@ -202,7 +202,7 @@ export default class HomePage extends Component {
   //Constructs payload for scenario PUT/ POST call
   getPayload(objToSave){
     let allCars = this.state.cars.slice(); //Copy of cars state variable
-    let cars = allCars.filter((car) => !car.isSaved);
+    let cars = allCars.filter((car) => car.isDirty);
     for(let j=0; j< cars.length; j++){
       if(cars[j]["carId"] === cars[j]["carLabel"])
           delete(cars[j]["carId"]);
@@ -234,13 +234,14 @@ export default class HomePage extends Component {
   //To clone from a saved scenario without switching
   cloneScenario(response, scenarios){
     let self = this;
-    if(response.data.length > 0){
-      let cars = response.data[0].cars ? self.formCarArray(response.data[0].cars) : [];
+    if(response.data){
+      let cars = response.data.cars ? self.formCarArray(response.data.cars) : [];
       let selCar = cars.length > 0 ? cars[0] : {};
       for(let i=0;i<cars.length; i++){
         cars[i]["carId"] = cars[i].carLabel;
+        cars[i]["isDirty"] = true;
       } 
-      let adr = response.data[0].userAddress || null;
+      let adr = response.data.userAddress || null;
       let updateObj = {cars: cars, count: cars.length, selectedCar: selCar, 
                           currentScenario: "", address: adr, dialogVisible: false};
       if(scenarios)
@@ -272,7 +273,7 @@ export default class HomePage extends Component {
             password: pwd
           }
     }).then(function (response) {
-          console.log("RESPONSE ->", response);
+          console.log("scenario create/update RESPONSE ->", response);
           if(response.status === 200){
             let s, scenarios;
              s = {id: response.data.scenarioId, name: response.data.name}; 
@@ -290,8 +291,9 @@ export default class HomePage extends Component {
                     }
                 });
             }
-            if(self.mapRef.state.isDirty)
+            if(self.mapRef.state.isDirty){
                self.mapRef.setState({isDirty: false});
+            }
             if(action === 'save'){  //Update/ Save current scenario
                 let cars = response.data.cars ? self.formCarArray(response.data.cars) : [];
                 let selCar = self.state.selectedCar;
@@ -299,7 +301,7 @@ export default class HomePage extends Component {
                   selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
                   selCar['isDirty'] = false;
                 }
-                //Check for old & new current scenario
+                //Check for old & new current scenarios
                 self.setState({cars: cars, count: cars.length, currentScenario: s, selectedCar: selCar,
                                 scenarios: scenarios, address: response.data.userAddress, scenarioMap: sMap});
             }else if(action === 'save_and_switch'){ //Switch to other scenario
@@ -369,7 +371,7 @@ export default class HomePage extends Component {
   }
 
   formCarArray(cars){
-      let carArray= [], ids = [], unwanted_keys=['createdAt', 'deleted', 'emailId', 'geoFileName', 'parentUserId', 'updatedAt', 'scenarioId', 'configFileName', 'granularPoints'];
+      let carArray= [], ids = [], unwanted_keys=['id', 'fileWritten', 'createdAt', 'deleted', 'emailId', 'geoFileName', 'parentUserId', 'updatedAt', 'scenarioId', 'configFileName', 'granularPoints'];
       for(let i=0; i< cars.length; i++){
           let c=cars[i];
           if(ids.indexOf(c.carId) === -1){
@@ -424,7 +426,7 @@ export default class HomePage extends Component {
 
   createCar(carData){
     if(this.state.isEditing){
-      console.log("Updating a car");
+      console.log("Updating a car", carData);
       this.updateCarProps(carData);
     }else{
       console.log("Creating a car");
@@ -493,7 +495,7 @@ export default class HomePage extends Component {
      const localData=localStorage.getItem("loginData");
      const password=localStorage.getItem("pwd");
      const header = JSON.parse(localData);
-     if(car.isSaved){
+     if(car.isSaved && self.state.currentScenario.id){
           let url = apiUrl + 'scenario/deleteCar/' + self.state.currentScenario.id + '?carId=' + carId;
           let auth = { username: header.uuid, password: password  };
           axios.delete(url, { auth: auth}).then(function (response) {
@@ -578,6 +580,7 @@ export default class HomePage extends Component {
     let selCar = this.state.selectedCar;
     for(let i=0;i<cars.length; i++){
       cars[i].useAsEv = cars[i].carId === car.carId;
+      cars[i].isDirty = true;
     }
     selCar.useAsEv = selCar.carId === car.carId; 
     if(!this.mapRef.state.isDirty){
@@ -594,6 +597,7 @@ export default class HomePage extends Component {
       if(c.carId === car.carId){
         c.carLabel = car.carLabel;
         c.speed = car.speed;
+        c.isDirty = true;
       }
      });
      self.mapRef.setState({isDirty: true});
@@ -696,7 +700,6 @@ export default class HomePage extends Component {
   switchCar(carId){
     let cars = this.state.cars;
     let selectedCar = cars.filter((car) => car.carId === carId)[0];
-    console.log("In switchCar-----", selectedCar);
     this.setState({mapOpen: true, selectedCar: selectedCar});
   }
 
