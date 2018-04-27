@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { FormGroup, FormControl, ControlLabel} from "react-bootstrap";
-import {MuiThemeProvider,RaisedButton}  from 'material-ui';
+import {MuiThemeProvider,RaisedButton, TextField}  from 'material-ui';
 //import axios from 'axios';
 import '../css/car.css';
 const apiData = require('../utils/api.jsx');
@@ -22,20 +22,13 @@ export class Car extends Component {
   }
 
   validateForm() {
-    return (this.state.carLabel.length > 0 && parseFloat(this.state.speed) > 0) ? true : false; //TODO: Validations for the form
+    return (this.state.carLabel.length > 0 && parseFloat(this.state.speed) > 0 && !isNaN(this.state.speed)) ? true : false; //TODO: Validations for the form
   }
 
-  handleChange = (event, item) => {
-    if(item){
-      this.setState({
-        [item]: event.target.checked
-      });
-    }else{
+  handleChange = (event) => {
       this.setState({
         [event.target.id]: event.target.value
       });
-    }
-
   }
 
   handleSubmit = (event) => {
@@ -76,7 +69,7 @@ export class Car extends Component {
       <div className="Car">
         <MuiThemeProvider>
         <form onSubmit={this.handleSubmit}>
-        <FormGroup controlId="carLabel" bsSize="sm">
+        {/*<FormGroup controlId="carLabel" bsSize="sm">
             <ControlLabel>Car Label</ControlLabel>
             <FormControl
               autoFocus
@@ -85,8 +78,19 @@ export class Car extends Component {
               placeholder="Car Label"
               onChange={this.handleChange}
             />
-          </FormGroup>
-          <FormGroup controlId="speed" bsSize="sm">
+          </FormGroup>*/}
+          <TextField id="carLabel" autoFocus
+             hintText="Car Label"
+             floatingLabelText="Car Label"
+             onChange={this.handleChange}
+          />
+          <br/>
+          <TextField id="speed"
+             hintText="Speed in mph"
+             floatingLabelText="Initial Speed"
+             onChange={this.handleChange}
+          />
+{/*          <FormGroup controlId="speed" bsSize="sm">
             <ControlLabel>Initial Speed</ControlLabel>
             <FormControl
               type="text"
@@ -95,7 +99,7 @@ export class Car extends Component {
               placeholder="Miles per hour"
               onChange={this.handleChange}
             />
-          </FormGroup>
+          </FormGroup>*/}
           
           <div className="modal-footer">
             <RaisedButton className="action-btns" disabled={!this.validateForm()} label="Save" primary={true} type="submit"/>
