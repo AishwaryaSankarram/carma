@@ -13,6 +13,7 @@ export class PolyLine extends React.Component {
                 strokeWeight: 2,
             },
             modalIsVisible: false,
+            coordinates: null,
             currentSpeed: "",
             vertex: null
         }
@@ -175,30 +176,35 @@ export class PolyLine extends React.Component {
         this.props.onRef(undefined);
     }
 
-    handleClick(e, v){
+    handleClick = (e,v) => {
+        console.log("click on polyline vertex----------->", e, typeof(e), Object.keys(e));
         let vertex = typeof(v) === 'undefined' ?  e.vertex : v;
-        console.log("click on polyline vertex----------->", e, vertex, v);
+        let coordinates;
         if(vertex > -1  && this.props.pathCoordinates.length !== vertex + 1){
         let latLng = e.latLng || e;
+        if(e.Ia){
+            coordinates = {top: (e.Ia.pageY-60) + 'px', left: (e.Ia.pageX)+'px'};
+        }else{
         let google = window.google;
         let map = this.props.mapObj;
         console.log("Map Props------", map, latLng);    
         if(map && map.getProjection()){
-            let coordinates = map.getProjection().fromLatLngToPoint(latLng);
+            coordinates = map.getProjection().fromLatLngToPoint(latLng);
             let pt =  new google.maps.Point(coordinates.x, coordinates.y);    
             console.log("Map ready now------------", pt, coordinates);
         }else{ 
             console.log("Map not at--------", new Date());
         }
-        
-            console.log(this.props.pathCoordinates[vertex]);
-            let speed = this.props.pathCoordinates[vertex].speed ;
-            this.setState({vertex: vertex, modalIsVisible: true, currentSpeed: speed});
+        }
+        console.log(this.props.pathCoordinates[vertex]);
+        let speed = this.props.pathCoordinates[vertex].speed ;
+        this.setState({vertex: vertex, modalIsVisible: true, 
+            currentSpeed: speed, coordinates: coordinates});
         }
     }
 
     closeDialog(){
-        this.setState({modalIsVisible: false});
+        this.setState({modalIsVisible: false, coordinates: null});
     }
 
     setSpeed(speed, vertex){
@@ -207,7 +213,7 @@ export class PolyLine extends React.Component {
            let existingLine =  this.refs.gPolyLine;
            let point = existingLine.getPath().getAt(vertex);
            point.speed = speed;
-           this.setState({modalIsVisible: false});
+           this.setState({modalIsVisible: false, coordinates: null});
            isDragging= true; //Set so that set_at is not triggered
            existingLine.getPath().setAt(vertex, point);
            let pathArray = existingLine.getPath().getArray();
@@ -269,17 +275,20 @@ export class PolyLine extends React.Component {
                 <Polyline ref="gPolyLine"
                 path={ this.props.pathCoordinates }
                 options={lineOptions}
-                onClick={this.handleClick}
+                clickable={true}
+                onClick={(event) => this.handleClick(event) }
                 onDragEnd={this.handleDrag}
                 editable={this.props.allowEdit}
                 draggable={this.props.allowEdit}
                 onDragStart={this.handleDragStart}
                 />
                 <Icon markerPos={this.props.pathCoordinates}  clickHandler={this.handleClick}
-                dragHandler={this.handleIconDrag} allowEdit={true} color={this.props.color}/>
+                dragHandler={this.handleIconDrag} allowEdit={true} color={this.props.color} 
+                />
                 {this.state.modalIsVisible &&
-                      <SpeedModal title="Enter Speed" modalIsOpen={this.state.modalIsVisible}
-                      okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex} speed={this.state.currentSpeed} /> }
+                    <SpeedModal modalIsOpen={this.state.modalIsVisible} coordinates={this.state.coordinates}
+                    okAction={this.setSpeed} cancelAction={this.closeDialog} vertex={this.state.vertex} 
+                    speed={this.state.currentSpeed} /> }
             </div>
         );
     }

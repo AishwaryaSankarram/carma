@@ -21,24 +21,24 @@ z-index: 1400;
 	width: 75%;
 	max-width: 768px;
 	max-height: 620px;
-	left: 38px !important;
+	position: absolute;
 	margin: 0px auto;
 	z-index: 1500;
 	opacity: 1;
 	overflow: unset !important;
 	transform: translate(0px, 64px);
-}
-
-.log-out, .car-details, .draw-routes, .delete-car, .speed-collector, .edit-profile-settings, .delete-scenario, .new-scenario {
-	position: absolute;
-	top: 40px;
-	right: 40px;
-	bottom: 40px;
 	border: 1px solid rgb(204, 204, 204);
 	background: rgb(255, 255, 255) none repeat scroll 0% 0%;
 	border-radius: 4px;
 	outline: medium none currentcolor;
 	padding: 20px;
+}
+
+.log-out, .car-details, .draw-routes, .delete-car, .edit-profile-settings, .delete-scenario, .new-scenario {
+	top: 40px;
+	right: 40px;
+	bottom: 40px;
+	left: 38px !important;
 }
 
 .car-details {

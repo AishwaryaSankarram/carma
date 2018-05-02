@@ -40,7 +40,7 @@ export class SpeedModal extends Component {
   render(){
    	return (
 	   	<Modal isOpen={this.state.modalIsOpen} onRequestClose={this.closeModal}
-	         contentLabel={this.props.title} className="speed-collector">
+	         contentLabel={this.props.title} className="speed-collector" style={{content: this.props.coordinates}}>
 	         <MuiThemeProvider>
 	         <form onSubmit={this.onSave}>
 	           <FormGroup controlId="speed" bsSize="sm">

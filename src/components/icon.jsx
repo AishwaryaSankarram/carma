@@ -16,14 +16,12 @@ export class Icon extends React.Component {
     }
 
     handleClick = (e, index) => {
-        // console.log("Clicking speed icon--->" , e, index,  e.latLng);
+        console.log("Clicking speed icon--->" , e, index,  e.latLng);
         if(this.props.carId){
             this.props.switchCar(this.props.carId);
         }else{
-            let markerPos =  e.latLng ;
-            this.props.clickHandler(markerPos, index);
+            this.props.clickHandler(e, index);
         }
-
     }
 
 	render() {
@@ -36,13 +34,17 @@ export class Icon extends React.Component {
                 let svg = SpeedIcon.replace(/SpeedVal/g, point.speed);
                 let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
                      anchor: new google.maps.Point(15, -3),
-                     scaledSize: new google.maps.Size(50, 50)};
+                     scaledSize: new google.maps.Size(70, 70)};
         
-        		 markers.push(<Marker key={"icon_" + index} position={point} zIndex={zIndex}
-                        draggable={self.props.allowEdit} icon={icon} title={"Speed: " + point.speed}
+        		 markers.push(
+                 <div key={"marker-info_" + index}>
+                    <Marker key={"icon_" + index} position={point} zIndex={zIndex}
+                        draggable={self.props.allowEdit} icon={icon} title={"Speed: " + point.speed + "mph"}
                         onDragEnd={(event) => self.handleDrag(event, index)}
                         onClick={(event) => self.handleClick(event, index)}
-                />);
+                    />
+                 </div>
+                );
             }
         });
         console.log("Icons------------>", markers)
