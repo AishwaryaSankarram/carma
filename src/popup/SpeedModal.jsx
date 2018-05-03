@@ -48,7 +48,6 @@ export class SpeedModal extends Component {
 	               <FormControl
 	                 autoFocus
 	                 type="text"
-	                 maxLength={3}
 	                 style={{float: "left", width: 45}}
 	                 value={this.state.speed}
 	                 placeholder="Miles per hour"

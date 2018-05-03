@@ -18,10 +18,12 @@ export class Dropdown extends Component {
   }
 
   handleChange(event, index, value) {
-    this.setState({
-      value: value
-    });
-    this.props.changeHandler(value);
+    if(this.state.value !== value){
+      this.setState({
+        value: value
+      });
+      this.props.changeHandler(value);  
+    }
   }
 
   componentWillReceiveProps(nextProps){
