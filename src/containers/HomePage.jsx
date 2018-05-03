@@ -417,11 +417,11 @@ export default class HomePage extends Component {
   }
 */
   openModal() {
-    this.setState({modalIsOpen: true, sourceCar: {}});
+    this.setState({modalIsOpen: true, sourceCar: {}, isEditing: false});
   }
 
   closeModal() {
-    this.setState({modalIsOpen: false, sourceCar: {}});
+    this.setState({modalIsOpen: false, sourceCar: {}, isEditing: false});
   }
 
   createCar(carData){

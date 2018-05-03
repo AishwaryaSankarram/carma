@@ -81,12 +81,14 @@ export class Car extends Component {
           <TextField id="carLabel" autoFocus
              hintText="Car Label"
              floatingLabelText="Car Label"
+             value={this.state.carLabel}
              onChange={this.handleChange}
           />
           <br/>
           <TextField id="speed"
              hintText="Speed in mph"
              floatingLabelText="Initial Speed"
+             value={this.state.speed}
              onChange={this.handleChange}
           />
 {/*          <FormGroup controlId="speed" bsSize="sm">

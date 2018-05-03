@@ -30,7 +30,7 @@ export class PolyLine extends React.Component {
 
     componentDidMount() {
         this.props.onRef(this);
-        var path = this.refs.gPolyLine.getPath();
+        let path = this.refs.gPolyLine.getPath();
         let google = window.google;
         let self = this;
         google.maps.event.addListener(path, 'insert_at', function(e){
@@ -143,7 +143,7 @@ export class PolyLine extends React.Component {
     }
 
     componentDidUpdate() {
-        var path = this.refs.gPolyLine.getPath();
+        let path = this.refs.gPolyLine.getPath();
         let google = window.google;
         let self = this;
         google.maps.event.addListener(path, 'insert_at', function(e){
@@ -169,7 +169,7 @@ export class PolyLine extends React.Component {
     componentWillUnmount() {
         isDragging=false;
         let google = window.google;
-        var path = this.refs.gPolyLine.getPath();
+        let path = this.refs.gPolyLine.getPath();
         google.maps.event.clearListeners(path, 'insert_at');
         google.maps.event.clearListeners(path, 'remove_at');
         google.maps.event.clearListeners(path, 'set_at');
@@ -177,24 +177,35 @@ export class PolyLine extends React.Component {
     }
 
     handleClick = (e,v) => {
-        console.log("click on polyline vertex----------->", e, typeof(e), Object.keys(e));
         let vertex = typeof(v) === 'undefined' ?  e.vertex : v;
+        console.log("click on polyline vertex----------->", e, vertex);
         let coordinates;
         if(vertex > -1  && this.props.pathCoordinates.length !== vertex + 1){
         let latLng = e.latLng || e;
         if(e.Ia){
             coordinates = {top: (e.Ia.pageY-60) + 'px', left: (e.Ia.pageX)+'px'};
         }else{
-        let google = window.google;
-        let map = this.props.mapObj;
-        console.log("Map Props------", map, latLng);    
-        if(map && map.getProjection()){
-            coordinates = map.getProjection().fromLatLngToPoint(latLng);
-            let pt =  new google.maps.Point(coordinates.x, coordinates.y);    
-            console.log("Map ready now------------", pt, coordinates);
-        }else{ 
-            console.log("Map not at--------", new Date());
-        }
+            let map = this.props.mapObj;
+            console.log("Map Props------", map, latLng);   
+            let projection = map.getProjection(); 
+            if(map && projection){
+                // Projection variables.
+                let topRight = projection.fromLatLngToPoint(map.getBounds().getNorthEast()); 
+                let bottomLeft = projection.fromLatLngToPoint(map.getBounds().getSouthWest()); 
+                let scale = Math.pow(2,map.getZoom());
+ 
+                // Create our point.
+                let point = projection.fromLatLngToPoint(latLng);
+ 
+                // Get the x/y based on the scale.
+                let posLeft = (point.x - bottomLeft.x) * scale;
+                let posTop = (point.y - topRight.y) * scale;
+                    
+                coordinates = {top: (posTop + 60) + 'px', left: (posLeft) + 'px'};
+                console.log("Map ready now------------", coordinates);
+            }else{ 
+                console.log("Map not at--------", new Date());
+            }
         }
         console.log(this.props.pathCoordinates[vertex]);
         let speed = this.props.pathCoordinates[vertex].speed ;
