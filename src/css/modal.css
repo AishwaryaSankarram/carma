@@ -68,8 +68,13 @@ z-index: 1400;
 }
 
 .speed-collector {
-	width: 125px;
-    height: 80px;
+	width: 100px;
+    height: 75px;
+    margin-left: -50px;
+    padding: 6px;
+    text-align: center;
+    border-color: #333;
+    box-shadow: 0px 5px 15px #333;
 }
 .speed-collector .modal-body{
 	top: unset;
@@ -78,6 +83,22 @@ z-index: 1400;
 }
 .speed-collector .icon-close{
 	display: none;
+}
+
+.speed-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: transparent !important;
+  }
+
+.speed-collector input {
+	 border: none;
+    border-bottom: 1px solid #ccc;
+    box-shadow: none;
+    border-radius: 0px !important;
 }
 .log-out, .delete-car, .delete-scenario{
 	width: 400px;

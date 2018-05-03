@@ -9,6 +9,7 @@ const style = {
   },
   customWidth:{
     width:200,
+    marginTop: -12
   },
   block: {
     maxWidth: 250,
@@ -79,7 +80,7 @@ export class NewScenario extends Component {
         					     <h4 className="modal-title">{this.props.message.length === 0 ? "Create New Scenario" : "Change Scenario"}</h4>
         					</div>
                   <div className="modal-body">
-                     {this.props.isDirty && <div style={{marginBottom: 20}}>Do you want to save this scenario before switching?</div>}              
+                     <div style={{marginBottom: 20,height:20}}>{this.props.isDirty && "Do you want to save this scenario before switching?"}</div>              
         					   {this.props.message.length === 0 && 
                       <RadioButtonGroup name="cloneType" defaultSelected={this.cloneType} onChange={this.handleSwitch.bind(this)}>
                       <RadioButton
