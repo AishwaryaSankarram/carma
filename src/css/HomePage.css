@@ -38,6 +38,11 @@ html, body {
     border: none;
 }
 
+.map-container .gmnoprint {
+    width: 43px !important;
+    height: 43px !important;
+}
+
 .footer {
     display: none;
     position: fixed;
@@ -383,7 +388,7 @@ color: #fff;
     display: inline;
 }
 
-#hideMe {
+#hideMe, .header-msg {
     -moz-animation: cssAnimation 0s ease-in 5s forwards;
     /* Firefox */
     -webkit-animation: cssAnimation 0s ease-in 5s forwards;
