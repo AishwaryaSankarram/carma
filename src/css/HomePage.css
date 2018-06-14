@@ -388,7 +388,7 @@ color: #fff;
     display: inline;
 }
 
-#hideMe, .header-msg {
+#hideMe {
     -moz-animation: cssAnimation 0s ease-in 5s forwards;
     /* Firefox */
     -webkit-animation: cssAnimation 0s ease-in 5s forwards;

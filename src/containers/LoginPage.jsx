@@ -82,7 +82,7 @@ export default class LoginPage extends Component {
   }
   render() {
     return (
-      <div className="loginscreen">
+      <div className="loginscreen" key="login-div">
         {this.state.loginscreen}
         <div>
           {this.state.loginmessage}

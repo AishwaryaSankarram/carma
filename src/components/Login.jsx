@@ -94,16 +94,24 @@ export default class Login extends Component{
                 console.log("uuid==>"+response.data.uuid);
                 localStorage.setItem("loginData",JSON.stringify(response.data));
                 localStorage.setItem("pwd",payload.password);
+                self.setState({ loginmessage: "" });
                 self.populateHomePage();
             }
             else {
                 console.log("Username password does not match");
-                self.setState({loginmessage: <div className="alert-danger" >Incorect Email Address or Password. Please try again.</div>});
+                self.setState({loginmessage: <div className="header-msg alert-danger" >Incorect Email Address or Password. Please try again.</div>});
+                setTimeout(() => {
+                    self.setState({ loginmessage: ""});
+                }, 3000);
                 console.log(response.status);
             }
         })
         .catch(function(data){
             console.log("error :"+data);
+            self.setState({loginmessage: <div className="header-msg alert-danger" >Unable to connect to server. Please try again.</div>});
+            setTimeout(() => {
+                self.setState({ loginmessage: "" });
+            }, 3000);
         });
     }
 
@@ -125,7 +133,7 @@ export default class Login extends Component{
                   <div className="header_title">Carma Route Planner</div>
               </div>
             </MuiThemeProvider>
-            {this.state.loginmessage} 
+            {this.state.loginmessage}
             {this.state.loginComponent}
           </div>
         );
