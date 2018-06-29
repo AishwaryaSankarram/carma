@@ -55,6 +55,7 @@ export class Car extends Component {
     }
     let carData = Object.assign(defaultParams, this.state); //Adding current params
     carData.carId = this.props.car? this.props.car.carId : "";
+		carData.vehId = this.props.car? this.props.car.vehId : "";
     console.log("saving carData------" , carData);
     this.props.onSave(carData);
   }
@@ -101,7 +102,7 @@ export class Car extends Component {
               onChange={this.handleChange}
             />
           </FormGroup>*/}
-          
+
           <div className="modal-footer">
             <RaisedButton className="action-btns" disabled={!this.validateForm()} label="Save" primary={true} type="submit"/>
             <RaisedButton className="action-btns" label="Cancel" onClick={this.handleCancel}/>
