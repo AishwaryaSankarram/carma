@@ -201,7 +201,7 @@ export default class HomePage extends Component {
 
   //Constructs payload for scenario PUT/ POST call
   getPayload(objToSave){
-    let allCars = this.state.cars.slice(); //Copy of cars state variable
+    let allCars = [].concat(this.state.cars); //Copy of cars state variable
     let cars = allCars.filter((car) => car.isDirty);
     for(let j=0; j< cars.length; j++){
       if(cars[j]["carId"] === cars[j]["carLabel"])
@@ -299,7 +299,10 @@ export default class HomePage extends Component {
                 let selCar = self.state.selectedCar;
                 if(selCar.carLabel){
                   selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
-                  selCar['isDirty'] = false;
+                  if(selCar)
+                    selCar['isDirty'] = false;
+                  else
+                    console.log("Sel car is-------", selCar.carLabel);
                 }
                 //Check for old & new current scenarios
                 self.setState({cars: cars, count: cars.length, currentScenario: s, selectedCar: selCar,
@@ -443,6 +446,7 @@ export default class HomePage extends Component {
         }
       }
       carData.carId = carData.carLabel;
+      carData.isDirty = true;
       carData.color = constants.color_codes[index % 10];
       oldCars.push(carData);
       let newCount = oldCount + 1;

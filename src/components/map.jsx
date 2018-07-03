@@ -36,6 +36,7 @@ export const MyMapComponent = compose(
             refs.map = ref
             if (!ref) { return }
             let mapBounds = refs.map.getBounds();
+            // console.log("Map receives props---", this.props.event_name);
             if(this.props.event_name.length > 0){
             if(!(mapBounds.contains(bounds.getNorthEast()) && mapBounds.contains(bounds.getSouthWest())))  {
                 console.log("Change Bounds now");
@@ -58,7 +59,7 @@ export const MyMapComponent = compose(
           panControl: false,
           rotateControl: false,
           fullscreenControl: false,
-          maxZoom: 18,
+          // maxZoom: 18,
           minZoom: 12
       }}
       options={{
