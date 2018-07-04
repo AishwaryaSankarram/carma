@@ -38,10 +38,10 @@ html, body {
     border: none;
 }
 
-.map-container .gmnoprint {
+/*.map-container .gmnoprint {
     width: 43px !important;
     height: 43px !important;
-}
+}*/
 
 .footer {
     display: none;

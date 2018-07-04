@@ -559,7 +559,7 @@ export default class HomePage extends Component {
             let showDelete = ( car === this.state.selectedCar )? ' ' : ' hide';
             let colorClass = constants.color_classes[constants.color_codes.indexOf(car.color)];
             let evDiv= car.useAsEv ? <div className="load_ev_icon" title="This is your EV">EV</div> :
-                    <div className="load_ev_icon disable_ev" title="Mark as EV" onClick={(event) => this.markEV(car)}>EV</div>
+                    <div className="load_ev_icon disable_ev" title="Mark as EV" onClick={(event) => this.markEV(car)}>RV</div>
             let btnHtml = <div key={'div_' + car.carId + i}  className={"car-btn "+ cloneIcon + colorClass + activeClass}>
                         <button key={'btn_' + car.carId + i} data-carid={car.carId}
                        className={"pull-left load_car " } onClick={this.showMap}
