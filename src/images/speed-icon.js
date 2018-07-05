@@ -1,10 +1,10 @@
 const speedIcon = 
 [
 '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100px" height="120px" viewBox="0 0 200 300" version="1.1">',
-    '<g id="Page-1" stroke="none" stroke-width="1" fill="#00000" fill-rule="evenodd">', 
+    '<g id="Page-1" stroke="none" stroke-width="1" fill="colour" fill-rule="evenodd">', 
        ' <g id="Group">',
             '<g id="Rectangle">',
-               ' <use fill-opacity="0" fill="#00000" fill-rule="evenodd" xlink:href="#path-1"/>',
+               ' <use fill-opacity="0" fill="colour" fill-rule="evenodd" xlink:href="#path-1"/>',
                ' <rect stroke="#979797" stroke-width="5" x="2.5" y="2.5" width="100" height="120" rx="10"/>',
             '</g>',
            ' <text id="SPEED" font-family="Arial-BoldMT, Arial" font-size="20" font-weight="bold" letter-spacing="0.695652187" fill="#FFFFFF">',

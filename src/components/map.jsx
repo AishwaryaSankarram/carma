@@ -59,7 +59,7 @@ export const MyMapComponent = compose(
           panControl: false,
           rotateControl: false,
           fullscreenControl: false,
-          minZoom: 12
+          // minZoom: 12
       }}
       disableDefaultUI >
           {props.routes && props.routes.length > 0 && <MultiPolyLine routes={props.routes} switchCar={props.switchCar}/> }
@@ -68,7 +68,7 @@ export const MyMapComponent = compose(
       <GoogleMap
       ref={props.setZoom}
        defaultOptions={{
-          minZoom: 16
+          // minZoom: 16
        }}
       defaultZoom={16}
        mapTypeId="roadmap" onClick={props.onClick}>

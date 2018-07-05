@@ -32,6 +32,7 @@ export class Icon extends React.Component {
         self.props.markerPos.forEach(function(point, index) {
             if(typeof point.speed !== 'undefined' && point.speed && index !== self.props.markerPos.length - 1){     
                 let svg = SpeedIcon.replace(/SpeedVal/g, point.speed);
+                svg = svg.replace(/colour/g, self.props.allowEdit? "#000000" : "#aaa")
                 let icon = { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
                      anchor: new google.maps.Point(15, -3),
                      scaledSize: new google.maps.Size(70, 70)};
