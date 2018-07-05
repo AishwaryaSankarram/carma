@@ -72,6 +72,7 @@ export default class HomePage extends Component {
 
     this.displayContent = this.displayContent.bind(this);
     this.updateCarPanel = this.updateCarPanel.bind(this);
+    this.handleScenarioChange = this.handleScenarioChange.bind(this);
     this.updateScenarioList = this.updateScenarioList.bind(this);
     this.displayRoutes = this.displayRoutes.bind(this);
     this.deleteCar = this.deleteCar.bind(this);
@@ -172,7 +173,7 @@ export default class HomePage extends Component {
   
   //Called as change handler on drop-down
   handleScenarioChange(newScenario){
-    if(this.mapRef.state.isDirty || !newScenario){ //Show popup if there are edits / new scenario is to be created
+    if((this.mapRef && this.mapRef.state.isDirty) || !newScenario){ //Show popup if there are edits / new scenario is to be created
       this.setState({dialogVisible: true, action: this.onConfirmSwitch.bind(this), message: newScenario, modalHeading: null });
     }else{ // Just switch to specified scenario
       this.fetchCars(newScenario);
@@ -778,14 +779,14 @@ export default class HomePage extends Component {
       <div className="App">
          <Header menuClickIns={this.menuClick} scenarios={this.state.scenarios}
                  currentScenario={this.state.currentScenario} 
-                 scenarioChangeHandler={this.handleScenarioChange.bind(this)}/>
+                 scenarioChangeHandler={this.handleScenarioChange}/>
         {this.state.dialogVisible && (this.state.modalHeading ? 
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  /> :
           <NewScenario modalIsOpen={this.state.dialogVisible} scenarios={this.state.scenarios} 
               okAction={this.state.action} 
               cancelAction={this.discardEdits.bind(this)} data={this.state.currentScenario}
-              message={this.state.message} isDirty={this.mapRef.state.isDirty} /> )
+              message={this.state.message} isDirty={this.mapRef && this.mapRef.state.isDirty} /> )
         }
         {this.state.cars && this.displayCars()}
         {this.state.showHeader && <div className="alert-success" id="hideMe">Route for {this.state.selectedCar.carLabel} has been saved</div> }

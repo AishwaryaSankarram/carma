@@ -40,7 +40,7 @@ export class Dropdown extends Component {
           <MenuItem key={index + "_" + item.id} value={item} primaryText={item.name} />
         );
     });
-    menuElements.push(<MenuItem key={menuElements.length + "_" + 0} value="" primaryText="New Scenario" />);
+    menuElements.push(<MenuItem key={menuElements.length + "_" + 0} value="" primaryText="New Scenario" disabled={true}/>);
     return(
       <div>
         <MuiThemeProvider >

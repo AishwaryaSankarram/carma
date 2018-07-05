@@ -6,11 +6,17 @@ export class Header extends Component {
   constructor(props){
     super(props);
     this.menuClick = this.menuClick.bind(this);
+    this.scenarioChangeHandler = this.scenarioChangeHandler.bind(this);
   }
 
   menuClick(){
     this.props.menuClickIns();
   }
+
+  scenarioChangeHandler(){
+    this.props.scenarioChangeHandler("");
+  }
+
 
 
   render(){
@@ -29,9 +35,9 @@ export class Header extends Component {
             <i className="fa fa-user-circle">  {userName}</i>
           </button>
         </div>
-        <div className="add_car hide">
-          <button className="logout_icon new_car" title="Start Simulation">
-            <i className="fa fa-play"> </i>
+        <div className="add_car" >
+          <button className="add-scenario new_car" title="Create Scenario" onClick={this.scenarioChangeHandler}>
+            <i className="fa fa-plus">ADD SCENARIO</i>
           </button>
         </div>
         <div className="scenario_option">
