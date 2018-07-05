@@ -1,5 +1,20 @@
 import React, {Component} from 'react';
 import {Dropdown} from '../components/dropDown';
+import {MuiThemeProvider, RaisedButton} from 'material-ui';
+import AddIcon from 'material-ui/svg-icons/content/add';
+
+const labelStyle = {
+  position: "relative",
+  opacity: 1,
+  fontSize: 14,
+  letterSpacing: 0,
+  textTransform: "uppercase",
+  fontWeight: 500,
+  margin: 0,
+  paddingRight: "15px",
+  paddingLeft: "0px",
+  fontFamily: "Roboto, sans-serif"
+};
 
 export class Header extends Component {
 
@@ -23,7 +38,8 @@ export class Header extends Component {
     var loginData=JSON.parse(localStorage.getItem("loginData"));
     let userName=loginData ? loginData.name : "";
     console.log("username: ", loginData);
-    return (<div className="header_part">
+    return (<MuiThemeProvider>
+      <div className="header_part">
         <div className="page_logo">
           <figure className="logo">
             <img src="http://carmanetworks.com/img/assets/Carma%20Network.png" alt="Carma Networks" title="Carma Networks" />
@@ -35,15 +51,15 @@ export class Header extends Component {
             <i className="fa fa-user-circle">  {userName}</i>
           </button>
         </div>
-        <div className="add_car" >
-          <button className="add-scenario new_car" title="Create Scenario" onClick={this.scenarioChangeHandler}>
-            <i className="fa fa-plus">ADD SCENARIO</i>
-          </button>
-        </div>
+        <RaisedButton className="add_car" labelStyle={labelStyle} labelPosition="after"
+                    icon={<AddIcon />} label="Add Scenario" title="Create Scenario"
+                    primary={true} onClick={this.scenarioChangeHandler} />
+
         <div className="scenario_option">
           <Dropdown scenarios={this.props.scenarios} currentScenario={this.props.currentScenario} 
                       changeHandler={this.props.scenarioChangeHandler} />
         </div>
-      </div>);
+      </div>
+      </MuiThemeProvider>);
   }
 }

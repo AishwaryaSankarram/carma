@@ -784,7 +784,7 @@ export default class HomePage extends Component {
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  /> :
           <NewScenario modalIsOpen={this.state.dialogVisible} scenarios={this.state.scenarios} 
-              okAction={this.state.action} 
+              okAction={this.state.action} closeModal={this.closeDialog}
               cancelAction={this.discardEdits.bind(this)} data={this.state.currentScenario}
               message={this.state.message} isDirty={this.mapRef && this.mapRef.state.isDirty} /> )
         }

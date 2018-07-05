@@ -28,6 +28,7 @@ export class NewScenario extends Component {
 		};
     this.cloneType = "start-new";
     this.closeModal = this.closeModal.bind(this);
+    this.cancelAction = this.cancelAction.bind(this);
     this.onSave = this.onSave.bind(this);
 	}
 
@@ -55,6 +56,11 @@ export class NewScenario extends Component {
     this.setState({
       cloneFrom: value
     });
+  }
+
+  cancelAction(){
+    this.setState({modalIsOpen: false});  
+    this.props.closeModal();
   }
 
   handleSwitch(event, value) {
@@ -97,8 +103,9 @@ export class NewScenario extends Component {
                     {this.props.message.length === 0 && selectItem}
                   </div>
                   <div className="modal-footer">
-                      <RaisedButton label="OK" primary={true} style={style.button} onClick={this.onSave}/>
+                      <RaisedButton label="Save and Create" primary={true} style={style.button} onClick={this.onSave}/>
                       <RaisedButton label="Discard Changes"  style={style.button} onClick={this.closeModal} />
+                      <RaisedButton label="Cancel"  style={style.button} onClick={this.cancelAction} />
                   </div>
     					</div>
           </MuiThemeProvider>

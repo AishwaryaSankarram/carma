@@ -151,10 +151,6 @@
 #edit-profile .auto_address .autoComplete{
   margin-top:30px; 
 }
-
-.add-scenario{
-  text-transform: uppercase;
-  font-weight: 400;
-  font-size: 14px;
-  font-family: Roboto, sans-serif;
+.add-scenario svg{
+  color: #fff;
 }
