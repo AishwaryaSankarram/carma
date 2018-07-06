@@ -101,6 +101,7 @@ export class ScenarioActions extends Component {
   }
 
   confirmDelete(){
+    this.setState({modalIsVisible: false});
     this.props.handleDelete(this.state.scenario);
   }
 

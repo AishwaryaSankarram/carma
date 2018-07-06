@@ -218,14 +218,16 @@ export default class HomePage extends Component {
       delete(cars[j].showMarker);
       delete(cars[j].markerCount);
       let poly = [];
-      cars[j].poly.forEach(function(p) {
-        let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
-        if(p.speed)
-            point.speed = p.speed;
-        poly.push(point);
-      });
-      cars[j].poly =  poly;
-    }
+      if(cars[j].poly){
+          cars[j].poly.forEach(function(p) {
+            let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
+            if(p.speed)
+                point.speed = p.speed;
+            poly.push(point);
+          });
+          cars[j].poly =  poly;
+        }
+      }
     let payload = {
       name: objToSave.scenario.name,
       cars: cars

@@ -41,7 +41,7 @@ export class MyMarker extends React.Component {
 		let zIndex = self.props.allowEdit ? 150 : 137 ;
 		let markers = self.props.markerPos.map((marker, index) => {
             return (
-            	<Marker key={marker.lat+"_"+marker.lng} position={marker} zIndex={zIndex} 
+            	<Marker key={index + "_" + marker.lat+"_"+marker.lng} position={marker} zIndex={zIndex} 
             	draggable={self.props.allowEdit} icon={icon} title={title} 
             	onDragEnd={(event) => self.handleDrag(event, index)} onClick={this.handleClick}
             />);

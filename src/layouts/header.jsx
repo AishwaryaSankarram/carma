@@ -43,7 +43,9 @@ export class Header extends Component {
     this.props.onHeaderMount(this);
   }
 
-
+  componentWillUnmount() {
+   this.props.onHeaderMount(null); 
+  }
 
   render(){
     var loginData=JSON.parse(localStorage.getItem("loginData"));
