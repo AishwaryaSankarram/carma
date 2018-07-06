@@ -341,16 +341,16 @@ html, body {
     width: 18px;
     height: 18px;
     border: 1px solid #f29d67;
-    font-size: 10px !important;
+    font-size: 12px !important;
     padding: 1px 0px;
     border-radius: 15px;
     cursor: pointer;
-    color: #f29d67;
-    font-weight: bold;
+    color: #f90202;
+    font-weight: bolder;
 }
 .disable_ev{
   border: 1px solid #ccc;
-  color: #f6f3f3;
+  color: #fff;
   background: #aaa;
 }
 
