@@ -38,17 +38,17 @@ export class NewScenario extends Component {
 
 	closeModal() {
     let new_scenario = this.props.message.length === 0 ?
-                    {scenario: this.props.message, cloneFrom: this.state.cloneFrom, cloneType: this.cloneType} : 
+                    {scenario: this.props.message, cloneFrom: this.state.cloneFrom, cloneType: this.cloneType} :
                     {scenario: this.props.message, cloneFrom: "", cloneType: ""};
-    this.setState({modalIsOpen: false});       
+    this.setState({modalIsOpen: false});
     this.props.cancelAction(new_scenario);
   }
 
   onSave() {
     let new_scenario = this.props.message.length === 0 ?
-                            {scenario: this.props.message, cloneFrom: this.state.cloneFrom, cloneType: this.cloneType} : 
+                            {scenario: this.props.message, cloneFrom: this.state.cloneFrom, cloneType: this.cloneType} :
                             {scenario: this.props.message, cloneFrom: "", cloneType: ""};
-    this.setState({modalIsOpen: false});                            
+    this.setState({modalIsOpen: false});
     this.props.okAction(new_scenario);
   }
 
@@ -59,7 +59,7 @@ export class NewScenario extends Component {
   }
 
   cancelAction(){
-    this.setState({modalIsOpen: false});  
+    this.setState({modalIsOpen: false});
     this.props.closeModal();
   }
 
@@ -86,8 +86,8 @@ export class NewScenario extends Component {
         					     <h4 className="modal-title">{this.props.message.length === 0 ? "Create New Scenario" : "Change Scenario"}</h4>
         					</div>
                   <div className="modal-body">
-                     <div style={{marginBottom: 20,height:20}}>{this.props.isDirty && "Do you want to save this scenario before switching?"}</div>              
-        					   {this.props.message.length === 0 && 
+                     <div style={{marginBottom: 20,height:20}}>{this.props.isDirty && "Do you want to save this scenario before switching?"}</div>
+        					   {this.props.message.length === 0 &&
                       <RadioButtonGroup name="cloneType" defaultSelected={this.cloneType} onChange={this.handleSwitch.bind(this)}>
                       <RadioButton
                         value="start-new"
@@ -103,8 +103,8 @@ export class NewScenario extends Component {
                     {this.props.message.length === 0 && selectItem}
                   </div>
                   <div className="modal-footer">
-                      <RaisedButton label="Save and Create" primary={true} style={style.button} onClick={this.onSave}/>
-                      <RaisedButton label="Discard Changes"  style={style.button} onClick={this.closeModal} />
+                      <RaisedButton label="OK" primary={true} style={style.button} onClick={this.onSave}/>
+                      {this.props.isDirty && <RaisedButton label="Discard Changes"  style={style.button} onClick={this.closeModal} />}
                       <RaisedButton label="Cancel"  style={style.button} onClick={this.cancelAction} />
                   </div>
     					</div>

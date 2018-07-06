@@ -54,7 +54,8 @@ export default class HomePage extends Component {
           currentScenario: null,
           modalHeading: "",
           isEditing: false,
-          isMenuOpen:false
+          isMenuOpen:false,
+          header: null
     };
 
     this.openModal = this.openModal.bind(this);
@@ -80,6 +81,11 @@ export default class HomePage extends Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.handleProfileSave = this.handleProfileSave.bind(this);
     this.fetchCars = this.fetchCars.bind(this);
+    this.onHeaderMount = this.onHeaderMount.bind(this);
+  }
+
+  onHeaderMount(obj) {
+    this.setState({header: obj})
   }
 
   loadCars(){
@@ -128,7 +134,7 @@ export default class HomePage extends Component {
     return scenarioMap;
   }
 
-  //Called on scenario change 
+  //Called on scenario change
   fetchCars(scenario, list, isClone){
     let self = this;
     const localData=localStorage.getItem("loginData");
@@ -150,10 +156,10 @@ export default class HomePage extends Component {
           }
           let adr = response.data[0].userAddress || null;
           let currentScenario = isClone === 'isClone' ? "" : scenario ;
-          let updateObj = list ? 
+          let updateObj = list ?
                             {cars: cars, count: cars.length, selectedCar: selCar, scenarios: list,
                                     currentScenario: currentScenario, address: adr, dialogVisible: false, scenarioMap: self.formScenarioMap(list)} :
-                            {cars: cars, count: cars.length, selectedCar: selCar, 
+                            {cars: cars, count: cars.length, selectedCar: selCar,
                                     currentScenario: currentScenario, address: adr, dialogVisible: false};
           self.setState(updateObj);
         }else{
@@ -170,7 +176,7 @@ export default class HomePage extends Component {
         console.log("The error is------------", error);
     });
   }
-  
+
   //Called as change handler on drop-down
   handleScenarioChange(newScenario){
     if((this.mapRef && this.mapRef.state.isDirty) || !newScenario){ //Show popup if there are edits / new scenario is to be created
@@ -185,10 +191,11 @@ export default class HomePage extends Component {
     let newScenario = scenarioDetails.scenario;
     let objToSave = {scenario: this.state.currentScenario, address: this.state.address};
     let payload = this.getPayload(objToSave);
-    if(newScenario){ //Switch to an existing scenario 
+    if(newScenario){ //Switch to an existing scenario
         this.saveCurrent(payload, 'save_and_switch', newScenario);
     }else{ //Create New scenario
-      if(scenarioDetails.cloneType === "start-new"){ 
+      this.state.header.scenarioButtonHandler(true);
+      if(scenarioDetails.cloneType === "start-new"){
         this.saveCurrent(payload, 'save_and_new');
       }
       else{
@@ -197,7 +204,7 @@ export default class HomePage extends Component {
         else
           this.saveCurrent(payload, 'save_clone_other', scenarioDetails.cloneFrom);
       }
-    } 
+    }
   }
 
   //Constructs payload for scenario PUT/ POST call
@@ -208,8 +215,8 @@ export default class HomePage extends Component {
       if(cars[j]["carId"] === cars[j]["carLabel"])
           delete(cars[j]["carId"]);
       delete(cars[j].markers);
-      delete(cars[j].showMarker); 
-      delete(cars[j].markerCount); 
+      delete(cars[j].showMarker);
+      delete(cars[j].markerCount);
       let poly = [];
       cars[j].poly.forEach(function(p) {
         let point = {lat: parseFloat(p.lat), lng:parseFloat(p.lng)}; //Keep only essential data in poly; Otherwise causes circular error
@@ -241,12 +248,12 @@ export default class HomePage extends Component {
       for(let i=0;i<cars.length; i++){
         cars[i]["carId"] = cars[i].carLabel;
         cars[i]["isDirty"] = true;
-      } 
+      }
       let adr = response.data.userAddress || null;
-      let updateObj = {cars: cars, count: cars.length, selectedCar: selCar, 
+      let updateObj = {cars: cars, count: cars.length, selectedCar: selCar,
                           currentScenario: "", address: adr, dialogVisible: false};
       if(scenarios)
-          updateObj.scenarios = scenarios;                    
+          updateObj.scenarios = scenarios;
       self.setState(updateObj);
     }else{
       let updateObj = {cars: [], count: 0, selectedCar: {}, currentScenario: "", dialogVisible: false };
@@ -277,7 +284,7 @@ export default class HomePage extends Component {
           console.log("scenario create/update RESPONSE ->", response);
           if(response.status === 200){
             let s, scenarios;
-             s = {id: response.data.scenarioId, name: response.data.name}; 
+             s = {id: response.data.scenarioId, name: response.data.name};
              scenarios = self.state.scenarios;
              let sMap = self.state.scenarioMap;
              if(method === 'POST'){
@@ -298,6 +305,7 @@ export default class HomePage extends Component {
             if(action === 'save'){  //Update/ Save current scenario
                 let cars = response.data.cars ? self.formCarArray(response.data.cars) : [];
                 let selCar = self.state.selectedCar;
+                self.state.header.scenarioButtonHandler(false);
                 if(selCar.carLabel){
                   selCar = cars.filter((car) => car.carLabel === selCar.carLabel)[0];
                   if(selCar)
@@ -311,14 +319,13 @@ export default class HomePage extends Component {
             }else if(action === 'save_and_switch'){ //Switch to other scenario
                 self.fetchCars(changedScenario, scenarios);
             }else if(action === 'save_and_new'){ //Switch to a new scenario w/o cloning
-                self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarioMap: sMap, 
+                self.setState({cars: [], count: 0, selectedCar: {}, currentScenario: "", scenarioMap: sMap,
                                   scenarios: scenarios, dialogVisible: false });
             }else if(action === 'save_and_clone'){
-               self.cloneScenario(response, scenarios);   
+               self.cloneScenario(response, scenarios);
             }else if(action === 'save_clone_other'){
                 self.fetchCars(changedScenario, scenarios, 'isClone');
             }
-            
           }
         else{
           console.log("Oops...! Rest HIT failed with--------" + response.status);
@@ -456,7 +463,7 @@ export default class HomePage extends Component {
     if(!this.mapRef.state.isDirty){
        this.mapRef.setState({isDirty: true});
     }
-        
+
   }
 
   showMap(e) {
@@ -587,10 +594,10 @@ export default class HomePage extends Component {
       cars[i].useAsEv = cars[i].carId === car.carId;
       cars[i].isDirty = true;
     }
-    selCar.useAsEv = selCar.carId === car.carId; 
+    selCar.useAsEv = selCar.carId === car.carId;
     if(!this.mapRef.state.isDirty){
       this.mapRef.setState({isDirty: true});
-    }        
+    }
     this.setState({cars: cars, selectedCar: selCar});
   }
 
@@ -609,7 +616,7 @@ export default class HomePage extends Component {
      self.setState({cars: cars, isEditing: false, mapOpen: true});
   }
 
-  
+
 
   drawMap(){
   	let routes = [];
@@ -778,12 +785,13 @@ export default class HomePage extends Component {
     return (
       <div className="App">
          <Header menuClickIns={this.menuClick} scenarios={this.state.scenarios}
-                 currentScenario={this.state.currentScenario} 
+                 currentScenario={this.state.currentScenario}
+                 onHeaderMount={this.onHeaderMount}
                  scenarioChangeHandler={this.handleScenarioChange}/>
-        {this.state.dialogVisible && (this.state.modalHeading ? 
+        {this.state.dialogVisible && (this.state.modalHeading ?
           <MyModal title={this.state.modalHeading} modalIsOpen={this.state.dialogVisible} content={this.state.message}
           okAction={this.state.action} cancelAction={this.closeDialog} data={this.state.selectedCar}  /> :
-          <NewScenario modalIsOpen={this.state.dialogVisible} scenarios={this.state.scenarios} 
+          <NewScenario modalIsOpen={this.state.dialogVisible} scenarios={this.state.scenarios}
               okAction={this.state.action} closeModal={this.closeDialog}
               cancelAction={this.discardEdits.bind(this)} data={this.state.currentScenario}
               message={this.state.message} isDirty={this.mapRef && this.mapRef.state.isDirty} /> )

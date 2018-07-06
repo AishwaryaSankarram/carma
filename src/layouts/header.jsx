@@ -20,8 +20,15 @@ export class Header extends Component {
 
   constructor(props){
     super(props);
+    this.state = {
+      addScenarioDisabled: false
+    }
     this.menuClick = this.menuClick.bind(this);
     this.scenarioChangeHandler = this.scenarioChangeHandler.bind(this);
+  }
+
+  scenarioButtonHandler(state) {
+    this.setState({addScenarioDisabled: state});
   }
 
   menuClick(){
@@ -30,6 +37,10 @@ export class Header extends Component {
 
   scenarioChangeHandler(){
     this.props.scenarioChangeHandler("");
+  }
+
+  componentDidMount() {
+    this.props.onHeaderMount(this);
   }
 
 
@@ -53,10 +64,12 @@ export class Header extends Component {
         </div>
         <RaisedButton className="add_car" labelStyle={labelStyle} labelPosition="after"
                     icon={<AddIcon />} label="Add Scenario" title="Create Scenario"
-                    primary={true} onClick={this.scenarioChangeHandler} />
+                    primary={true}
+                    disabled={this.state.addScenarioDisabled}
+                    onClick={this.scenarioChangeHandler} />
 
         <div className="scenario_option">
-          <Dropdown scenarios={this.props.scenarios} currentScenario={this.props.currentScenario} 
+          <Dropdown scenarios={this.props.scenarios} currentScenario={this.props.currentScenario}
                       changeHandler={this.props.scenarioChangeHandler} />
         </div>
       </div>
