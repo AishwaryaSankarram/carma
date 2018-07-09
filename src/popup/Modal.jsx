@@ -58,7 +58,7 @@ export class MyModal extends Component {
 
             {this.props.okAction &&
             <div className="modal-footer">
-                <RaisedButton label={this.props.labelOk || "Yes"} primary={true} style={style} onClick={this.onSave}/>
+                <RaisedButton label={this.props.labelOk || "Yes"} primary={true} className="btn-primary" style={style} onClick={this.onSave}/>
                 {this.props.addBtn && <RaisedButton label={this.props.addBtnLabel}  primary={true} style={style} onClick={this.handleClick}/>}
                 <RaisedButton label={this.props.labelCancel || "No"}  style={style} onClick={this.closeModal} />
               </div>

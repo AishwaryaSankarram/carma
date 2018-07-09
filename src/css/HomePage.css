@@ -136,6 +136,27 @@ html, body {
     position: relative;
 }
 
+.add_car button, .btn-primary button, .action-btns button{
+  background: #93c84a !important;
+  color: #000 !important;
+}
+
+.action-btns button:disabled{
+  background: rgb(229, 229, 229) !important;
+}
+
+.action-btns button:disabled span{
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+
+#btn-submit-container button:disabled span{
+  color: rgba(0, 0, 0, 0.3) !important;
+}
+
+#btn-submit-container span, .add_car span, .btn-primary span, .action-btns span{
+  color: #000 !important;
+}
+
 .load_car .car_name_no {
     border-top: 1px solid #93c84a;
     padding: 5px 10px;
@@ -150,11 +171,11 @@ html, body {
   margin-top: -105px;
 }
 #btn-submit-container button {
-    background: #4dadf7;
+    background: #93c84a !important;
      outline: none;
      border: 1px solid #fff;
      padding: 8px 15px;
-     color: #fff;
+     color: #000 !important;
      margin: 5px 10px 5px 10px;
      font-size: 14px;
      display: inline-block;
@@ -165,7 +186,7 @@ html, body {
 }
 
 #btn-submit-container button:disabled {
-    background: #afd8f7 !important;
+    background: rgb(229, 229, 229) !important;
     cursor: no-drop;
 }
 
@@ -363,12 +384,12 @@ html, body {
 .scenario-delete-icon{
   width: 20px;
 height: 25px;
-background: #52bed5;
+background: #93c84a;
 font-size: 18px;
 cursor: pointer;
 position: absolute;
 right: 10px;
-color: #fff;
+color: #000;
 }
 .scenario_option label{
   top: 5px !important;

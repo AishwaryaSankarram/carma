@@ -103,7 +103,7 @@ export class NewScenario extends Component {
                     {this.props.message.length === 0 && selectItem}
                   </div>
                   <div className="modal-footer">
-                      <RaisedButton label="OK" primary={true} style={style.button} onClick={this.onSave}/>
+                      <RaisedButton label="OK" primary={true} style={style.button} className="btn-primary" onClick={this.onSave}/>
                       {this.props.isDirty && <RaisedButton label="Discard Changes"  style={style.button} onClick={this.closeModal} />}
                       <RaisedButton label="Cancel"  style={style.button} onClick={this.cancelAction} />
                   </div>

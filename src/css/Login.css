@@ -151,6 +151,7 @@
 #edit-profile .auto_address .autoComplete{
   margin-top:30px; 
 }
-.add-scenario svg{
-  color: #fff;
+.add_car svg, .saveBtn svg{
+  fill: #000 !important;
+  margin-top: -3px;
 }

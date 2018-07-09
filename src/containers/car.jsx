@@ -105,7 +105,7 @@ export class Car extends Component {
 
           <div className="modal-footer">
             <RaisedButton className="action-btns" disabled={!this.validateForm()} label="Save" primary={true} type="submit"/>
-            <RaisedButton className="action-btns" label="Cancel" onClick={this.handleCancel}/>
+            <RaisedButton label="Cancel" onClick={this.handleCancel}/>
           </div>
         </form>
         </MuiThemeProvider>
