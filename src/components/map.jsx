@@ -55,7 +55,6 @@ export const MyMapComponent = compose(
         defaultOptions={{
           streetViewControl: false,
           scaleControl: false,
-          mapTypeControl: false,
           panControl: false,
           rotateControl: false,
           fullscreenControl: false,
