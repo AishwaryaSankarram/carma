@@ -38,10 +38,10 @@ export const MyMapComponent = compose(
             let mapBounds = refs.map.getBounds();
             // console.log("Map receives props---", this.props.event_name);
             if(this.props.event_name.length > 0){
-            if(!(mapBounds.contains(bounds.getNorthEast()) && mapBounds.contains(bounds.getSouthWest())))  {
+            // if(!(mapBounds.contains(bounds.getNorthEast()) && mapBounds.contains(bounds.getSouthWest())))  {
                 console.log("Change Bounds now");
                 refs.map.fitBounds(bounds);
-              }
+              // }
             }
           }
         });

@@ -152,6 +152,7 @@ export default class HomePage extends Component {
             for(let i=0;i<cars.length; i++){
               cars[i]["carId"] = cars[i].carLabel;
               cars[i]["isSaved"] = false;
+              cars[i]["isDirty"] = true;
             }
           }
           let adr = response.data[0].userAddress || null;
