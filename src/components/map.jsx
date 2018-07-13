@@ -53,11 +53,11 @@ export const MyMapComponent = compose(
      props.disabled ?  <GoogleMap ref={props.setZoom} mapTypeId="roadmap"
         defaultZoom={16}
         defaultOptions={{
-          streetViewControl: false,
+          // streetViewControl: false,
           scaleControl: false,
           panControl: false,
           rotateControl: false,
-          fullscreenControl: false,
+          // fullscreenControl: false,
           // minZoom: 12
       }}
       disableDefaultUI >

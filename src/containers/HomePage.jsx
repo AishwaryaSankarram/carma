@@ -250,6 +250,7 @@ export default class HomePage extends Component {
       for(let i=0;i<cars.length; i++){
         cars[i]["carId"] = cars[i].carLabel;
         cars[i]["isDirty"] = true;
+        cars[i]["isSaved"] = false;
       }
       let adr = response.data.userAddress || null;
       let updateObj = {cars: cars, count: cars.length, selectedCar: selCar,
@@ -438,6 +439,8 @@ export default class HomePage extends Component {
   }
 
   createCar(carData){
+    if(carData.poly && carData.poly.length > 0)
+          carData.poly[0].speed = carData.speed;
     if(this.state.isEditing){
       console.log("Updating a car", carData);
       this.updateCarProps(carData);
@@ -564,7 +567,7 @@ export default class HomePage extends Component {
      for(let i = 0; i < this.state.count ; i++) {
             let car = this.state.cars[i];
             // let t = (car === this.state.selectedCar) ? 'car_active ' : '' ;
-            let cloneIcon = (car.isSaved && car === this.state.selectedCar) ?  'car_active ' : '' ;
+            let cloneIcon = (car === this.state.selectedCar) ?  'car_active ' : '' ;
             let activeClass = ( car === this.state.selectedCar )? ' car_selected' : '';
             let showDelete = ( car === this.state.selectedCar )? ' ' : ' hide';
             let colorClass = constants.color_classes[constants.color_codes.indexOf(car.color)];

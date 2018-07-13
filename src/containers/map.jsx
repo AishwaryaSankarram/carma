@@ -163,6 +163,7 @@ export class MapContainer extends React.Component {
 	handlePolyEvents(h){
 		let selCar = this.props.car;
 		selCar.poly = h;
+		selCar.speed = h[0].speed;
 		selCar.isSaved = false;
 		selCar.isDirty = true;
 		this.setState({poly: h, isDirty: true});
